@@ -1,0 +1,14 @@
+1. Unable to resolve path to module 'prop-types'
+Sol: Stop any running packager
+
+//Already added
+Add this to package.json: "clean-start": "rm -rf node_modules && yarn install && rm -rf $TMPDIR/react* && npm start --reset-cache", (or npm install if you don't use yarn)
+
+//Run this
+npm run clean-start
+
+--------------------------------------------------------------------------------------------
+
+2. Prop type "object" is forbidden  react/forbid-prop-types
+Sol: add the following line of code to the .eslintrc.json file on the rules object.
+"react/forbid-prop-types": "off"
