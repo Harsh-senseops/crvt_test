@@ -1,6 +1,12 @@
 // @mui material components
 import Card from "@mui/material/Card";
 import { Grid } from "@mui/material";
+import RO from "../RO";
+import ThermalShock from "../thermal-shock";
+import Shower from "./shower";
+import Dust from "../dust";
+import Vibration from "../vibration";
+import Oven from "../oven";
 
 // react imports
 import { useState } from "react";
@@ -40,18 +46,33 @@ function AnnualPlanner() {
               Please configure equipment details for all components
             </MDTypography> */}
           </MDBox>
-          <Grid 
+         { role.roles === 3 ?  <Grid 
           // item xs={12} md={6} xl={4} 
           container
             spacing={0}
             direction="column"
             alignItems="center"
             justifyContent="center">
-              <Grid item xs={3}>
+             <Grid item xs={3}>
             {/* <Masterpartlistupload /> */}
-           {role.roles === 3 ? <DropFileInput onFileChange={(files) => onFileChange(files)}/>:"No annual planner uploaded for current year."}
+         <DropFileInput onFileChange={(files) => onFileChange(files)}/>
+       
             </Grid>
           </Grid>
+          // <>
+          // </>
+            // <RO/>
+            // <ThermalShock/>
+            // <Shower/>
+         
+          : ""}
+           <> <RO/>
+          <ThermalShock/>
+          <Shower/>
+          <Dust/>
+          <Vibration/>
+          <Oven/>
+          </>          
         </Card>
       </MDBox>
       <Footer />
