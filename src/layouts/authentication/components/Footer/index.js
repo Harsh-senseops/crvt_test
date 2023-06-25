@@ -74,7 +74,7 @@ function Footer({ light }) {
               },
             })}
           >
-            <MDBox component="li" pr={2} lineHeight={1}>
+            {/* <MDBox component="li" pr={2} lineHeight={1}>
               <Link href="https://www.creative-tim.com/" target="_blank">
                 <MDTypography
                   variant="button"
@@ -84,7 +84,7 @@ function Footer({ light }) {
                   Senseops
                 </MDTypography>
               </Link>
-            </MDBox>
+            </MDBox> */}
             {/* <MDBox component="li" px={2} lineHeight={1}>
               <Link href="https://www.creative-tim.com/presentation" target="_blank">
                 <MDTypography

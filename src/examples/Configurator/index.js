@@ -141,7 +141,7 @@ function Configurator() {
         px={3}
       >
         <MDBox>
-          <MDTypography variant="h5">Material UI Configurator</MDTypography>
+          <MDTypography variant="h5">CRVT UI Configurator</MDTypography>
           <MDTypography variant="body2" color="text">
             See our dashboard options.
           </MDTypography>
@@ -294,7 +294,7 @@ function Configurator() {
           <Switch checked={darkMode} onChange={handleDarkMode} />
         </MDBox>
         <Divider />
-        <MDBox mt={3} mb={2}>
+        {/* <MDBox mt={3} mb={2}>
           <MDBox mb={2}>
             <MDButton
               component={Link}
@@ -330,13 +330,13 @@ function Configurator() {
           >
             Star
           </GitHubButton>
-        </MDBox>
+        </MDBox> */}
         <MDBox mt={2} textAlign="center">
-          <MDBox mb={0.5}>
+          {/* <MDBox mb={0.5}>
             <MDTypography variant="h6">Thank you for sharing!</MDTypography>
-          </MDBox>
+          </MDBox> */}
 
-          <MDBox display="flex" justifyContent="center">
+          {/* <MDBox display="flex" justifyContent="center">
             <MDBox mr={1.5}>
               <MDButton
                 component={Link}
@@ -359,7 +359,7 @@ function Configurator() {
               <FacebookIcon />
               &nbsp; Share
             </MDButton>
-          </MDBox>
+          </MDBox> */}
         </MDBox>
       </MDBox>
     </ConfiguratorRoot>

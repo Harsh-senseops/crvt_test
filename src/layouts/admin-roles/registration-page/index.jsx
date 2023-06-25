@@ -22,6 +22,7 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { IconButton, InputAdornment } from "@mui/material";
 import { ADD_USER,UPDATE_USER } from "apis/queries";
 import { useMutation } from "urql";
+
 export default function MDDialog({ updateOrAdd, title }) {
   const [passIcon, setPassIcon] = React.useState(false);
   const store = useSelector((store) => {

@@ -73,6 +73,7 @@ function DailyReportTable(currentReportEquipment) {
   const [observation, setObservation] = useState("");
   const [analysis, setAnalysis] = useState("");
   const [result, setResult] = useState("");
+  const [uploadFile,setUploadFile] = useState("")
   const classes = useStyles();
 
   const onFileChange = (files) => {
@@ -498,10 +499,10 @@ function DailyReportTable(currentReportEquipment) {
                   </TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell align="center" colSpan={12}>
+                  {/* <TableCell align="center" colSpan={12}>
                     Component pictures
                     <DropFileInput onFileChange={(files) => onFileChange(files)} uploadFile={uploadFile} />
-                  </TableCell>
+                  </TableCell> */}
                   
                 </TableRow>
                 <TableRow>

@@ -65,7 +65,7 @@ function ComponentsTable() {
 
     return (
         <Grid container spacing={3}>
-        <Grid item xs={detailsOpen ? 3.5 : 12} md={detailsOpen ? 3.5 : 12} lg={detailsOpen ? 3.5 : 12} ml={2} mb={2} mr={detailsOpen ? 0 : 2}>
+      {!detailsOpen?  <Grid item xs={12} md={12} lg={12} ml={2} mb={2} mr={2}>
         <MaterialTable
           columns={columns}  
           data={componentDetails}  
@@ -88,11 +88,9 @@ function ComponentsTable() {
                 }
             ] : null}
              />
-            </Grid>
-            {/* </div> */}
-            <Grid item xs={8.1} md={8.1} lg={8.1}>
-            {detailsOpen ? 
-            <MDBox>
+            </Grid> :
+            <Grid item xs={12} md={12} lg={12} ml={2} mb={2}>
+     <MDBox>
               <Card style={{ backgroundColor: 'transparent', shadowOpacity: 0, border: "none", boxShadow: "none" }}>
           <CardHeader
       action = {
@@ -118,9 +116,10 @@ function ComponentsTable() {
     <ThermalShockChamber componentName = {formtitle} componentDetails={componentDetails} />
     <Report componentName = {formtitle} componentDetails={componentDetails} />
     </Card>
-            </MDBox>
-          : null}
-          </Grid>
+            </MDBox></Grid> }
+            
+        
+           
           </Grid>
     )
 }

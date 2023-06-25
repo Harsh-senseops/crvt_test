@@ -34,7 +34,7 @@ function UploadTable() {
   ])
 
   const [data, setData] = useState([
-    { filename: 'masterpart.xlrx', status: 'File parsed with error', description: "Failed to upload", date: "10/10/2021" },
+    { filename: 'masterpart.xlsx', status: 'File parsed with error', description: "Failed to upload", date: "10/10/2021" },
 ])
 
   return (
