@@ -2,7 +2,7 @@
 import Card from "@mui/material/Card";
 
 // react imports
-import { useState } from "react";
+import { useState,useEffect } from "react";
 
 // Material Dashboard 2 PRO React components
 import MDBox from "components/MDBox";
@@ -12,9 +12,31 @@ import MDTypography from "components/MDTypography";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
-import UploadTable from "./upload-table";
+import DataTable from "examples/Tables/DataTable";
+import { useQuery } from "urql";
+import { ALL_YEARLY_PLANNER_HISTORY } from "apis/queries";
+
+const columns = [
+  {Header:"File Name", accessor:"fileName"},
+  {Header:"Employee Code", accessor:"empCode"},
+  {Header:"Date", accessor:"date"}
+]
 
 function AnnualUploadHistory() {
+  const [data,setData] = useState({columns,rows:[]});
+  const [result,recResult] = useQuery({
+    query:ALL_YEARLY_PLANNER_HISTORY
+  })
+
+  useEffect(()=>{
+    if(result.data){
+      let tempArray = []
+      result.data?.allYearlyPlannerHistories.nodes.map((val)=>{
+        tempArray.push({date:val.date.split("T")[0],empCode:val.empcode,fileName:val.fileName})
+      })
+      setData({columns,rows:tempArray})
+    }
+  },[result.data])
   return (
     <DashboardLayout>
       <MDBox width="calc(100% - 48px)" position="absolute" top="1.75rem">
@@ -26,10 +48,7 @@ function AnnualUploadHistory() {
             <MDTypography variant="h5" fontWeight="medium">
                Upload History : Master Part List
             </MDTypography>
-            {/* <MDTypography variant="button" color="text">
-              Please configure equipment details for all components
-            </MDTypography> */}
-            <UploadTable />
+            <DataTable table={data} canSearch={true}/>
           </MDBox>
         </Card>
       </MDBox>

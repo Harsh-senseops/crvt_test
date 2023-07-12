@@ -9,357 +9,335 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
 import MuiToggleButton from '@mui/material/ToggleButton';
-import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import clsx from 'clsx';
 import { makeStyles } from '@mui/styles';
 import MDBox from 'components/MDBox';
-import MDInput from 'components/MDInput';
-import MDInputFormControl from 'components/MDInputFormControl';
-import { CardActions } from '@mui/material';
-import { useSubscription, useMutation } from 'urql'
-import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
+import { CardActions, TextField } from '@mui/material';
+import { useSubscription, useMutation, useQuery } from 'urql'
+
 import Grid from "@mui/material/Grid";
-import Autocomplete from "@mui/material/Autocomplete";
-import FormField from "layouts/pages/account/components/FormField";
-import selectData from '../../selectData';
-import {useSelector} from "react-redux";
 
-const createDustQry = `mutation createDustDetail( $Inpcomponentid:Int!, $Inpdust:Int!, $InpequipmentRunning: Int!, $Inpremark:String, $Inprest: Int!, $Inptestduration: Int!, $Inptotaltime: Int!) {
-    createDustDetail(
-      input: {dustDetail: {componentid: $Inpcomponentid, dust:$Inpdust, equipmentRunning:$InpequipmentRunning, remark: $Inpremark, rest: $Inprest, testduration: $Inptestduration, totaltime: $Inptotaltime}}
-    ) {
-      clientMutationId
-    }
-  }`
+import { useSelector } from "react-redux";
+import { DUST_TEST_DETAILS } from 'apis/queries';
+import { SAVE_DUST_DETAILS } from 'apis/queries';
+import { ADD_EQUIPMENT_UPDATE_HISTORY } from 'apis/queries'
+import { ADD_DUST_STATUS } from 'apis/queries';
+import dataTableData from 'layouts/applications/data-tables/data/dataTableData';
 
-  const dustSubscription = `subscription {
-    allDustDetails {
-      nodes {
-        componentid
-        dust
-        equipmentRunning
-        remark
-        rest
-        testduration
-        totaltime
-      }
-    }
-  }`
+
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-      maxWidth: '100%',
-      margin: '1%'
-    },
-    expand: {
-      transform: 'rotate(0deg)',
-      marginLeft: 'auto',
-      transition: theme.transitions.create('transform', {
-        duration: theme.transitions.duration.shortest,
-      }),
-    },
-    expandOpen: {
-      transform: 'rotate(180deg)',
-    },
-    formControl: {
-      // margin: theme.spacing(1),
-      minWidth: 174,
-    },
-    formControltest: {
-      // margin: theme.spacing(1),
-      minWidth: 174,
-    },
-    selectEmpty: {
-      marginTop: theme.spacing(2),
-    },
-    parentFlexRight: {
-      display: "flex",
-      justifyContent: "flex-end",
-      marginBottom: '2%',
-      marginRight: '3%'
-    },
-  }));
+  root: {
+    maxWidth: '100%',
+    margin: '1%'
+  },
+  expand: {
+    transform: 'rotate(0deg)',
+    marginLeft: 'auto',
+    transition: theme.transitions.create('transform', {
+      duration: theme.transitions.duration.shortest,
+    }),
+  },
+  expandOpen: {
+    transform: 'rotate(180deg)',
+  },
+  formControl: {
+    // margin: theme.spacing(1),
+    minWidth: 174,
+  },
+  formControltest: {
+    // margin: theme.spacing(1),
+    minWidth: 174,
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2),
+  },
+  parentFlexRight: {
+    display: "flex",
+    justifyContent: "flex-end",
+    marginBottom: '2%',
+    marginRight: '3%'
+  },
+}));
 
-export default function ThermalShockChamber(componentDataProp) {
+export default function DustTest({ details, componentName, id }) {
   const [expanded, setExpanded] = React.useState(false);
   const [selected, setSelected] = useState(false);
   const [toggleEnable, setToggleEnable] = useState(false)
-  const [repeatedOperationDetails, setRepeatedOperationDetails] = useState([])
-  const [currentdata, setCurrentData] = useState([])
-  const [dataSaved, setDataSaved] = useState(false)
-  const [cycleTime, setCycleTime] = useState('');
-  const [testDurationmin, setTestDurationmin] = useState('')
-  const [testDurationmax, setTestDurationmax] = useState('')
-  const [totalCycle, setTotalCycle] = useState('')
-  const [equipmentDuration, setEquipmentDuration] = useState('')
-  const [subheaderdata, setSubheaderData] = useState('')
-  const [climaticChamberDetails, setClimaticChamberDetails] = useState([])
-  const [thermalShockDetails, setThermalShockDetails] = useState([])
-  const [dustDetails, setdustDetails] = useState([])
-  const [cold, setCold] = useState('');
-  const [hot, setHot] = useState('')
-  const [testDuration, setTestDuration] = useState('')
-  const [dust, setDust] = useState('');
-  const [equipmentRunning, setEquipmentRunning] = useState('')
-  const [totalTime, setTotalTime] = useState('')
-  const [rest, setRest] = useState('')
-  const [remark, setRemark] = useState('')
+  const [enabled, setEnabled] = useState(true);
+  const [oldData, setOldData] = useState("")
+  const [simultaneously, setSimultaneously] = useState({ oldData: "", newData: "" });
+  const [testDurationMax, setTestDurationMax] = useState({ oldData: "", newData: "" })
+  const [testDurationMin, setTestDurationMin] = useState({ oldData: "", newData: "" })
+  const [dust, setDust] = useState({ oldData: "", newData: "" });
+  const [sampleQty, setSampleQty] = useState({ oldData: "", newData: "" });
+  const [equipmentRunning, setEquipmentRunning] = useState({ oldData: "", newData: "" })
+  const [rest, setRest] = useState({ oldData: "", newData: "" })
   const classes = useStyles();
-  const role = useSelector((store)=>{
+  const role = useSelector((store) => {
     return store.userRoles
   });
-
-  const [getDust, getDustResult] = useSubscription({
-    query: dustSubscription,
+  const [saveDustDetailRes, saveDustDetails] = useMutation(SAVE_DUST_DETAILS)
+  const [dustdetailByID, rexDustDetailByID] = useSubscription({
+    query: DUST_TEST_DETAILS,
+    variables: { partName: id }
   })
+  const [dustStatus, saveDustStatus] = useMutation(ADD_DUST_STATUS)
+  const [equipmentHistoryRes, saveEquipmentHistory] = useMutation(ADD_EQUIPMENT_UPDATE_HISTORY)
 
-  const { data: dustData, 
-    fetching: dustFetching, 
-    error: dustError } = getDust
 
-    const [
-      createDustData,
-      createDustQryDataRecord,
-    ] = useMutation(createDustQry);
+  useEffect(() => {
+    if (dustdetailByID.data) {
+      let constValues = JSON.parse(dustdetailByID.data.dustTestDetailByPartName.testDetails)
+      setOldData({ eName: constValues.name, running: constValues["7daysrunning"] })
+      setDust({ newData: constValues.dust_sec, oldData: constValues.dust_sec })
+      setRest({ newData: constValues.rest_mins, oldData: constValues.rest_mins })
+      setTestDurationMax({ newData: constValues.test_duration_hr.max, oldData: constValues.test_duration_hr.max })
+      setTestDurationMin({ newData: constValues.test_duration_hr.min, oldData: constValues.test_duration_hr.min })
+      setEquipmentRunning({ newData: constValues.equipment_running, oldData: constValues.equipment_running })
+      setSimultaneously({ newData: constValues.simultaneously, oldData: constValues.simultaneously })
+      setSampleQty({ newData: constValues.sample_qty, oldData: constValues.sample_qty })
 
-  // return current componentId
-  const currentComponentId = (component) => {
-    // console.log("component name in current component id", component)
-    const filtered = component.componentDetails.filter(data => data.componentname === component.componentName)
-    const obj = filtered[0] 
-    return obj.componentid
+    }
+
+    details.map((val) => {
+      let data = ""
+      if (val.partName == componentName) {
+
+        setToggleEnable(true)
+
+        if (val.dustTestDetailsByPartName.nodes.length !== 0) {
+          data = JSON.parse(val.dustTestDetailsByPartName.nodes[0].testDetails)
+        }
+
+        setDust({ newData: data.dust_sec, oldData: data.dust_sec })
+        setRest({ newData: data.rest_mins, oldData: data.rest_mins })
+        setTestDurationMin({ newData: data.test_duration_hr.min, oldData: data.test_duration_hr.min })
+        setTestDurationMax({ newData: data.test_duration_hr.max, oldData: data.test_duration_hr.max })
+        setEquipmentRunning({ newData: data.equipment_running, oldData: data.equipment_running })
+        setSimultaneously({ newData: data.simultaneously, oldData: data.simultaneously })
+        setSampleQty({ newData: data.sample_qty, oldData: data.sample_qty })
+
+        if (JSON.parse(val.dustTestDetailsByPartName.nodes[0].status) === 1) {
+          setToggleEnable(true)
+          setEnabled(true)
+        } else {
+          setToggleEnable(false)
+          setEnabled(false)
+        }
+      }
+    })
+  }, [details, dustdetailByID])
+
+
+
+
+  const saveData = () => {
+
+    let data = JSON.stringify({
+      name: oldData.eName,
+      dust_sec: parseInt(dust.newData),
+      rest_mins: parseInt(rest.newData),
+      // total_time:parseInt(totalTime[0]),
+      equipment_running: parseInt(equipmentRunning.newData),
+      simultaneously: parseInt(simultaneously.newData),
+      test_duration_hr: { min: parseInt(testDurationMin.newData), max: parseInt(testDurationMax.newData) },
+      "7daysrunning": oldData.running,
+      sample_qty: parseInt(sampleQty.newData)
+    })
+
+    saveDustDetails({
+      testDetails: data,
+      partName: id
+    }).then((res) => {
+      console.log(res)
+      if (res.data) {
+        let obj = {
+          "Dust (sec)": dust,
+          "Rest (mins)": rest,
+          "Equipment Running (Hour)": equipmentRunning,
+          "Simultaneously": simultaneously,
+          "Test Duration (Min)": testDurationMin,
+          "Test Duration (Max)": testDurationMax ,
+          "Sample Quantity": sampleQty
+        }
+        saveEquipmentHistory(
+          {
+            componentId: id,
+            employeeCode: role.empCode,
+            testType: "Dust Test",
+            updateValues: handleCompare(obj)
+          }
+        ).then((res) => {
+          console.log(res);
+        })
+      }
+    })
   }
-
-  const currentComponentThermalShockDetails = useCallback((component) => {
-    const filtered = component.filter(data => data.componentid === currentComponentId(componentDataProp))
-    console.log("Current component ro details", filtered)
-    setCurrentData(filtered[0])
-    return filtered[0]
-  })
-
-  const createDustRecord = useCallback((data) => {
-    createDustQryDataRecord(data).then((result) => {
-      if (result.error) {
-        console.error("Oh no!", result.error);
-        return false;
-      } 
-        setDataSaved(true)
-        return true;
-    });
-  });
-
-  useEffect(() => {
-    if (dustData) setdustDetails(dustData.allDustDetails.nodes)
-    currentComponentThermalShockDetails(dustDetails)
-    // setRowsPerPage(Object.keys(componentData).length)
-  }, [dustData])
-
-  useEffect(() => {
-    if(dustDetails) {
-      const filtered = dustDetails.filter(data => data.componentid === currentComponentId(componentDataProp))
-      console.log("Current component TC details", filtered[0])
-      setCurrentData(filtered[0])
-      if(filtered.length > 0) {
-        setDataSaved(true)
+  const handleCompare = (obj) => {
+    let newObj = {}
+    for (let key in obj) {
+      if (obj[key].newData !== obj[key].oldData) {
+        newObj[key] = obj[key].newData
       }
     }
-  }, [dustDetails])
-
-  const handleChangeDust = (value) => {
-    setDust(value);
-  };
-
-  const handleChangeRest = (value) => {
-    setRest(value)
+    return JSON.stringify(newObj);
   }
-
-  const handleChangeTotalTime = (value) => {
-    setTotalTime(value)
-  }
-
-  const handleChangeTestDuration = (value) => {
-    setTestDuration(value)
-  }
-
-  const handleRemark = (value) => {
-    setRemark(value)
-  }
-
-  const handleEquipmentRunning = (value) => {
-    setEquipmentRunning(value)
-  }
-
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
-  };
 
   const handleFormSubmit = (e) => {
     e.preventDefault()
-    // if(equipmentDuration && testDurationmax && testDurationmin && totalCycle && totalCycle && cycleTime === '') {
-    //   setDataSaved(false)
-    //   } else {
-    //       setDataSaved(true)
-    //   }
-    const newdata = {
-        Inpcomponentid: currentComponentId(componentDataProp),
-        Inpdust: Number(dust),
-        InpequipmentRunning: Number(equipmentRunning),
-        Inpremark: remark,
-        Inprest: Number(rest),
-        Inptestduration: Number(testDuration),
-        Inptotaltime: Number(totalTime)
-      }
-      createDustRecord(newdata)
-  }  
 
-  if (dustFetching) return <p>Loading Subscription...</p>
-  if (dustError) return <p>Oh no... {dustError.message}</p>
+  }
+  const toggleTrue = () => {
+    setEnabled(!enabled);
+
+    saveDustStatus({
+      partName: id,
+      status: !toggleEnable ? 1 : 0
+    }).then((res) => {
+
+    })
+
+  }
 
   return (
-    <Card style={{marginTop: '2%'}}>
-      <CardHeader
-        action={
+    <>
+      <Card style={{ marginTop: '2%' }}>
+        <CardHeader
+          action={
             <div>
-           {role.roles === 3 && <MuiToggleButton style={{height: '30px', border: 'none'}}
-             value="check"
-             selected={!selected}
-             selectedcolor="#BCE2BE"
-             onChange={() => {
-                 setSelected(!selected);
-                 setToggleEnable(!toggleEnable)
-             }}
-             >
-             <p style={{fontSize: '0.75rem', color: '#429D46', fontWeight: 'bold'}}>{toggleEnable ? "Disabled" : "Enabled"}</p>
-             </MuiToggleButton>}
-             <IconButton
-             className={clsx(classes.expand, {
-               [classes.expandOpen]: expanded,
-             })}
-             onClick={!toggleEnable ? handleExpandClick : null}
-             aria-expanded={expanded}
-             aria-label="show more"
-           >
-             <ExpandMoreIcon />
-           </IconButton>
-           
-           </div>
-        }
-        title={<MDTypography variant="h6" fontWeight="medium">Dust</MDTypography>}
-        subheader={dataSaved ? <MDTypography style={{color: 'green', fontSize: '14px', paddingTop: '1%'}}>Data saved</MDTypography> : <MDTypography style={{color: '#D9534F', fontSize: '14px', paddingTop: '1%'}}>No data saved</MDTypography>}
+              {role.roles === 3 && <MuiToggleButton style={{ height: '30px', border: 'none' }}
+                value="check"
+                selected={!selected}
+                selectedcolor="#BCE2BE"
+                onChange={toggleTrue}
+              >
+                <p style={{ fontSize: '0.75rem', color: toggleEnable ? '#429D46' : '#d50000', fontWeight: 'bold' }}>{toggleEnable ? "Enabled" : "Disabled"}</p>
+              </MuiToggleButton>}
+              <IconButton
+                className={clsx(classes.expand, {
+                  [classes.expandOpen]: expanded,
+                })}
+                onClick={() => setExpanded(!expanded)}
+                aria-expanded={expanded}
+                aria-label="show more"
+              >
+                <ExpandMoreIcon />
+              </IconButton>
+            </div>
+          }
+          title={<MDTypography variant="h6" fontWeight="medium">Dust</MDTypography>}
+          subheader={toggleEnable ? <MDTypography style={{ color: 'green', fontSize: '14px', paddingTop: '1%' }}>Dust Test is Enabled</MDTypography> : <MDTypography style={{ color: '#D9534F', fontSize: '14px', paddingTop: '1%' }}>No Dust Test</MDTypography>}
         // subheader={subheaderdata}
         />
-      {!toggleEnable ? 
-      <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <form onSubmit={(e) => handleFormSubmit(e)}>
-        <CardContent>
-          <MDBox pr={1}>
-          <Grid container spacing={3}>
-          <Grid item xs={12}>
-            <Grid container spacing={3}>
-              <Grid item xs={12} sm={3}>
-                <Autocomplete
-                  defaultValue={currentdata ? currentdata.dust : dust}
-                  disabled={currentdata ? true : null}
-                  options={selectData.cycleTime}
-                  onChange={(event, value) => handleChangeDust(value)}
-                  renderInput={(params) => (
-                    <FormField {...params} 
-                      label="Dust" 
-                      InputLabelProps={{ shrink: true }} 
+        <Collapse in={expanded} timeout="auto" unmountOnExit>
+          <form onSubmit={(e) => handleFormSubmit(e)}>
+            <CardContent>
+              <MDBox pr={1}>
+                <Grid container spacing={3}>
+                  <Grid item xs={12} sm={3}>
+                    <TextField
+                      onChange={(e) => setDust(prevData => ({
+                        ...prevData,
+                        newData: e.target.value
+                      }))}
+                      disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      value={dust.newData}
+                      label="Dust (sec)"
                     />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={3}>
-                <Autocomplete
-                  defaultValue={currentdata ? currentdata.rest : rest}
-                  disabled={currentdata ? true : null}
-                  options={selectData.cycleTime}
-                  onChange={(event, value) => handleChangeRest(value)}
-                  renderInput={(params) => (
-                    <FormField {...params} 
-                    label="Rest" 
-                    InputLabelProps={{ shrink: true }} 
+                  </Grid>
+                  <Grid item xs={12} sm={3}>
+                    <TextField
+                      onChange={(e) => setRest(prevData => ({
+                        ...prevData,
+                        newData: e.target.value
+                      }))}
+                      disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      value={rest.newData}
+                      label="Rest (mins)"
                     />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={3}>
-                <Autocomplete
-                  defaultValue={currentdata ? currentdata.totaltime : totalTime}
-                  disabled={currentdata ? true : null}
-                  options={selectData.cycleTime}
-                  onChange={(event, value) => handleChangeTotalTime(value)}
-                  renderInput={(params) => (
-                    <FormField {...params} 
-                    label="Total Time" 
-                    InputLabelProps={{ shrink: true }} 
+                  </Grid>
+                  <Grid item xs={12} sm={3}>
+                    <TextField
+                      onChange={(e) => setTestDurationMin(prevData => ({
+                        ...prevData,
+                        newData: e.target.value
+                      }))}
+                      disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      value={testDurationMin.newData}
+                      label="Test Duration (Min)"
                     />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={3}>
-                <Autocomplete
-                  defaultValue={currentdata ? currentdata.testduration : testDuration}
-                  disabled={currentdata ? true : null}
-                  options={selectData.cycleTime}
-                  onChange={(event, value) => handleChangeTestDuration(value)}
-                  renderInput={(params) => (
-                    <FormField {...params} 
-                    label="Test Duration" 
-                    InputLabelProps={{ shrink: true }} 
+                  </Grid>
+                  <Grid item xs={12} sm={3}>
+
+                    <TextField
+                      onChange={(e) => setTestDurationMax(prevData => ({
+                        ...prevData,
+                        newData: e.target.value
+                      }))}
+                      disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      value={testDurationMax.newData}
+                      label="Test Duration (Max)"
                     />
-                  )}
-                />
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid  item xs={12} sm={12}>
-          <Autocomplete
-                  defaultValue={currentdata ? currentdata.equipmentRunning : equipmentRunning}
-                  disabled={currentdata ? true : null}
-                  options={selectData.cycleTime}
-                  onChange={(event, value) => handleEquipmentRunning(value)}
-                  renderInput={(params) => (
-                    <FormField {...params} 
-                    label="Equipment Running" 
-                    InputLabelProps={{ shrink: true }} 
+                  </Grid>
+
+                  <Grid item xs={12} sm={4}>
+
+                    <TextField
+                      onChange={(e) => setEquipmentRunning(prevData => ({
+                        ...prevData,
+                        newData: e.target.value
+                      }))}
+                      disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      value={equipmentRunning.newData}
+                      label="Equipment Running (Hour)"
                     />
-                  )}
-                />
-          </Grid>
-          <Grid  item xs={12} sm={12}>
-          <Autocomplete
-                  defaultValue={currentdata ? currentdata.remark : remark}
-                  disabled={currentdata ? true : null}
-                  options={selectData.remark}
-                  onChange={(event, value) => handleRemark(value)}
-                  renderInput={(params) => (
-                    <FormField {...params} 
-                    label="Remark" 
-                    InputLabelProps={{ shrink: true }} 
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+
+                    <TextField
+                      onChange={(e) => setSimultaneously(prevData => ({
+                        ...prevData,
+                        newData: e.target.value
+                      }))}
+                      disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      value={simultaneously.newData}
+                      label="Simultaneously"
                     />
-                  )}
-                />
-          </Grid>
-          </Grid>
-          </MDBox>
-        </CardContent>
-        <CardActions className={classes.parentFlexRight}>
-        {role.roles && <MDButton
-                      variant="gradient" disabled={currentdata ? true : null} startIcon={<SaveAltIcon />}
-                      color="dark" type="submit"
-                      // onClick={!isLastStep ? handleNext : undefined}
-                    >
-                      {/* {isLastStep ? "send" : "next"} */}
-                      Save
-                    </MDButton>}
-        </CardActions>
-        </form>
-      </Collapse> : null }
-    </Card>
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <TextField
+                      onChange={(e) => setSampleQty(prevData => ({
+                        ...prevData,
+                        newData: e.target.value
+                      }))}
+                      disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      value={sampleQty.newData}
+                      label="Sample Quantity"
+                    />
+                  </Grid>
+                </Grid>
+              </MDBox>
+            </CardContent>
+            <CardActions className={classes.parentFlexRight}>
+              {role.roles === 3 ? <MDButton
+                color="dark" type="submit"
+                onClick={saveData}
+                disabled={!enabled}
+              >
+                Save
+              </MDButton> : null}
+            </CardActions>
+          </form>
+        </Collapse>
+      </Card>
+      {/*:<Card style={{marginTop: '2%'}}>
+      <CardHeader 
+      title={<MDTypography variant="h6" fontWeight="medium">Dust</MDTypography>}
+      subheader={<MDTypography style={{color: 'red', fontSize: '14px', paddingTop: '1%'}}>No Dust Test</MDTypography>}
+      >
+      </CardHeader>
+      </Card>}*/}
+    </>
   );
 }

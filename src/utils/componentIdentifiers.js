@@ -67,3 +67,18 @@ const componentIdentifiers = {
     UNIT_ASSY_BCM : ["38800"],
     SW_ASSY_SEAT_AND_HANDLE:["35260"]
 }
+
+function findComponetNameAndComponetCode(codeToSearch){
+    let data = []
+    for (let key in componentIdentifiers) {
+        if(componentIdentifiers[key].includes(codeToSearch)){
+            data.push({name:key.replace(/_/g," "),code:componentIdentifiers[key]})
+           
+        }
+       }
+       if(data.length === 0) return false
+        return data
+
+}
+
+export {findComponetNameAndComponetCode}

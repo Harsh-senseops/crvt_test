@@ -2,7 +2,6 @@
 import Card from "@mui/material/Card";
 
 // react imports
-import { useState } from "react";
 
 // Material Dashboard 2 PRO React components
 import MDBox from "components/MDBox";
@@ -30,7 +29,7 @@ function EquipmentDetails() {
               Equipment Details
             </MDTypography>
             <MDTypography variant="button" color="text">
-              Please configure equipment details for all components
+              Configure equipment details for all components
             </MDTypography>
           </MDBox>
          <ComponentsTable />

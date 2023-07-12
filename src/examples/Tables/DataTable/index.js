@@ -38,6 +38,8 @@ import MDPagination from "components/MDPagination";
 // Material Dashboard 2 PRO React example components
 import DataTableHeadCell from "examples/Tables/DataTable/DataTableHeadCell";
 import DataTableBodyCell from "examples/Tables/DataTable/DataTableBodyCell";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CancelIcon from "@mui/icons-material/Cancel";
 
 function DataTable({
   entriesPerPage,
@@ -82,6 +84,7 @@ function DataTable({
 
   // Set the default value for the entries per page when component mounts
   useEffect(() => setPageSize(defaultValue || 10), [defaultValue]);
+  // useEffect(()=>,[])
 
   // Set the entries per page value based on the select value
   const setEntriesPerPage = (value) => setPageSize(value);
@@ -211,7 +214,13 @@ function DataTable({
                     align={cell.column.align ? cell.column.align : "left"}
                     {...cell.getCellProps()}
                   >
-                    {cell.render("Cell")}
+                    {cell.column.icon && cell.value === "success" && (
+                      <CheckCircleIcon style={{ color: "green"  }} fontSize="large" />
+                    )}
+                    {cell.column.icon && cell.value === "failed" && (
+                      <CancelIcon style={{ color: "Red" }} fontSize="large"/>
+                    )}
+                    {!cell.column.icon && cell.render("Cell")}
                   </DataTableBodyCell>
                 ))}
               </TableRow>

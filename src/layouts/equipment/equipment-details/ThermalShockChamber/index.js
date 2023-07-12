@@ -9,331 +9,367 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MDTypography from 'components/MDTypography';
 import MDButton from 'components/MDButton';
 import MuiToggleButton from '@mui/material/ToggleButton';
-import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import clsx from 'clsx';
 import { makeStyles } from '@mui/styles';
 import MDBox from 'components/MDBox';
-import MDInput from 'components/MDInput';
-import MDInputFormControl from 'components/MDInputFormControl';
-import { CardActions } from '@mui/material';
-import { useSubscription, useMutation } from 'urql'
-import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
+import { CardActions, TextField } from '@mui/material';
+import { useSubscription, useMutation, useQuery } from 'urql'
 import Grid from "@mui/material/Grid";
-import Autocomplete from "@mui/material/Autocomplete";
-import FormField from "layouts/pages/account/components/FormField";
-import selectData from '../../selectData'
-import {useSelector} from "react-redux";
-
-const createThermalShockQry = `mutation createThermalShockChamberDetail( $Inpcomponentid:Int!, $Inpcold:Int!, $Inphot: Int!, $Inpcycletime:Int!, $Inptestduration: Int!, $Inptotalcycle: Int!) {
-    createThermalShockChamberDetail(
-      input: {thermalShockChamberDetail: {componentid: $Inpcomponentid, cold:$Inpcold, hot:$Inphot, cycletime: $Inpcycletime, testduration: $Inptestduration, totalcycle: $Inptotalcycle}}
-    ) {
-      clientMutationId
-    }
-  }`
-
-  const thermalShockSubscription = `subscription {
-    allThermalShockChamberDetails {
-      nodes {
-        cold
-        componentid
-        cycletime
-        hot
-        testduration
-        totalcycle
-      }
-    }
-  }`
+import { useSelector } from "react-redux";
+import { THERMAL_SHOCK_TEST_DETAILS } from 'apis/queries';
+import { SAVE_THERMAL_SHOCK_DETAILS } from 'apis/queries';
+import { ADD_THERMAL_SHOCK_STATUS } from 'apis/queries';
+import { ADD_EQUIPMENT_UPDATE_HISTORY } from 'apis/queries';
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-      maxWidth: '100%',
-      margin: '1%'
-    },
-    expand: {
-      transform: 'rotate(0deg)',
-      marginLeft: 'auto',
-      transition: theme.transitions.create('transform', {
-        duration: theme.transitions.duration.shortest,
-      }),
-    },
-    expandOpen: {
-      transform: 'rotate(180deg)',
-    },
-    formControl: {
-      // margin: theme.spacing(1),
-      minWidth: 174,
-    },
-    formControltest: {
-      // margin: theme.spacing(1),
-      minWidth: 174,
-    },
-    selectEmpty: {
-      marginTop: theme.spacing(2),
-    },
-    parentFlexRight: {
-      display: "flex",
-      justifyContent: "flex-end",
-      marginBottom: '2%',
-      marginRight: '3%'
-    },
-  }));
+  root: {
+    maxWidth: '100%',
+    margin: '1%'
+  },
+  expand: {
+    transform: 'rotate(0deg)',
+    marginLeft: 'auto',
+    transition: theme.transitions.create('transform', {
+      duration: theme.transitions.duration.shortest,
+    }),
+  },
+  expandOpen: {
+    transform: 'rotate(180deg)',
+  },
+  formControl: {
+    // margin: theme.spacing(1),
+    minWidth: 174,
+  },
+  formControltest: {
+    // margin: theme.spacing(1),
+    minWidth: 174,
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2),
+  },
+  parentFlexRight: {
+    display: "flex",
+    justifyContent: "flex-end",
+    marginBottom: '2%',
+    marginRight: '3%'
+  },
+}));
 
-export default function ThermalShockChamber(componentDataProp) {
+export default function ThermalShockChamber({ details, componentName, id }) {
   const [expanded, setExpanded] = React.useState(false);
   const [selected, setSelected] = useState(false);
   const [toggleEnable, setToggleEnable] = useState(false)
   const [repeatedOperationDetails, setRepeatedOperationDetails] = useState([])
   const [currentdata, setCurrentData] = useState([])
   const [dataSaved, setDataSaved] = useState(false)
-  const [cycleTime, setCycleTime] = useState('');
-  const [testDurationmin, setTestDurationmin] = useState('')
-  const [testDurationmax, setTestDurationmax] = useState('')
-  const [totalCycle, setTotalCycle] = useState('')
-  const [equipmentDuration, setEquipmentDuration] = useState('')
+  const [equipmentRunning, setEquipmentRunning] = useState('')
   const [subheaderdata, setSubheaderData] = useState('')
-  const [climaticChamberDetails, setClimaticChamberDetails] = useState([])
-  const [thermalShockDetails, setThermalShockDetails] = useState([])
-  const [cold, setCold] = useState('');
-  const [hot, setHot] = useState('')
-  const [testDuration, setTestDuration] = useState('')
+  const [enabled, setEnabled] = useState(true)
+  const [cold, setCold] = useState([]);
+  const [hot, setHot] = useState([])
+  const [testDurationMax, setTestDurationMax] = useState([])
+  const [testDurationMin, setTestDurationMin] = useState([])
+  const [cycleTime, setCycleTime] = useState([""]);
+  const [totalCycle, setTotalCycle] = useState([""])
+  const [simultaneously, setSimultaneously] = useState([])
+  const [sampleQty, setSampleQty] = useState([])
+  const [oldData, setOldData] = useState("")
   const classes = useStyles();
-  const role = useSelector((store)=>{
+  const role = useSelector((store) => {
     return store.userRoles
   });
 
-  const [getThermalShock, getThermalShockResult] = useSubscription({
-    query: thermalShockSubscription,
+  const [saveThermalDetailsRes, saveThermalDetailDetails] = useMutation(SAVE_THERMAL_SHOCK_DETAILS)
+  const [thermalShockdetailByID, rexThermalShockDetailByID] = useSubscription({
+    query: THERMAL_SHOCK_TEST_DETAILS,
+    variables: { partName: id }
   })
 
-  const { data: thermalShockData, 
-    fetching: thermalShockFetching, 
-    error: thermalShockError } = getThermalShock
+  const [thermalShockStatusRes, saveThermalShockStatus] = useMutation(ADD_THERMAL_SHOCK_STATUS)
+  const [equipmentHistoryRes, saveEquipmentHistory] = useMutation(ADD_EQUIPMENT_UPDATE_HISTORY)
 
-    const [
-        createThermalShockQryData,
-        createThermalShockQryDataRecord,
-      ] = useMutation(createThermalShockQry);
 
-  // return current componentId
-  const currentComponentId = (component) => {
-    // console.log("component name in current component id", component)
-    const filtered = component.componentDetails.filter(data => data.componentname === component.componentName)
-    const obj = filtered[0] 
-    return obj.componentid
+  useEffect(() => {
+    if (thermalShockdetailByID.data) {
+      let constValues = JSON.parse(thermalShockdetailByID.data.thermalShockChamberTestDetailByPartName.testDetails, "datadetails")
+      setOldData({ eName: constValues.name, running: constValues["7daysrunning"] })
+
+
+      setCold({newData:constValues.cold,oldDat:constValues.cold})
+      setHot({newData:constValues.hot,oldDat:constValues.hot})
+      setCycleTime({newData:constValues.cycle_time_sec,oldDat:constValues.cycle_time_sec})
+      setTotalCycle({newData:constValues.total_cycle,oldDat:constValues.total_cycle})
+      setTestDurationMin({newData:constValues.test_duration_hr.min,oldDat:constValues.test_duration_hr.min})
+      setTestDurationMax({newData:constValues.test_duration_hr.max,oldDat:constValues.test_duration_hr.max})
+      setEquipmentRunning({newData:constValues.equipment_running,oldDat:constValues.equipment_running})
+      setSimultaneously({newData:constValues.simultaneously,oldDat:constValues.simultaneously})
+      setSampleQty({newData:constValues.sample_qty,oldDat:constValues.sample_qty})
+
+    }
+    details.map((val) => {
+      let data = ""
+      if (val.partName == componentName) {
+
+        setToggleEnable(true)
+
+        if (val.thermalShockChamberTestDetailsByPartName.nodes.length !== 0) {
+          data = JSON.parse(val.thermalShockChamberTestDetailsByPartName.nodes[0].testDetails)
+        }
+
+      setCold({newData:data.cold,oldDat:data.cold})
+      setHot({newData:data.hot,oldDat:data.hot})
+      setCycleTime({newData:data.cycle_time_sec,oldDat:data.cycle_time_sec})
+      setTotalCycle({newData:data.total_cycle,oldDat:data.total_cycle})
+      setTestDurationMin({newData:data.test_duration_hr.min,oldDat:data.test_duration_hr.min})
+      setTestDurationMax({newData:data.test_duration_hr.max,oldDat:data.test_duration_hr.max})
+      setEquipmentRunning({newData:data.equipment_running,oldDat:data.equipment_running})
+      setSimultaneously({newData:data.simultaneously,oldDat:data.simultaneously})
+      setSampleQty({newData:data.sample_qty,oldDat:data.sample_qty})
+
+        if (JSON.parse(val.thermalShockChamberTestDetailsByPartName.nodes[0].status) === 1) {
+          setToggleEnable(true)
+          setEnabled(true)
+        } else {
+          setToggleEnable(false)
+          setEnabled(false)
+        }
+
+      }
+    })
+  }, [details, thermalShockdetailByID])
+
+
+
+  const saveData = () => {
+
+    let data = JSON.stringify({
+      name: oldData.eName,
+      cold: parseInt(cold.newData),
+      hot: parseInt(hot.newData),
+      cycle_time_sec: parseInt(cycleTime.newData),
+      total_cycle: parseInt(totalCycle.newData),
+      equipment_running: parseInt(equipmentRunning.newData),
+      simultaneously: parseInt(simultaneously.newData),
+      test_duration_hr: { min: parseInt(testDurationMin.newData), max: parseInt(testDurationMax.newData) },
+      "7daysrunning": oldData.running,
+      sample_qty: parseInt(sampleQty.newData)
+    })
+
+
+    saveThermalDetailDetails({
+      testDetails: data,
+      partName: id
+    }).then((res) => {
+      if (res.data) {
+        let obj = {"Cold (℃)":cold,
+                  "Hot (℃)":hot,
+                  "Cycle Time":cycleTime,
+                  "Total Cycle":totalCycle,
+                  "Equipment Running (Hour)":equipmentRunning,
+                   "Simultaneously":simultaneously,
+                   "Test Duration (Min)":testDurationMin,
+                   "Test Duration (Max)":testDurationMax,
+                   "Sample Quantity":sampleQty
+        } 
+        saveEquipmentHistory(
+          {
+            componentId: id,
+            employeeCode: role.empCode,
+            testType: "Thermal Shock",
+            updateValues: handleCompare(obj)
+          }
+        ).then((res)=>{
+          console.log(res);
+        })
+      }
+    })
   }
 
-  const currentComponentThermalShockDetails = useCallback((component) => {
-    const filtered = component.filter(data => data.componentid === currentComponentId(componentDataProp))
-    console.log("Current component ro details", filtered)
-    setCurrentData(filtered[0])
-    return filtered[0]
-  })
-
-  const createClimaticChamberRecord = useCallback((data) => {
-    createThermalShockQryDataRecord(data).then((result) => {
-      if (result.error) {
-        console.error("Oh no!", result.error);
-        return false;
-      }
-        setDataSaved(true)
-        return true;
-    });
-  });
-
-  useEffect(() => {
-    if (thermalShockData) setThermalShockDetails(thermalShockData.allThermalShockChamberDetails.nodes)
-    currentComponentThermalShockDetails(thermalShockDetails)
-    // setRowsPerPage(Object.keys(componentData).length)
-  }, [thermalShockData])
-
-  useEffect(() => {
-    if(thermalShockDetails) {
-      const filtered = thermalShockDetails.filter(data => data.componentid === currentComponentId(componentDataProp))
-      console.log("Current component TC details", filtered[0])
-      setCurrentData(filtered[0])
-      if(filtered.length > 0) {
-        setDataSaved(true)
+  const handleCompare = (obj) => {
+    let newObj = {}
+    for (let key in obj) {
+      if (obj[key].newData !== obj[key].oldData) {
+        newObj[key] = obj[key].newData
       }
     }
-  }, [thermalShockDetails])
-
-  const handleChangeCold = (value) => {
-    setCold(value);
-  };
-
-  const handleChangeHot = (value) => {
-    setHot(value)
+    return JSON.stringify(newObj);
   }
-
-  const handleChangeCycleTime = (value) => {
-    setCycleTime(value)
-  }
-
-  const handleChangeTotalCycle = (value) => {
-    setTotalCycle(value)
-  }
-
-  const handleTestDuration = (value) => {
-    setTestDuration(value)
-  }
-
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
-  };
 
   const handleFormSubmit = (e) => {
     e.preventDefault()
-    // if(equipmentDuration && testDurationmax && testDurationmin && totalCycle && totalCycle && cycleTime === '') {
-    //   setDataSaved(false)
-    //   } else {
-    //       setDataSaved(true)
-    //   }
-    const newdata = {
-      Inpcomponentid: currentComponentId(componentDataProp),
-      Inpcold: Number(cold),
-      Inphot: Number(hot),
-      Inpcycletime: Number(cycleTime),
-      Inptestduration: Number(testDuration),
-      Inptotalcycle: Number(totalCycle)
-    }
-    createClimaticChamberRecord(newdata)
-  }  
 
-  if (thermalShockFetching) return <p>Loading Subscription...</p>
-  if (thermalShockError) return <p>Oh no... {thermalShockError.message}</p>
+  }
+  const toggleTrue = () => {
+    setEnabled(!enabled)
+
+    saveThermalShockStatus({
+      partName: id,
+      status: (!toggleEnable ? 1 : 0)
+    }).then((res) => {
+    })
+
+  }
 
   return (
-    <Card style={{marginTop: '2%'}}>
-      <CardHeader
-        action={
+    <>
+      <Card style={{ marginTop: '2%', marginBottom: '2%' }}>
+        <CardHeader
+          action={
             <div>
-            {role.roles === 3 && <MuiToggleButton style={{height: '30px', border: 'none'}}
-             value="check"
-             selected={!selected}
-             selectedcolor="#BCE2BE"
-             onChange={() => {
-                 setSelected(!selected);
-                 setToggleEnable(!toggleEnable)
-             }}
-             >
-             <p style={{fontSize: '0.75rem', color: '#429D46', fontWeight: 'bold'}}>{toggleEnable ? "Disabled" : "Enabled"}</p>
-             </MuiToggleButton>}
-             <IconButton
-             className={clsx(classes.expand, {
-               [classes.expandOpen]: expanded,
-             })}
-             onClick={!toggleEnable ? handleExpandClick : null}
-             aria-expanded={expanded}
-             aria-label="show more"
-           >
-             <ExpandMoreIcon />
-           </IconButton>
-           
-           </div>
-        }
-        title={<MDTypography variant="h6" fontWeight="medium">Thermal Shock Chamber</MDTypography>}
-        subheader={dataSaved ? <MDTypography style={{color: 'green', fontSize: '14px', paddingTop: '1%'}}>Data saved</MDTypography> : <MDTypography style={{color: '#D9534F', fontSize: '14px', paddingTop: '1%'}}>No data saved</MDTypography>}
+              {role.roles === 3 && <MuiToggleButton style={{ height: '30px', border: 'none' }}
+                value="check"
+                selected={!selected}
+                selectedcolor="#BCE2BE"
+                onChange={toggleTrue}
+              >
+                <p style={{ fontSize: '0.75rem', color: toggleEnable ? '#429D46' : '#d50000', fontWeight: 'bold' }}>{toggleEnable ? "Enabled" : "Disabled"}</p>
+              </MuiToggleButton>}
+              <IconButton
+                className={clsx(classes.expand, {
+                  [classes.expandOpen]: expanded,
+                })}
+                onClick={() => setExpanded(!expanded)}
+                aria-expanded={expanded}
+                aria-label="show more"
+              >
+                <ExpandMoreIcon />
+              </IconButton>
+
+            </div>
+          }
+          title={<MDTypography variant="h6" fontWeight="medium">Thermal Shock Chamber</MDTypography>}
+          subheader={toggleEnable ? <MDTypography style={{ color: 'green', fontSize: '14px', paddingTop: '1%' }}>Thermal Shock Test is Enabled</MDTypography> : <MDTypography style={{ color: '#D9534F', fontSize: '14px', paddingTop: '1%' }}>No Thermal Shock Test</MDTypography>}
         // subheader={subheaderdata}
         />
-      {!toggleEnable ? 
-      <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <form onSubmit={(e) => handleFormSubmit(e)}>
-        <CardContent>
-          <MDBox pr={1}>
-          <Grid container spacing={3}>
-          <Grid item xs={12}>
-            <Grid container spacing={3}>
-              <Grid item xs={12} sm={3}>
-                <Autocomplete
-                  defaultValue={currentdata ? currentdata.cold : cold}
-                  disabled={currentdata ? true : null}
-                  options={selectData.cycleTime}
-                  onChange={(event, value) => handleChangeCold(value)}
-                  renderInput={(params) => (
-                    <FormField {...params} 
-                      label="Cold" 
-                      InputLabelProps={{ shrink: true }} 
+
+        <Collapse in={expanded} timeout="auto" unmountOnExit>
+          <form onSubmit={(e) => handleFormSubmit(e)}>
+            <CardContent>
+              <MDBox pr={1}>
+                <Grid container spacing={3}>
+                  <Grid item xs={12} sm={3}>
+
+                    <TextField
+                      onChange={(e) => setCold(prevData => ({
+                        ...prevData,
+                        newData: e.target.value
+                      }))}
+                      disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      value={cold.newData}
+                      label="Cold (℃)"
                     />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={3}>
-                <Autocomplete
-                  defaultValue={currentdata ? currentdata.hot : hot}
-                  disabled={currentdata ? true : null}
-                  options={selectData.cycleTime}
-                  onChange={(event, value) => handleChangeHot(value)}
-                  renderInput={(params) => (
-                    <FormField {...params} 
-                    label="Hot" 
-                    InputLabelProps={{ shrink: true }} 
+                  </Grid>
+                  <Grid item xs={12} sm={3}>
+
+                    <TextField
+                      onChange={(e) => setHot(prevData => ({
+                        ...prevData,
+                        newData: e.target.value
+                      }))}
+                      disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      value={hot.newData}
+                      label="Hot (℃)"
                     />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={3}>
-                <Autocomplete
-                  defaultValue={currentdata ? currentdata.cycletime : cycleTime}
-                  disabled={currentdata ? true : null}
-                  options={selectData.cycleTime}
-                  onChange={(event, value) => handleChangeCycleTime(value)}
-                  renderInput={(params) => (
-                    <FormField {...params} 
-                    label="Cycle Time" 
-                    InputLabelProps={{ shrink: true }} 
+                  </Grid>
+                  <Grid item xs={12} sm={3}>
+
+                    <TextField
+                      onChange={(e) => setCycleTime(prevData => ({
+                        ...prevData,
+                        newData: e.target.value
+                      }))}
+                      disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      value={cycleTime.newData}
+                      label="Cycle Time"
                     />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={3}>
-                <Autocomplete
-                  defaultValue={currentdata ? currentdata.totalcycle : totalCycle}
-                  disabled={currentdata ? true : null}
-                  options={selectData.cycleTime}
-                  onChange={(event, value) => handleChangeTotalCycle(value)}
-                  renderInput={(params) => (
-                    <FormField {...params} 
-                    label="Total Cycle" 
-                    InputLabelProps={{ shrink: true }} 
+                  </Grid>
+                  <Grid item xs={12} sm={3}>
+
+                    <TextField
+                      onChange={(e) => setTotalCycle(prevData => ({
+                        ...prevData,
+                        newData: e.target.value
+                      }))}
+                      disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      value={totalCycle.newData}
+                      label="Total Cycle"
                     />
-                  )}
-                />
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid  item xs={12} sm={12}>
-          <Autocomplete
-                  defaultValue={currentdata ? currentdata.testduration : testDuration}
-                  disabled={currentdata ? true : null}
-                  options={selectData.cycleTime}
-                  onChange={(event, value) => handleTestDuration(value)}
-                  renderInput={(params) => (
-                    <FormField {...params} 
-                    label="Test Duration" 
-                    InputLabelProps={{ shrink: true }} 
+                  </Grid>
+                  <Grid item xs={12} sm={3}>
+
+                    <TextField
+                      onChange={(e) => setTestDurationMax(prevData => ({
+                        ...prevData,
+                        newData: e.target.value
+                      }))}
+                      disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      value={testDurationMax.newData}
+                      label="Test Duration (Max)"
                     />
-                  )}
-                />
-          </Grid>
-          </Grid>
-          </MDBox>
-        </CardContent>
-        <CardActions className={classes.parentFlexRight}>
-        {role.roles === 3 && <MDButton
-                      variant="gradient" disabled={currentdata ? true : null} startIcon={<SaveAltIcon />}
-                      color="dark" type="submit"
-                      // onClick={!isLastStep ? handleNext : undefined}
-                    >
-                      {/* {isLastStep ? "send" : "next"} */}
-                      Save
-                    </MDButton>}
-        </CardActions>
-        </form>
-      </Collapse> : null }
-    </Card>
+                  </Grid>
+                  <Grid item xs={12} sm={3}>
+
+                    <TextField
+                      onChange={(e) => setTestDurationMin(prevData => ({
+                        ...prevData,
+                        newData: e.target.value
+                      }))}
+                      disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      value={testDurationMin.newData}
+                      label="Test Duration (Min)"
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={3}>
+
+                    <TextField
+                      onChange={(e) => setSimultaneously(prevData => ({
+                        ...prevData,
+                        newData: e.target.value
+                      }))}
+                      disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      value={simultaneously.newData}
+                      label="Simultaneously"
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={3}>
+
+                    <TextField
+                      onChange={(e) => setSampleQty(prevData => ({
+                        ...prevData,
+                        newData: e.target.value
+                      }))}
+                      disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      value={sampleQty.newData}
+                      label="Sample Quantity"
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+
+                    <TextField
+                      onChange={(e) => setEquipmentRunning(prevData => ({
+                        ...prevData,
+                        newData: e.target.value
+                      }))}
+                      disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      value={equipmentRunning.newData}
+                      label="Equipment Running (Hour)"
+                    />
+                  </Grid>
+                </Grid>
+              </MDBox>
+            </CardContent>
+            <CardActions className={classes.parentFlexRight}>
+              {role.roles === 3 ? <MDButton
+                color="dark" type="submit"
+                onClick={saveData}
+                disabled={!enabled}
+              >
+                Save
+              </MDButton> : null}
+            </CardActions>
+          </form>
+        </Collapse>
+      </Card>
+    </>
   );
 }
