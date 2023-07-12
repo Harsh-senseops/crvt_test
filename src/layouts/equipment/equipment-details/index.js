@@ -17,6 +17,7 @@ import ComponentsTable from "./componentsTable";
 
 
 function EquipmentDetails() {
+  console.log("Hello world")
   return (
     <DashboardLayout>
       <MDBox width="calc(100% - 48px)" position="absolute" top="1.75rem">
