@@ -224,11 +224,7 @@ function Masterpartlistupload({ children }) {
               <MDButton
                 color="info"
                 type="submit"
-                // className="m-2"
-                // disabled={
-                //   !dataSubscription.allFormationEnableds.nodes[0].isEnabled
-                // }
-                // style={{ position: "relative", bottom: "10px" }}
+                
               >
                   Upload
               </MDButton>
