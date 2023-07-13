@@ -140,7 +140,7 @@ function AnnualPlanner() {
     allPlanners:"allRoYearlyPlanners"
   },
   {
-    name:"SHOWER",
+    name:"Shower",
     query:SHOWER_YEARLY_PLANNER,
     allPlanners:"allShowerYearlyPlanners"
   },
