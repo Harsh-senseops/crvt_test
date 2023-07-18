@@ -23,18 +23,24 @@ const columns = [
 ]
 
 function AnnualUploadHistory() {
+  const [shouldPause,setShouldPause] = useState(true);
   const [data,setData] = useState({columns,rows:[]});
   const [result,recResult] = useQuery({
-    query:ALL_YEARLY_PLANNER_HISTORY
+    query:ALL_YEARLY_PLANNER_HISTORY,
+    pause:shouldPause,
   })
 
   useEffect(()=>{
+    if(data.rows.length === 0){
+      setShouldPause(false)
+    }
     if(result.data){
       let tempArray = []
       result.data?.allYearlyPlannerHistories.nodes.map((val)=>{
         tempArray.push({date:val.date.split("T")[0],empCode:val.empcode,fileName:val.fileName})
       })
       setData({columns,rows:tempArray})
+      setShouldPause(true)
     }
   },[result.data])
   return (

@@ -80,7 +80,7 @@ function SidenavItem({ color, name, active, nested, children, open, ...rest }) {
 
 // Setting default values for the props of SidenavItem
 SidenavItem.defaultProps = {
-  color: "info",
+  color: "warning",
   active: false,
   nested: false,
   children: false,

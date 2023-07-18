@@ -12,7 +12,8 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import { useSelector, useDispatch } from "react-redux";
 import { useMutation } from "urql";
 import alertAndLoaders from "utils/alertAndLoaders";
-import { ADD_MONTHLY_UPLOAD_HISTORY } from "apis/queries";
+import { incrementCounter,setShouldPauseNotification } from "reduxSlices/notifications";
+import { ADD_MONTHLY_UPLOAD_HISTORY,ADD_NOTIFICATION } from "apis/queries";
 
 function ConfirmationDialogRaw({ onClose, value: valueProp, open, optionList,mutation, ...other }) {
   const radioGroupRef = useRef(null);
@@ -24,6 +25,7 @@ function ConfirmationDialogRaw({ onClose, value: valueProp, open, optionList,mut
   const [addMonthlyUploadHistoryResult, addMonthlyUploadHistory] = useMutation(
     ADD_MONTHLY_UPLOAD_HISTORY
   );
+  const [addNotificationResult, addNotification] = useMutation(ADD_NOTIFICATION)
 
   useEffect(() => {
     if (!open) {
@@ -47,7 +49,7 @@ function ConfirmationDialogRaw({ onClose, value: valueProp, open, optionList,mut
     onClose();
   }, [onClose]);
 
-  const handleOk = useCallback(() => {
+  const handleOk = useCallback(async() => {
     const [vendorName, vendorCode] = value.split("-");
     if(vendorName){
         addMonthlyPlanner({
@@ -70,11 +72,30 @@ function ConfirmationDialogRaw({ onClose, value: valueProp, open, optionList,mut
                       if(res.error){
                           console.log(res.error)
                       }else if(res.data){
-                        alertAndLoaders("UNSHOW_ALERT", dispatch, "Successfully added monthly planner.", "success");
+                        alertAndLoaders("UNSHOW_ALERT", dispatch, "Successfully nioce added monthly planner.", "success");
+                          addNotification({
+                            empCode:userStore.empCode,
+                            message: "New planner added",
+                            notificationFrom:`Planner`,
+                            description:`${userStore.empCode} Added ${store.detailsToPush.partName} with part code ${store.detailsToPush.partCode} to ${store.testName}`
+                          }).then((res2)=>{
+                            console.log(res2)
+                            if(res2.data){
+                              setShouldPauseNotification(false)
+                              // let nCount = localStorage.getItem("cn") || 0 
+                              // localStorage.setItem("cn",nCount+1)
+                              dispatch(incrementCounter(1))
+                            }
+                            
+                          })
+                       
                       }
                   })
+                   
+                    
+                
             }
-          });
+          })
          
         //   alert(JSON.stringify(store.detailsToPush) + JSON.stringify({ vendorName, vendorCode }));
           onClose(value);

@@ -126,7 +126,7 @@ function MonthlyPlanner() {
               Monthly Planner
             </MDTypography>
             <UnplannedListUpload />
-            <Grid mt={3} pt={2} pr={1} pl={1} pb={3} bgcolor="#F7F7F7" borderRadius={3}>
+            <Grid style={{background:"#394259"}} mt={3} pt={2} pr={1} pl={1} pb={3} bgcolor="#F7F7F7" borderRadius={3}>
               {test.map((props,i)=>{
                 return(
                   <Box mb={2}>

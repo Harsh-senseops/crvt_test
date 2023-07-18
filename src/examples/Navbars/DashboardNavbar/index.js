@@ -1,20 +1,6 @@
-/**
-=========================================================
-* Material Dashboard 2 PRO React - v2.0.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-pro-react
-* Copyright 2021 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
-import { useState, useEffect } from "react";
-
+import { useState, useEffect, useRef } from "react";
+import Popover from "@mui/material/Popover";
+import { makeStyles } from "@material-ui/core/styles";
 import React from "react";
 
 // react-router components
@@ -59,27 +45,91 @@ import {
 
 //Dilagoe componet imports
 
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import Slide from '@mui/material/Slide';
-import Button from '@mui/material/Button';
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import Slide from "@mui/material/Slide";
+import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
+import Box from "@mui/material/Box";
+import { useSelector, useDispatch } from "react-redux";
+import { NOTIFICATION_MESSAGE_BY_DATE } from "apis/queries";
+import { useQuery } from "urql";
+import { setShouldPauseNotification, setCounter } from "reduxSlices/notifications";
+import MDTypography from "components/MDTypography";
+import OnHoverMenu from "components/PopOver";
+// import { Link } from "react-router-dom";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
+const useStyles = makeStyles((theme) => ({
+  popover: {
+    pointerEvents: "none",
+  },
+  popoverContent: {
+    pointerEvents: "auto",
+  },
+}));
+
 function DashboardNavbar({ absolute, light, isMini }) {
+  const iconRef = React.useRef(null);
+
+  const messages = [
+    { id: 1, message: "Notification 1" },
+    { id: 2, message: "Notification 2" },
+    { id: 3, message: "Notification 3" },
+  ];
   const [navbarType, setNavbarType] = useState();
   const [controller, dispatch] = useMaterialUIController();
   const { miniSidenav, transparentNavbar, fixedNavbar, openConfigurator, darkMode } = controller;
   const [openMenu, setOpenMenu] = useState(false);
   const route = useLocation().pathname.split("/").slice(1);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
+  const [openedPopover, setOpenedPopover] = useState(false);
+  const [openAlertPopOver, setOpenAlertPopover] = useState(false)
+  const popoverAnchor = useRef(null);
+  const [noOfNotification, setNoOfNotification] = useState(0);
+  const [notificationsState, setNotification] = useState([]);
+  // const [getAllNotifica]
+  const nStore = useSelector((store) => {
+    return store.notifications;
+  });
+  const date = new Date(); // Replace with your desired date object
+  const dispatchR = useDispatch();
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  const formattedDate = `${year}-${month}-${day} 0:0:0.0000`;
+  const [notificationMsgByDate, rexNMBD] = useQuery({
+    query: NOTIFICATION_MESSAGE_BY_DATE,
+    variables: { dateTime: new Date(formattedDate) },
+    pause: nStore.shouldPause,
+  });
+
+  const popoverEnter = ({ currentTarget }) => {
+    setOpenedPopover(true);
+  };
+
+  const popoverLeave = ({ currentTarget }) => {
+    setOpenedPopover(false);
+  };
+
+  const popoverEnterAlert = ({ currentTarget }) => {
+    // alert("amig")
+    setOpenAlertPopover(true);
+  };
+
+  const popoverLeaveAlert = ({ currentTarget }) => {
+    setOpenAlertPopover(false);
+  };
+
+  const classes = useStyles();
 
   useEffect(() => {
     // Setting the navbar type
@@ -107,29 +157,35 @@ function DashboardNavbar({ absolute, light, isMini }) {
     return () => window.removeEventListener("scroll", handleTransparentNavbar);
   }, [dispatch, fixedNavbar]);
 
+  useEffect(() => {
+    if (notificationsState.length === 0) {
+      dispatchR(setShouldPauseNotification(false));
+    }
+    // if(!nStore.shouldPause){
+    //   rexNMBD({ requestPolicy: 'network-only' })
+    // }
+    if (notificationMsgByDate.data) {
+      console.log(notificationMsgByDate.data.allNotifications.nodes);
+      dispatchR(setShouldPauseNotification(true));
+      let tempArr = [];
+      if (notificationMsgByDate.data.allNotifications.nodes.length !== 0) {
+        for (let i = 0; i < notificationMsgByDate.data.allNotifications.nodes.length; i++) {
+          if (i < 5) {
+            tempArr.push(notificationMsgByDate.data.allNotifications.nodes[i]);
+          }
+        }
+        setNotification(tempArr);
+      }
+      console.log(notificationMsgByDate.data.allNotifications.nodes.length);
+      dispatchR(setCounter(notificationMsgByDate.data.allNotifications.nodes.length));
+      setNoOfNotification(notificationMsgByDate.data.allNotifications.nodes.length);
+    }
+  }, [notificationMsgByDate.data, nStore.shouldPause]);
+
   const handleMiniSidenav = () => setMiniSidenav(dispatch, !miniSidenav);
   const handleConfiguratorOpen = () => setOpenConfigurator(dispatch, !openConfigurator);
   const handleOpenMenu = (event) => setOpenMenu(event.currentTarget);
   const handleCloseMenu = () => setOpenMenu(false);
-
-  // Render the notifications menu
-  const renderMenu = () => (
-    <Menu
-      anchorEl={openMenu}
-      anchorReference={null}
-      anchorOrigin={{
-        vertical: "bottom",
-        horizontal: "left",
-      }}
-      open={Boolean(openMenu)}
-      onClose={handleCloseMenu}
-      sx={{ mt: 2 }}
-    >
-      <NotificationItem icon={<Icon>email</Icon>} title="Check new messages" />
-      <NotificationItem icon={<Icon>podcasts</Icon>} title="Manage Podcast sessions" />
-      <NotificationItem icon={<Icon>shopping_cart</Icon>} title="Payment successfully completed" />
-    </Menu>
-  );
 
   // Styles for the navbar icons
   const iconsStyle = ({ palette: { dark, white, text }, functions: { rgba } }) => ({
@@ -157,6 +213,12 @@ function DashboardNavbar({ absolute, light, isMini }) {
     navigate("/authentication/sign-in/basic");
   }
 
+  const [selectedIndex, setSelectedIndex] = React.useState(1);
+
+  const handleListItemClick = (event, index) => {
+    setSelectedIndex(index);
+  };
+
   return (
     <AppBar
       position={absolute ? "absolute" : navbarType}
@@ -174,23 +236,14 @@ function DashboardNavbar({ absolute, light, isMini }) {
         </MDBox>
         {isMini ? null : (
           <MDBox sx={(theme) => navbarRow(theme, { isMini })}>
-            {/* <MDBox pr={1}>
-              <MDInput label="Search here" />
-            </MDBox> */}
             <MDBox color={light ? "white" : "inherit"}>
-            <IconButton onClick={handleClickOpen} sx={navbarIconButton} size="small" disableRipple>
-                  <Icon sx={iconsStyle}>logout</Icon>
-                </IconButton>
               <IconButton
+                onClick={handleClickOpen}
+                sx={navbarIconButton}
                 size="small"
                 disableRipple
-                color="inherit"
-                sx={navbarMobileMenu}
-                onClick={handleMiniSidenav}
               >
-                <Icon sx={iconsStyle} fontSize="medium">
-                  {miniSidenav ? "menu_open" : "menu"}
-                </Icon>
+                <Icon sx={iconsStyle}>logout</Icon>
               </IconButton>
               <IconButton
                 size="small"
@@ -201,26 +254,17 @@ function DashboardNavbar({ absolute, light, isMini }) {
               >
                 <Icon sx={iconsStyle}>settings</Icon>
               </IconButton>
-              <IconButton
-                size="small"
-                disableRipple
-                color="inherit"
-                sx={navbarIconButton}
-                aria-controls="notification-menu"
-                aria-haspopup="true"
-                variant="contained"
-                onClick={handleOpenMenu}
-              >
-                <MDBadge badgeContent={9} color="error" size="xs" circular>
-                  <Icon sx={iconsStyle}>notifications</Icon>
-                </MDBadge>
-              </IconButton>
-              {/* {renderMenu()} */}
+              <OnHoverMenu messages={messages} badgeValue={messages.length} iconRef={iconRef} iconsStyle={iconsStyle} icon="priority_high"/>
+              <OnHoverMenu messages={notificationsState} badgeValue={nStore.counter} iconRef={popoverAnchor} iconsStyle={iconsStyle} icon="notifications"/>
             </MDBox>
           </MDBox>
         )}
       </Toolbar>
       <Dialog
+      PaperProps={{ style:{
+        backgroundColor:"#202940"
+      }}}
+      // style={{background:"red"}}
         open={open}
         TransitionComponent={Transition}
         keepMounted
@@ -229,8 +273,8 @@ function DashboardNavbar({ absolute, light, isMini }) {
       >
         <DialogTitle>{"Confirm logout"}</DialogTitle>
         <DialogContent>
-          <DialogContentText style={{padding:"10px"}} id="alert-dialog-slide-description">
-          Are you sure, you want to logout?
+          <DialogContentText style={{ padding: "10px" }} id="alert-dialog-slide-description">
+            Are you sure, you want to logout?
           </DialogContentText>
         </DialogContent>
         <DialogActions>

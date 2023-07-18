@@ -643,7 +643,37 @@ allEquipmentUpdateHistories {
 }
 }
 `
+const ADD_NOTIFICATION = `
+mutation MyMutation($empCode:String!,$message:String!,$notificationFrom:String!,$description:String!) {
+  createNotification(
+    input: {notification: {empCode: $empCode, message: $message, notificationFrom: $notificationFrom, description: $description}}
+  ) {
+    clientMutationId
+  }
+}
+`
+const NOTIFICATION_MESSAGE_BY_DATE = `
+query MyQuery($dateTime: Datetime!) {
+  allNotifications(filter: {datetime: {greaterThan: $dateTime}}) {
+    nodes {
+      message
+    }
+  }
+}
+`
+const ALL_NOTIFICATIONS = `
+query allNotifications {
+  allNotifications {
+    nodes {
+      datetime
+      description
+      empCode
+      notificationFrom
+    }
+  }
+}
 
+`
 export {
   AUTH,
   ADD_USER,
@@ -706,5 +736,8 @@ export {
   ADD_VIBRATION_STATUS,
   ADD_THERMAL_SHOCK_STATUS,
   ADD_THERMAL_CYCLE_STATUS,
-  ADD_DUST_STATUS
+  ADD_DUST_STATUS,
+  ADD_NOTIFICATION,
+  NOTIFICATION_MESSAGE_BY_DATE,
+  ALL_NOTIFICATIONS
 };

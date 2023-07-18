@@ -4,6 +4,7 @@ import userManagement from "reduxSlices/userManagement";
 import alert from "reduxSlices/alert";
 import monthlyPlanner from "reduxSlices/monthlyPlanner";
 import yearlyPlanner from "reduxSlices/yearlyPlanner";
+import notifications from "reduxSlices/notifications";
 
 export const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ export const store = configureStore({
     um:userManagement,
     alert,
     monthlyPlanner,
-    yearlyPlanner
+    yearlyPlanner,
+    notifications
   },
 });

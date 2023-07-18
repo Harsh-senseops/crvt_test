@@ -129,6 +129,8 @@ const ReusabaleMonthlyPlannerTests = ({
   useEffect(() => {
     if (partDetails.data?.partCodeDetailByPartCode === null && partCode.length !== 0) {
       alertAndLoaders("UNSHOW_ALERT", dispatch, `No Parts found in ${testName}.`, "warning");
+      alert("Holla",JSON.stringify(partDetails.data?.partCodeDetailByPartCode))
+      console.log(partDetails.data?.partCodeDetailByPartCode)
       setPartCode("");
     }
     if (partDetails.data?.partCodeDetailByPartCode) {
@@ -268,7 +270,7 @@ const ReusabaleMonthlyPlannerTests = ({
         subheader={
           <MDTypography
             style={{
-              color: "green",
+              color: "lime",
               fontSize: "14px",
               paddingTop: "1%",
             }}
