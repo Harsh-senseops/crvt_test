@@ -59,11 +59,7 @@ export default function ThermalShockChamber({ details, componentName, id }) {
   const [expanded, setExpanded] = React.useState(false);
   const [selected, setSelected] = useState(false);
   const [toggleEnable, setToggleEnable] = useState(false)
-  const [repeatedOperationDetails, setRepeatedOperationDetails] = useState([])
-  const [currentdata, setCurrentData] = useState([])
-  const [dataSaved, setDataSaved] = useState(false)
   const [equipmentRunning, setEquipmentRunning] = useState('')
-  const [subheaderdata, setSubheaderData] = useState('')
   const [enabled, setEnabled] = useState(true)
   const [cold, setCold] = useState([]);
   const [hot, setHot] = useState([])
@@ -116,15 +112,15 @@ export default function ThermalShockChamber({ details, componentName, id }) {
           data = JSON.parse(val.thermalShockChamberTestDetailsByPartName.nodes[0].testDetails)
         }
 
-      setCold({newData:data.cold,oldDat:data.cold})
-      setHot({newData:data.hot,oldDat:data.hot})
-      setCycleTime({newData:data.cycle_time_sec,oldDat:data.cycle_time_sec})
-      setTotalCycle({newData:data.total_cycle,oldDat:data.total_cycle})
-      setTestDurationMin({newData:data.test_duration_hr.min,oldDat:data.test_duration_hr.min})
-      setTestDurationMax({newData:data.test_duration_hr.max,oldDat:data.test_duration_hr.max})
-      setEquipmentRunning({newData:data.equipment_running,oldDat:data.equipment_running})
-      setSimultaneously({newData:data.simultaneously,oldDat:data.simultaneously})
-      setSampleQty({newData:data.sample_qty,oldDat:data.sample_qty})
+            setCold({newData:data.cold,oldDat:data.cold})
+            setHot({newData:data.hot,oldDat:data.hot})
+            setCycleTime({newData:data.cycle_time_sec,oldDat:data.cycle_time_sec})
+            setTotalCycle({newData:data.total_cycle,oldDat:data.total_cycle})
+            setTestDurationMin({newData:data.test_duration_hr.min,oldDat:data.test_duration_hr.min})
+            setTestDurationMax({newData:data.test_duration_hr.max,oldDat:data.test_duration_hr.max})
+            setEquipmentRunning({newData:data.equipment_running,oldDat:data.equipment_running})
+            setSimultaneously({newData:data.simultaneously,oldDat:data.simultaneously})
+            setSampleQty({newData:data.sample_qty,oldDat:data.sample_qty})
 
         if (JSON.parse(val.thermalShockChamberTestDetailsByPartName.nodes[0].status) === 1) {
           setToggleEnable(true)
@@ -137,8 +133,6 @@ export default function ThermalShockChamber({ details, componentName, id }) {
       }
     })
   }, [details, thermalShockdetailByID])
-
-
 
   const saveData = () => {
 
@@ -239,7 +233,7 @@ export default function ThermalShockChamber({ details, componentName, id }) {
           }
           title={<MDTypography variant="h6" fontWeight="medium">Thermal Shock Chamber</MDTypography>}
           subheader={toggleEnable ? <MDTypography style={{ color: 'green', fontSize: '14px', paddingTop: '1%' }}>Thermal Shock Test is Enabled</MDTypography> : <MDTypography style={{ color: '#D9534F', fontSize: '14px', paddingTop: '1%' }}>No Thermal Shock Test</MDTypography>}
-        // subheader={subheaderdata}
+            // subheader={subheaderdata}
         />
 
         <Collapse in={expanded} timeout="auto" unmountOnExit>
@@ -344,7 +338,6 @@ export default function ThermalShockChamber({ details, componentName, id }) {
                     />
                   </Grid>
                   <Grid item xs={12} sm={4}>
-
                     <TextField
                       onChange={(e) => setEquipmentRunning(prevData => ({
                         ...prevData,

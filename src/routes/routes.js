@@ -267,7 +267,7 @@ const routes = [
     icon: <Icon fontSize="medium">account_circle</Icon>,
     collapse: [
       {
-        name: "Admin Roles",
+        name: "User Management",
         key: "admin-roles",
         route: "/admin/admin-roles",
         component: <ProtectedRoute Component={AdminRoles}/>,

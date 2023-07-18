@@ -14,8 +14,9 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import Masterpartlistupload from "./master-part-list-upload";
-import { useSelector } from "react-redux";
 import DropFileInput from "./drop-file-input";
+import { useSelector } from "react-redux"
+import MDAlert from "components/MDAlert";
 // import { DUST_YEARLY_PLANNER,OVEN_YEARLY_PLANNER } from "apis/queries";
 
 const DUST_YEARLY_PLANNER = `
@@ -123,43 +124,44 @@ subscription vibrationYearlyPlanner {
 }
 `;
 function AnnualPlanner() {
-  const [testData,setTestData] = useState([
+  const alertStore = useSelector((store) => store.alert)
+  const [testData, setTestData] = useState([
     {
-    name:"Dust",
-    query:DUST_YEARLY_PLANNER,
-    allPlanners:"allDustYearlyPlanners"
-  },
-  {
-    name:"Oven",
-    query:OVEN_YEARLY_PLANNER,
-    allPlanners:"allOvenYearlyPlanners"
-  },
-  {
-    name:"RO",
-    query:RO_YEARLY_PLANNER,
-    allPlanners:"allRoYearlyPlanners"
-  },
-  {
-    name:"Shower",
-    query:SHOWER_YEARLY_PLANNER,
-    allPlanners:"allShowerYearlyPlanners"
-  },
-  {
-    name:"Thermal Cycle",
-    query:THERMAL_CYCLE_YEARLY_PLANNER,
-    allPlanners:"allThermalCycleYearlyPlanners"
-  },
-  {
-    name:"Thermal Shock",
-    query:THERMAL_SHOCK_YEARLY_PLANNER,
-    allPlanners:"allThermalShockYearlyPalnners"
-  },
-  {
-    name:"Vibration",
-    query:VIBRATION_YEARLY_PLANNER,
-    allPlanners:"allVibrationYearlyPlanners"
-  }
-])
+      name: "Dust",
+      query: DUST_YEARLY_PLANNER,
+      allPlanners: "allDustYearlyPlanners"
+    },
+    {
+      name: "Oven",
+      query: OVEN_YEARLY_PLANNER,
+      allPlanners: "allOvenYearlyPlanners"
+    },
+    {
+      name: "RO",
+      query: RO_YEARLY_PLANNER,
+      allPlanners: "allRoYearlyPlanners"
+    },
+    {
+      name: "Shower",
+      query: SHOWER_YEARLY_PLANNER,
+      allPlanners: "allShowerYearlyPlanners"
+    },
+    {
+      name: "Thermal Cycle",
+      query: THERMAL_CYCLE_YEARLY_PLANNER,
+      allPlanners: "allThermalCycleYearlyPlanners"
+    },
+    {
+      name: "Thermal Shock",
+      query: THERMAL_SHOCK_YEARLY_PLANNER,
+      allPlanners: "allThermalShockYearlyPalnners"
+    },
+    {
+      name: "Vibration",
+      query: VIBRATION_YEARLY_PLANNER,
+      allPlanners: "allVibrationYearlyPlanners"
+    }
+  ])
   const role = useSelector((store) => {
     return store.userRoles;
   });
@@ -169,10 +171,18 @@ function AnnualPlanner() {
 
   return (
     <DashboardLayout>
+      {alertStore.showAlert ? (
+        <div style={{ zIndex: "2000", position: "fixed", width: "60%" }}>
+          <MDAlert color={alertStore.color} dismissible={true}>
+            <h5>{alertStore.message}</h5>
+          </MDAlert>
+        </div>
+      ) : (
+        "")}
       <MDBox width="calc(100% - 48px)" position="absolute" top="1.75rem">
         <DashboardNavbar dark absolute />
       </MDBox>
-      <MDBox pt={10} pb={3} style={{background:"#202940",borderRadius:"10px"}} >
+      <MDBox pt={10} pb={3} style={{ background: "#202940", borderRadius: "10px" }} >
         <Card>
           <MDBox p={3} lineHeight={1}>
             <MDTypography variant="h5" fontWeight="medium">
@@ -199,11 +209,11 @@ function AnnualPlanner() {
           ) : (
             ""
           )}
-          <Grid style={{background:"#394259"}} mt={3} pt={2} pr={1} pl={1} pb={3} borderRadius={3}>
-            {testData.map((val)=>{
-              return(
-                 <YearlyPlannerComponent name={val.name} query={val.query} allPlanners={val.allPlanners}/>
-              ) 
+          <Grid style={{ background: "#394259" }} mt={3} pt={2} pr={1} pl={1} pb={3} borderRadius={3}>
+            {testData.map((val) => {
+              return (
+                <YearlyPlannerComponent name={val.name} query={val.query} allPlanners={val.allPlanners} />
+              )
             })}
           </Grid>
         </Card>

@@ -145,7 +145,7 @@ export default function ShowerTesting({details,componentName,id}) {
       partName:id
     }).then((res)=>{
       if(res.data){
-        let obj = {   "Flow (liter/hour)":flow,
+        let obj = { "Flow (liter/hour)":flow,
           "Equipment Running (Hour)":equipmentRunning,
           "Simultaneously":simultaneously,
           "Test Duration (Min)":testDurationMin,
@@ -213,7 +213,7 @@ export default function ShowerTesting({details,componentName,id}) {
            </IconButton>
            </div>
         }
-        title={<MDTypography variant="h6" fontWeight="medium">Shower Testing</MDTypography>}
+        title={<MDTypography variant="h6" fontWeight="medium">Shower Test</MDTypography>}
         subheader={toggleEnable ? <MDTypography style={{color: 'green', fontSize: '14px', paddingTop: '1%'}}>Shower Test is Enabled</MDTypography> : <MDTypography style={{color: '#D9534F', fontSize: '14px', paddingTop: '1%'}}>No Shower Test</MDTypography>}
         />
       <Collapse in={expanded} timeout="auto" unmountOnExit>

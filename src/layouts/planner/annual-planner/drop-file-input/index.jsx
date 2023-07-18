@@ -2,7 +2,6 @@ import React, { useRef, useState } from "react";
 import { useMutation, useSubscription } from "urql";
 import PropTypes from "prop-types";
 import * as XLSX from "xlsx";
-import { useCallback } from "react";
 import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
 import Grid from "@mui/material/Grid";
@@ -15,14 +14,9 @@ import { useQuery } from "urql";
 import { MAKE_YEARLY_PLANNER, PART_CODE_DETAILS,ADD_YEARLY_HISTORY } from "apis/queries";
 import * as yearlyPlanner from "../../../../reduxSlices/yearlyPlanner";
 import { useDispatch,useSelector } from "react-redux";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import { Progress } from 'react-sweet-progress';
-import "react-sweet-progress/lib/style.css";
+import alertAndLoaders from "utils/alertAndLoaders";
 
-import DialogContent from '@mui/material/DialogContent';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { useTheme } from '@mui/material/styles';
+import Backdrop from '@mui/material/Backdrop';
 
 
 function checkElement(val, array) {
@@ -35,8 +29,8 @@ function checkElement(val, array) {
 }
 
 const DropFileInput = (props) => {
-  const [openDialog, setOpenDialog] = React.useState(false);
-
+  const [open, setOpen] = React.useState(false);
+  const [progress, setProgress] = React.useState(0);
   const wrapperRef = useRef(null);
   const [data, setData] = useState([]);
   const [fileList, setFileList] = useState([]);
@@ -44,12 +38,12 @@ const DropFileInput = (props) => {
   const [fileName,setFileName] = useState("")
   const [shouldPause, setShouldPause] = useState(true);
   const [makePlanner, setMakePlanner] = useState(false);
-  const [open, setOpen] = React.useState(false);
-  const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+  const [masterPartDetails, setMasterPartListDetails] = useState("");
 
   
-  const [masterPartDetails, setMasterPartListDetails] = useState("");
+
+
+
   const store = useSelector((store)=>{
     return store.userRoles
   })
@@ -171,56 +165,72 @@ const DropFileInput = (props) => {
     }
   };
 
+    
+  
+
   const pushData = (e) => {
     e.preventDefault();
-    setOpen(true);
-    setTimeout(() => {
-      setOpen(false);
-
-    }, 2000);
 
     const updatedList = [];
     setFileList(updatedList);
     props.onFileChange(updatedList);
+    setDragAndDrop(false);
     setMakePlanner(true);
+
+    setOpen(true);
+
+   let timer =  setInterval(() => {
+    setProgress((prev)=>{
+      let newProgress = prev+1;
+      if(prev===100){
+        setOpen(false)
+        clearInterval(timer)
+        alertAndLoaders("UNSHOW_ALERT", dispatch,"Successfully Created Yearly Planner", "success");
+        newProgress = 0
+      }
+      return newProgress
+    }
+    )
+  }, 40);
+
     rexYearlyPlanner()
     
-    //   createHistory({
-    //     fileName,
-    //     empCode:store.empCode
-    //   }).then((result)=>{
-    //     console.log(result,"result1234")
-    //   })
+      createHistory({
+        fileName,
+        empCode:store.empCode
+      }).then((result)=>{
+        console.log(result,"result1234")
+      })
 
-    // masterPartDetails.map((val) => {
-    //   val.partCode.map((val1) => {
-    //     createPartCodeDetails({
-    //       he6t: val1.details.HE6T,
-    //       hhhd: val1.details.HHHD,
-    //       hhhg: val1.details.HHHG,
-    //       hhhu: val1.details.HHHU,
-    //       hm4n: val1.details.HM4N,
-    //       hm5v: val1.details.HM5V,
-    //       hm6c: val1.details.HM6C,
-    //       partCode: val1.partCode,
-    //       partName: val.partName,
-    //       count: val.partCount,
-    //       vendorDetails: JSON.stringify(val1.details.vendorsInfo),
-    //     }).then((res) => {
-    //       dispatch(yearlyPlanner.setShouldPause(false))
-    //     });
-    //     // console.log(typeof(val1.details.HHHD),val.partName,val1.partCode,JSON.stringify(val1.details.vendorsInfo))
-    //   });
-    // });
+    masterPartDetails.map((val) => {
+      val.partCode.map((val1) => {
+        createPartCodeDetails({
+          he6t: val1.details.HE6T,
+          hhhd: val1.details.HHHD,
+          hhhg: val1.details.HHHG,
+          hhhu: val1.details.HHHU,
+          hm4n: val1.details.HM4N,
+          hm5v: val1.details.HM5V,
+          hm6c: val1.details.HM6C,
+          partCode: val1.partCode,
+          partName: val.partName,
+          count: val.partCount,
+          vendorDetails: JSON.stringify(val1.details.vendorsInfo),
+        }).then((res) => {
+          dispatch(yearlyPlanner.setShouldPause(false))
+        });
+      });
+    });
   };
 
   return (
     <>
         <Grid mb={6} mt={2}>
+          
           {fileList.length > 0 ? (
             <div className="drop-file-preview">
               <MDTypography variant="h5" fontWeight="medium">
-                Ready to Upload
+                Ready to upload
               </MDTypography>
               <form>
                 {fileList.map((item, index) => (
@@ -233,26 +243,14 @@ const DropFileInput = (props) => {
                     </div>
                   </div>
                 ))}
-
-                <MDButton color="light" onClick={() => fileRemove()}>
+                
+                <MDButton color="dark" onClick={() => fileRemove()}>
                   Cancel
                 </MDButton>
-                <MDButton color="info" type="submit" onClick={(e) => pushData(e)}>
+                <MDButton style={{marginLeft:"20px" }} color="error" type="submit" onClick={(e) => pushData(e)}>
                   Upload
                 </MDButton>
-                <Dialog
-                fullScreen={fullScreen}
-                open={open}
-                aria-labelledby="responsive-dialog-title"
-                 >
-                <DialogTitle id="responsive-dialog-title">
-                  {"Uploading Please Wait..."}
-                </DialogTitle>
-                <DialogContent>
-                  Uploading Dialog Box Testing...
-                </DialogContent>
                 
-              </Dialog>
               </form>
             </div>
           ) : (
@@ -283,6 +281,22 @@ const DropFileInput = (props) => {
               <input type="file" accept=".xlsx" value="" onChange={handleFileChange} />
             </div>
           )}
+            <Backdrop 
+        sx={{ color: 'whitesmoke', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={open}      >
+     <div style={{display:"flex",flexDirection:"column"}}>  
+<div style={{width:"100%",height:"12px",background:"#202940",borderRadius:"12px"}}>
+ <div style={{width:`${progress}%`,background:"#F44335",borderRadius:"12px" ,transition:"width 0.2s",height:"12px"}}>
+    <span style={{fontSize:"10px",float:"right",fontWeight:"bolder",color:"whitesmoke",paddingBottom:"5px"}}>{progress+"%"}</span>
+  </div> 
+</div>
+<br/>
+<MDTypography variant="h6" fontWeight="medium">
+  We Appreciate Your Petience. Kindly hold on as we create Yearly planner...
+  </MDTypography>
+  </div>   
+     
+</Backdrop>
         </Grid>
     </>
   );
