@@ -91,3 +91,30 @@
 .drop-file-preview__item:hover .drop-file-preview__item__del {
     opacity: 1;
 }
+
+
+.container {
+    background-color: lightblue;
+    border-radius: 12px;
+    height: 12px;
+    width:50%
+}
+
+.barCompleted {
+    background-color: rgb(0, 142, 236);
+    /* width: 80%; */
+    height: 12px;
+    border-radius: 12px;
+    
+    transition:width 0.2s;
+    height:12px
+
+}
+
+.label {
+    color: whitesmoke;
+    font-size:10px;
+    float:right;
+    font-weight:bolder;
+    text-align:center;
+}
