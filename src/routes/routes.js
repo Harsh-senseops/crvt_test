@@ -85,6 +85,7 @@ import MDAvatar from "components/MDAvatar";
 // @mui icons
 import Icon from "@mui/material/Icon";
 // import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import DescriptionRoundedIcon from '@mui/icons-material/DescriptionRounded';
 
 // Images
 import profilePicture from "assets/images/admin.jpg";
@@ -147,64 +148,6 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Planner",
-    key: "planner",
-    icon:  <Icon fontSize="medium">calendar_today</Icon>,
-    collapse: [
-      {
-        name: "Annual Planner",
-        key: "annual-planner",
-        route: "/planner/annual-planner",
-        component: <ProtectedRoute Component={AnnualPlanner}/>,
-      },
-      {
-        name: "Monthly Planner",
-        key: "monthly-planner",
-        route: "/planner/monthly-planner",
-        component: <ProtectedRoute Component={MonthlyPlanner}/>,
-      }, 
-      {
-        name: "Upload History",
-        key: "upload-history",
-        collapse: [
-          {
-            name: "Annual Upload History",
-            key: "annual-upload-history",
-            route: "/planner/upload-history/annual-upload-history",
-            component: <ProtectedRoute Component={AnnualUploadHistory}/>,
-          },
-          {
-            name: "Monthly Upload History",
-            key: "monthly-upload-history",
-            route: "/planner/upload-history/monthly-upload-history",
-            component: <ProtectedRoute Component={MonthlyUploadHistory}/>,
-          }
-        ]
-      }
-    ],
-  },
-  {
-    type: "collapse",
-    name: "Report",
-    key: "report",
-    icon: <Icon fontSize="medium">topic</Icon>,
-    collapse: [
-      {
-        name: "Daily Report",
-        key: "daily-report",
-        route: "/report/daily-report",
-        component: <ProtectedRoute Component={DailyReport}/>,
-      },
-      {
-        name: "Final Report",
-        key: "final-report",
-        route: "/report/final-report",
-        component: <ProtectedRoute Component={FinalReport}/>,
-      },
-    ],
-  },
-  {
-    type: "collapse",
     name: "Alert & Notification",
     key: "alert-and-notification",
     icon: <Icon fontSize="medium">notifications</Icon>,
@@ -224,6 +167,45 @@ const routes = [
       },
     ],
   },
+  {
+    type: "collapse",
+    name: "Planner",
+    key: "planner",
+    icon:  <Icon fontSize="medium">calendar_today</Icon>,
+    collapse: [
+      {
+        name: "Annual Planner",
+        key: "annual-planner",
+        route: "/planner/annual-planner",
+        component: <ProtectedRoute Component={AnnualPlanner}/>,
+      },
+      {
+        name: "Monthly Planner",
+        key: "monthly-planner",
+        route: "/planner/monthly-planner",
+        component: <ProtectedRoute Component={MonthlyPlanner}/>,
+      }, 
+      {
+        name: "History",
+        key: "upload-history",
+        collapse: [
+          {
+            name: "Annual History",
+            key: "annual-upload-history",
+            route: "/planner/upload-history/annual-upload-history",
+            component: <ProtectedRoute Component={AnnualUploadHistory}/>,
+          },
+          {
+            name: "Monthly History",
+            key: "monthly-upload-history",
+            route: "/planner/upload-history/monthly-upload-history",
+            component: <ProtectedRoute Component={MonthlyUploadHistory}/>,
+          }
+        ]
+      }
+    ],
+  },
+  
   {
     type: "collapse",
     name: "Master Part List",
@@ -260,12 +242,32 @@ const routes = [
   },
   {
     type: "collapse",
+    name: "Report",
+    key: "report",
+    icon:<DescriptionRoundedIcon/>,
+    collapse: [
+      {
+        name: "Daily Report",
+        key: "daily-report",
+        route: "/report/daily-report",
+        component: <ProtectedRoute Component={DailyReport}/>,
+      },
+      {
+        name: "Final Report",
+        key: "final-report",
+        route: "/report/final-report",
+        component: <ProtectedRoute Component={FinalReport}/>,
+      },
+    ],
+  },
+  {
+    type: "collapse",
     name: "Admin",
     key: "admin",
     icon: <Icon fontSize="medium">account_circle</Icon>,
     collapse: [
       {
-        name: "Admin Roles",
+        name: "User Management",
         key: "admin-roles",
         route: "/admin/admin-roles",
         component: <ProtectedRoute Component={AdminRoles}/>,
