@@ -40,6 +40,7 @@ import DataTableHeadCell from "examples/Tables/DataTable/DataTableHeadCell";
 import DataTableBodyCell from "examples/Tables/DataTable/DataTableBodyCell";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
+import NotificationImportantIcon from '@mui/icons-material/NotificationImportant';
 
 function DataTable({
   entriesPerPage,
@@ -149,7 +150,7 @@ function DataTable({
   }
 
   return (
-    <TableContainer sx={{ boxShadow: "none" }}>
+    <TableContainer sx={{ boxShadow: "none" }} >
       {entriesPerPage || canSearch ? (
         <MDBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
           {entriesPerPage && (
@@ -186,9 +187,10 @@ function DataTable({
           )}
         </MDBox>
       ) : null}
-      <Table {...getTableProps()}>
+      <Table {...getTableProps()} style={{width:"100%"}}>
         <MDBox component="thead">
           {headerGroups.map((headerGroup) => (
+            <>
             <TableRow {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => (
                 <DataTableHeadCell
@@ -201,13 +203,14 @@ function DataTable({
                 </DataTableHeadCell>
               ))}
             </TableRow>
+                  </>
           ))}
         </MDBox>
         <TableBody {...getTableBodyProps()}>
           {page.map((row, key) => {
             prepareRow(row);
             return (
-              <TableRow {...row.getRowProps()}>
+              <TableRow fullWidth {...row.getRowProps()}>
                 {row.cells.map((cell) => (
                   <DataTableBodyCell
                     noBorder={noEndBorder && rows.length - 1 === key}
@@ -219,6 +222,9 @@ function DataTable({
                     )}
                     {cell.column.icon && cell.value === "failed" && (
                       <CancelIcon style={{ color: "Red" }} fontSize="large"/>
+                    )}
+                    {cell.column.icon && cell.value === "notification" && (
+                      <NotificationImportantIcon style={{ color: "green"  }} fontSize="large" />
                     )}
                     {!cell.column.icon && cell.render("Cell")}
                   </DataTableBodyCell>

@@ -16,6 +16,7 @@ import {useSelector,useDispatch} from "react-redux"
 import DataTable from "examples/Tables/DataTable";
 import { setShouldPause } from "reduxSlices/yearlyPlanner";
 import { useCallback } from 'react';
+import MDTypography from "components/MDTypography";
 
 const columns = [ 
   "Components",
@@ -116,13 +117,15 @@ export default function YearlyPlannerComponent({name,query,allPlanners}) {
   
   console.log(dustYearlyPlanner.data)
   return (
-    <>
-      <MDBox p={3} pt={1} pb={3}>
+    <div style={{background:"#394259"}}>
+      <MDBox p={1} pt={1}  style={{background:"#394259"}}>
         <Card>
           <MDBox p={3} lineHeight={1}>
-            <CardActions disableSpacing>
-              {name}
-              {/* Dust */}
+            <CardActions disableSpacing style={{color:"white",height:"5px"}}>
+            <MDTypography variant="h6" fontWeight="medium">
+            {name}
+          </MDTypography>
+              
               <ExpandMore
                 expand={expanded}
                 onClick={handleExpandClick}
@@ -132,7 +135,16 @@ export default function YearlyPlannerComponent({name,query,allPlanners}) {
                 <ExpandMoreIcon />
               </ExpandMore>
             </CardActions>
-            <span style={{fontSize:"15px",color:"green"}}>Total Components found {data.length}</span>
+            <MDTypography
+            style={{
+              color: "lime",
+              fontSize: "14px",
+              paddingTop: "1%",
+            }}
+          >
+            Total Components found {data.length}
+          </MDTypography>
+            {/* <span style={{fontSize:"15px",color:"lime"}}></span> */}
             <Collapse style={{ padding: "0px" }} in={expanded} timeout="auto" unmountOnExit>
               {data.length !== 0 ? (
                 <TableContainer style={{marginTop:"20px"}}>
@@ -147,7 +159,7 @@ export default function YearlyPlannerComponent({name,query,allPlanners}) {
                         ? data.map((val, index) => {
                             return (
                               <TableRow style={{
-                                  background: index % 2 === 0 ? "#d8e4e9" : "",
+                                  background: index % 2 === 0 ? "#d8e4e9" : "white",
                                   textAlign: "center",
                                 }} key={index}>
                                 <TableCell>{val.name}</TableCell>
@@ -172,6 +184,6 @@ export default function YearlyPlannerComponent({name,query,allPlanners}) {
           </MDBox>
         </Card>
       </MDBox>
-    </>
+    </div>
   );
 }

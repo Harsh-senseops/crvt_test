@@ -117,7 +117,7 @@ const AddPartCode = ({ buttonText, onAddPartCode }) => {
 
   return (
     <div>
-      <Button onClick={handleClickOpen} style={{ float: 'right', background: '#A2FF86' }}>
+      <Button onClick={handleClickOpen} style={{ float: 'right', background: '#344767',color:"white" }}>
         {buttonText}
       </Button>
       <Dialog

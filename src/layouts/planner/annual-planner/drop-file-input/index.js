@@ -182,16 +182,15 @@ const DropFileInput = (props) => {
     const updatedList = [];
     setFileList(updatedList);
     props.onFileChange(updatedList);
-    setDragAndDrop(false);
     setMakePlanner(true);
     rexYearlyPlanner()
     
-      createHistory({
-        fileName,
-        empCode:store.empCode
-      }).then((result)=>{
-        console.log(result,"result1234")
-      })
+    //   createHistory({
+    //     fileName,
+    //     empCode:store.empCode
+    //   }).then((result)=>{
+    //     console.log(result,"result1234")
+    //   })
 
     // masterPartDetails.map((val) => {
     //   val.partCode.map((val1) => {
@@ -267,7 +266,7 @@ const DropFileInput = (props) => {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                backgroundColor: "#EEF1FF",
+                backgroundColor: "#394259",
               }}
               ref={wrapperRef}
               className="drop-file-input"
