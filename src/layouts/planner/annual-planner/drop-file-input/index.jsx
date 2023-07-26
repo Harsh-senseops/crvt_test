@@ -11,12 +11,15 @@ import masterPartDetailsMaker from "utils/masterPartListCalculation";
 import ImageConfig from "../config";
 import uploadImg from "../../../../assets/cloud-upload-regular-240.png";
 import { useQuery } from "urql";
-import { MAKE_YEARLY_PLANNER, PART_CODE_DETAILS,ADD_YEARLY_HISTORY } from "apis/queries";
+import { MAKE_YEARLY_PLANNER, PART_CODE_DETAILS, ADD_YEARLY_HISTORY } from "apis/queries";
 import * as yearlyPlanner from "../../../../reduxSlices/yearlyPlanner";
-import { useDispatch,useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import alertAndLoaders from "utils/alertAndLoaders";
 
 import Backdrop from '@mui/material/Backdrop';
+import MDBox from "components/MDBox";
+import { Box ,Card,CardContent } from "@mui/material";
+import { position } from "stylis";
 
 
 function checkElement(val, array) {
@@ -35,16 +38,13 @@ const DropFileInput = (props) => {
   const [data, setData] = useState([]);
   const [fileList, setFileList] = useState([]);
   const [vendors, setVendors] = useState([]);
-  const [fileName,setFileName] = useState("")
+  const [fileName, setFileName] = useState("")
   const [shouldPause, setShouldPause] = useState(true);
   const [makePlanner, setMakePlanner] = useState(false);
   const [masterPartDetails, setMasterPartListDetails] = useState("");
 
-  
 
-
-
-  const store = useSelector((store)=>{
+  const store = useSelector((store) => {
     return store.userRoles
   })
   const [createYearlyPlanner, rexYearlyPlanner] = useQuery({
@@ -165,8 +165,6 @@ const DropFileInput = (props) => {
     }
   };
 
-    
-  
 
   const pushData = (e) => {
     e.preventDefault();
@@ -179,28 +177,28 @@ const DropFileInput = (props) => {
 
     setOpen(true);
 
-   let timer =  setInterval(() => {
-    setProgress((prev)=>{
-      let newProgress = prev+1;
-      if(prev===100){
-        setOpen(false)
-        clearInterval(timer)
-        alertAndLoaders("UNSHOW_ALERT", dispatch,"Successfully Created Yearly Planner", "success");
-        newProgress = 0
+    let timer = setInterval(() => {
+      setProgress((prev) => {
+        let newProgress = prev + 1;
+        if (prev === 100) {
+          setOpen(false)
+          clearInterval(timer)
+          alertAndLoaders("UNSHOW_ALERT", dispatch, "Successfully Created Yearly Planner", "success");
+          newProgress = 0
+        }
+        return newProgress
       }
-      return newProgress
-    }
-    )
-  }, 40);
+      )
+    }, 40);
 
     rexYearlyPlanner()
-    
-      createHistory({
-        fileName,
-        empCode:store.empCode
-      }).then((result)=>{
-        console.log(result,"result1234")
-      })
+
+    createHistory({
+      fileName,
+      empCode: store.empCode
+    }).then((result) => {
+      console.log(result, "result1234")
+    })
 
     masterPartDetails.map((val) => {
       val.partCode.map((val1) => {
@@ -225,79 +223,78 @@ const DropFileInput = (props) => {
 
   return (
     <>
-        <Grid mb={6} mt={2}>
-          
-          {fileList.length > 0 ? (
-            <div className="drop-file-preview">
-              <MDTypography variant="h5" fontWeight="medium">
-                Ready to upload
-              </MDTypography>
-              <form>
-                {fileList.map((item, index) => (
-                  <div className="drop-file-preview__item">
-                    <img src={ImageConfig[item.type.split("/")[1]] || ImageConfig.default} alt="" />
-                    <div className="drop-file-preview__item__info">
-                      <MDTypography variant="button" fontWeight="regular">
-                        {item.name}
-                      </MDTypography>
-                    </div>
+      <Grid mb={6} mt={2}>
+        {fileList.length > 0 ? (
+          <Box className="drop-file-preview"   >
+          <Card >
+            <CardContent style={{textAlign:'center'}}>
+            <MDTypography  variant="h5" fontWeight="medium" style={{}}>
+              Ready to Upload
+            </MDTypography>
+              {fileList.map((item, index) => (
+                <div className="drop-file-preview__item" style={{display:'flex',alignItems:'center'}}>
+                  <img src={ImageConfig[item.type.split("/")[1]] || ImageConfig.default} alt="" />
+                  <div className="drop-file-preview__item__info">
+                    <MDTypography variant="button" fontWeight="regular">
+                      {item.name}
+                    </MDTypography>
                   </div>
-                ))}
-                
-                <MDButton color="dark" onClick={() => fileRemove()}>
-                  Cancel
-                </MDButton>
-                <MDButton style={{marginLeft:"20px" }} color="error" type="submit" onClick={(e) => pushData(e)}>
-                  Upload
-                </MDButton>
-                
-              </form>
+                </div>
+              ))}
+              <MDButton  color="error" type="submit" onClick={(e) => pushData(e)}>
+                Upload
+              </MDButton>
+              <MDButton style={{marginLeft:"20px"}} color="dark" onClick={() => fileRemove()}>
+                Cancel
+              </MDButton>
+              </CardContent>
+            </Card>
+          </Box>
+        ) : (
+          <div
+            style={{
+              position: "relative",
+              width: "30rem",
+              height: "200px",
+              border: "2px dashed #277BC0",
+              borderRadius: "20px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: "#394259",
+            }}
+            ref={wrapperRef}
+            className="drop-file-input"
+            onDragEnter={onDragEnter}
+            onDragLeave={onDragLeave}
+            onDrop={onDrop}
+          >
+            <div className="drop-file-input__label">
+              <img src={uploadImg} alt="" />
+              <MDTypography variant="h5" fontWeight="regular" color="secondary">
+                Drag & Drop Master Part List file here
+              </MDTypography>
             </div>
-          ) : (
-            <div
-              style={{
-                position: "relative",
-                width: "30rem",
-                height: "200px",
-                border: "2px dashed #277BC0",
-                borderRadius: "20px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                backgroundColor: "#394259",
-              }}
-              ref={wrapperRef}
-              className="drop-file-input"
-              onDragEnter={onDragEnter}
-              onDragLeave={onDragLeave}
-              onDrop={onDrop}
-            >
-              <div className="drop-file-input__label">
-                <img src={uploadImg} alt="" />
-                <MDTypography variant="h5" fontWeight="regular" color="secondary">
-                  Drag & Drop Master Part List file here
-                </MDTypography>
+            <input type="file" accept=".xlsx" value="" onChange={handleFileChange} />
+          </div>
+        )}
+        <Backdrop
+          sx={{ color: 'whitesmoke', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={open}      >
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <div style={{ width: "100%", height: "12px", background: "#202940", borderRadius: "12px" }}>
+              <div style={{ width: `${progress}%`, background: "#F44335", borderRadius: "12px", transition: "width 0.2s", height: "12px" }}>
+                <span style={{ fontSize: "10px", float: "right", fontWeight: "bolder", color: "whitesmoke", paddingBottom: "5px",position:'relative',bottom:'2px' }}>{progress + "%"}</span>
               </div>
-              <input type="file" accept=".xlsx" value="" onChange={handleFileChange} />
             </div>
-          )}
-            <Backdrop 
-        sx={{ color: 'whitesmoke', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={open}      >
-     <div style={{display:"flex",flexDirection:"column"}}>  
-<div style={{width:"100%",height:"12px",background:"#202940",borderRadius:"12px"}}>
- <div style={{width:`${progress}%`,background:"#F44335",borderRadius:"12px" ,transition:"width 0.2s",height:"12px"}}>
-    <span style={{fontSize:"10px",float:"right",fontWeight:"bolder",color:"whitesmoke",paddingBottom:"5px"}}>{progress+"%"}</span>
-  </div> 
-</div>
-<br/>
-<MDTypography variant="h6" fontWeight="medium">
-  We Appreciate Your Petience. Kindly hold on as we create Yearly planner...
-  </MDTypography>
-  </div>   
-     
-</Backdrop>
-        </Grid>
+            <br />
+            <MDTypography variant="h6" fontWeight="medium">
+              We Appreciate Your Petience. Kindly hold on as we create Yearly planner...
+            </MDTypography>
+          </div>
+
+        </Backdrop>
+      </Grid>
     </>
   );
 };

@@ -36,7 +36,8 @@ const columns = [
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
-  return <IconButton {...other} />;
+  return <IconButton {...other} 
+  style={{color:'#1A73E8'}}/>;
 })(({ theme, expand }) => ({
   transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
   transition: theme.transitions.create("transform", {

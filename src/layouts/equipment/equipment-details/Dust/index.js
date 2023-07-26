@@ -17,12 +17,12 @@ import { useSubscription, useMutation, useQuery } from 'urql'
 
 import Grid from "@mui/material/Grid";
 
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { DUST_TEST_DETAILS } from 'apis/queries';
 import { SAVE_DUST_DETAILS } from 'apis/queries';
 import { ADD_EQUIPMENT_UPDATE_HISTORY } from 'apis/queries'
 import { ADD_DUST_STATUS } from 'apis/queries';
-import dataTableData from 'layouts/applications/data-tables/data/dataTableData';
+import alertAndLoaders from "utils/alertAndLoaders";
 
 
 
@@ -30,6 +30,15 @@ const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: '100%',
     margin: '1%'
+  },
+  disabledTextField: {
+    color: "gray",
+    "& .MuiFormLabel-root": {
+      color: "gray" // or black
+    },
+    "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+      borderColor: "gray"
+    },
   },
   expand: {
     transform: 'rotate(0deg)',
@@ -77,6 +86,11 @@ export default function DustTest({ details, componentName, id }) {
   const role = useSelector((store) => {
     return store.userRoles
   });
+
+
+  const dispatch = useDispatch();
+
+
   const [saveDustDetailRes, saveDustDetails] = useMutation(SAVE_DUST_DETAILS)
   const [dustdetailByID, rexDustDetailByID] = useSubscription({
     query: DUST_TEST_DETAILS,
@@ -129,9 +143,6 @@ export default function DustTest({ details, componentName, id }) {
     })
   }, [details, dustdetailByID])
 
-
-
-
   const saveData = () => {
 
     let data = JSON.stringify({
@@ -158,7 +169,7 @@ export default function DustTest({ details, componentName, id }) {
           "Equipment Running (Hour)": equipmentRunning,
           "Simultaneously": simultaneously,
           "Test Duration (Min)": testDurationMin,
-          "Test Duration (Max)": testDurationMax ,
+          "Test Duration (Max)": testDurationMax,
           "Sample Quantity": sampleQty
         }
         saveEquipmentHistory(
@@ -169,7 +180,7 @@ export default function DustTest({ details, componentName, id }) {
             updateValues: handleCompare(obj)
           }
         ).then((res) => {
-          console.log(res);
+          alertAndLoaders("UNSHOW_ALERT", dispatch, "Dust Test Details Are Saved... ", "success")       
         })
       }
     })
@@ -189,15 +200,14 @@ export default function DustTest({ details, componentName, id }) {
 
   }
   const toggleTrue = () => {
-    setEnabled(!enabled);
 
     saveDustStatus({
       partName: id,
       status: !toggleEnable ? 1 : 0
     }).then((res) => {
+      toggleEnable ? alertAndLoaders("UNSHOW_ALERT", dispatch, "Dust Test Is Disabled...", "warning") : alertAndLoaders("UNSHOW_ALERT", dispatch, "Dust Test Is Enabled... ", "success")
 
     })
-
   }
 
   return (
@@ -206,28 +216,34 @@ export default function DustTest({ details, componentName, id }) {
         <CardHeader
           action={
             <div>
-              {role.roles === 3 && <MuiToggleButton style={{ height: '30px', border: 'none' }}
+              {role.roles === 3 && <MuiToggleButton style={{ height: '30px', border: 'none' ,background:toggleEnable?"green":"red"}}
                 value="check"
                 selected={!selected}
                 selectedcolor="#BCE2BE"
                 onChange={toggleTrue}
               >
-                <p style={{ fontSize: '0.75rem', color: toggleEnable ? '#429D46' : '#d50000', fontWeight: 'bold' }}>{toggleEnable ? "Enabled" : "Disabled"}</p>
+                <p style={{ fontSize: '0.75rem', color:'white', fontWeight: 'bold' }}>{toggleEnable ? "Enabled" : "Disabled"}</p>
               </MuiToggleButton>}
               <IconButton
                 className={clsx(classes.expand, {
                   [classes.expandOpen]: expanded,
                 })}
+                sx={{
+                  "& .MuiInputBase-input.Mui-disabled": {
+                    WebkitTextFillColor: "gray",
+                  },
+                }}
                 onClick={() => setExpanded(!expanded)}
                 aria-expanded={expanded}
                 aria-label="show more"
+                color='info'
               >
                 <ExpandMoreIcon />
               </IconButton>
             </div>
           }
           title={<MDTypography variant="h6" fontWeight="medium">Dust</MDTypography>}
-          subheader={toggleEnable ? <MDTypography style={{ color: 'green', fontSize: '14px', paddingTop: '1%' }}>Dust Test is Enabled</MDTypography> : <MDTypography style={{ color: '#D9534F', fontSize: '14px', paddingTop: '1%' }}>No Dust Test</MDTypography>}
+          subheader={toggleEnable ? <MDTypography style={{ color: 'green', fontSize: '14px', paddingTop: '1%' }}>Dust Test is Enabled</MDTypography> : <MDTypography style={{ color: 'red', fontSize: '14px', paddingTop: '1%' }}>No Dust Test</MDTypography>}
         // subheader={subheaderdata}
         />
         <Collapse in={expanded} timeout="auto" unmountOnExit>
@@ -241,7 +257,13 @@ export default function DustTest({ details, componentName, id }) {
                         ...prevData,
                         newData: e.target.value
                       }))}
+                      sx={{
+                        "& .MuiInputBase-input.Mui-disabled": {
+                          WebkitTextFillColor: "gray",
+                        },
+                      }}
                       disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      className={toggleEnable ? "" : classes.disabledTextField}
                       value={dust.newData}
                       label="Dust (sec)"
                     />
@@ -252,7 +274,14 @@ export default function DustTest({ details, componentName, id }) {
                         ...prevData,
                         newData: e.target.value
                       }))}
+                      sx={{
+                        "& .MuiInputBase-input.Mui-disabled": {
+                          WebkitTextFillColor: "gray",
+                        },
+                      }}
                       disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      className={toggleEnable ? "" : classes.disabledTextField}
+
                       value={rest.newData}
                       label="Rest (mins)"
                     />
@@ -263,55 +292,84 @@ export default function DustTest({ details, componentName, id }) {
                         ...prevData,
                         newData: e.target.value
                       }))}
+                      sx={{
+                        "& .MuiInputBase-input.Mui-disabled": {
+                          WebkitTextFillColor: "gray",
+                        },
+                      }}
                       disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      className={toggleEnable ? "" : classes.disabledTextField}
+
                       value={testDurationMin.newData}
-                      label="Test Duration (Min)"
+                      label="Test Duration (hr min)"
                     />
                   </Grid>
                   <Grid item xs={12} sm={3}>
-
                     <TextField
                       onChange={(e) => setTestDurationMax(prevData => ({
                         ...prevData,
                         newData: e.target.value
                       }))}
+                      sx={{
+                        "& .MuiInputBase-input.Mui-disabled": {
+                          WebkitTextFillColor: "gray",
+                        },
+                      }}
                       disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      className={toggleEnable ? "" : classes.disabledTextField}
+
                       value={testDurationMax.newData}
-                      label="Test Duration (Max)"
+                      label="Test Duration (hr max)"
                     />
                   </Grid>
-
-                  <Grid item xs={12} sm={4}>
-
+                  <Grid item xs={12} sm={3}>
                     <TextField
                       onChange={(e) => setEquipmentRunning(prevData => ({
                         ...prevData,
                         newData: e.target.value
                       }))}
+                      sx={{
+                        "& .MuiInputBase-input.Mui-disabled": {
+                          WebkitTextFillColor: "gray",
+                        },
+                      }}
                       disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      className={toggleEnable ? "" : classes.disabledTextField}
+
                       value={equipmentRunning.newData}
-                      label="Equipment Running (Hour)"
+                      label="Equipment Running (hr)"
                     />
                   </Grid>
-                  <Grid item xs={12} sm={4}>
-
+                  <Grid item xs={12} sm={3}>
                     <TextField
                       onChange={(e) => setSimultaneously(prevData => ({
                         ...prevData,
                         newData: e.target.value
                       }))}
+                      sx={{
+                        "& .MuiInputBase-input.Mui-disabled": {
+                          WebkitTextFillColor: "gray",
+                        },
+                      }}
                       disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      className={toggleEnable ? "" : classes.disabledTextField}
                       value={simultaneously.newData}
                       label="Simultaneously"
                     />
                   </Grid>
-                  <Grid item xs={12} sm={4}>
+                  <Grid item xs={12} sm={3}>
                     <TextField
                       onChange={(e) => setSampleQty(prevData => ({
                         ...prevData,
                         newData: e.target.value
                       }))}
+                      sx={{
+                        "& .MuiInputBase-input.Mui-disabled": {
+                          WebkitTextFillColor: "gray",
+                        },
+                      }}
                       disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      className={toggleEnable ? "" : classes.disabledTextField}
                       value={sampleQty.newData}
                       label="Sample Quantity"
                     />

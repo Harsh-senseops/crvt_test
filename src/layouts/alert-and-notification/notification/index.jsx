@@ -131,9 +131,9 @@ function Notification() {
       <MDBox pt={10} pb={3}>
         <Card>
           <MDBox p={3} lineHeight={1}>
-            <MDTypography variant="h5" fontWeight="medium">
+            {/* <MDTypography variant="h5" fontWeight="medium">
               NOTIFICATIONS
-            </MDTypography>
+            </MDTypography> */}
             <MDInput
               placeholder="Search..."
               // value={search}

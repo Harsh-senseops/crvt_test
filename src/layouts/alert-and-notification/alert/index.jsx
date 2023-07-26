@@ -58,9 +58,9 @@ function Alert() {
       <MDBox pt={10} pb={3}>
         <Card>
           <MDBox p={3} lineHeight={1}>
-            <MDTypography variant="h5" fontWeight="medium">
+            {/* <MDTypography variant="h5" fontWeight="medium">
               Alert
-            </MDTypography>
+            </MDTypography> */}
             <Grid mt={2}>
               <h2>Timer: {timer}</h2>
               <TableContainer component={Paper}>

@@ -15,11 +15,13 @@ import MDBox from 'components/MDBox';
 import { CardActions, TextField } from '@mui/material';
 import { useSubscription, useMutation, useQuery } from 'urql'
 import Grid from "@mui/material/Grid";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { THERMAL_SHOCK_TEST_DETAILS } from 'apis/queries';
 import { SAVE_THERMAL_SHOCK_DETAILS } from 'apis/queries';
 import { ADD_THERMAL_SHOCK_STATUS } from 'apis/queries';
 import { ADD_EQUIPMENT_UPDATE_HISTORY } from 'apis/queries';
+import alertAndLoaders from 'utils/alertAndLoaders';
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,6 +34,19 @@ const useStyles = makeStyles((theme) => ({
     transition: theme.transitions.create('transform', {
       duration: theme.transitions.duration.shortest,
     }),
+  },
+  disabledTextField: {
+    color: "gray",
+    "& .MuiFormLabel-root": {
+      color: "gray" // or black
+    },
+
+
+    "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+      borderColor: "gray"
+    },
+
+
   },
   expandOpen: {
     transform: 'rotate(180deg)',
@@ -75,6 +90,8 @@ export default function ThermalShockChamber({ details, componentName, id }) {
     return store.userRoles
   });
 
+  const dispatch=useDispatch()
+
   const [saveThermalDetailsRes, saveThermalDetailDetails] = useMutation(SAVE_THERMAL_SHOCK_DETAILS)
   const [thermalShockdetailByID, rexThermalShockDetailByID] = useSubscription({
     query: THERMAL_SHOCK_TEST_DETAILS,
@@ -91,15 +108,15 @@ export default function ThermalShockChamber({ details, componentName, id }) {
       setOldData({ eName: constValues.name, running: constValues["7daysrunning"] })
 
 
-      setCold({newData:constValues.cold,oldDat:constValues.cold})
-      setHot({newData:constValues.hot,oldDat:constValues.hot})
-      setCycleTime({newData:constValues.cycle_time_sec,oldDat:constValues.cycle_time_sec})
-      setTotalCycle({newData:constValues.total_cycle,oldDat:constValues.total_cycle})
-      setTestDurationMin({newData:constValues.test_duration_hr.min,oldDat:constValues.test_duration_hr.min})
-      setTestDurationMax({newData:constValues.test_duration_hr.max,oldDat:constValues.test_duration_hr.max})
-      setEquipmentRunning({newData:constValues.equipment_running,oldDat:constValues.equipment_running})
-      setSimultaneously({newData:constValues.simultaneously,oldDat:constValues.simultaneously})
-      setSampleQty({newData:constValues.sample_qty,oldDat:constValues.sample_qty})
+      setCold({ newData: constValues.cold, oldDat: constValues.cold })
+      setHot({ newData: constValues.hot, oldDat: constValues.hot })
+      setCycleTime({ newData: constValues.cycle_time_sec, oldDat: constValues.cycle_time_sec })
+      setTotalCycle({ newData: constValues.total_cycle, oldDat: constValues.total_cycle })
+      setTestDurationMin({ newData: constValues.test_duration_hr.min, oldDat: constValues.test_duration_hr.min })
+      setTestDurationMax({ newData: constValues.test_duration_hr.max, oldDat: constValues.test_duration_hr.max })
+      setEquipmentRunning({ newData: constValues.equipment_running, oldDat: constValues.equipment_running })
+      setSimultaneously({ newData: constValues.simultaneously, oldDat: constValues.simultaneously })
+      setSampleQty({ newData: constValues.sample_qty, oldDat: constValues.sample_qty })
 
     }
     details.map((val) => {
@@ -112,15 +129,15 @@ export default function ThermalShockChamber({ details, componentName, id }) {
           data = JSON.parse(val.thermalShockChamberTestDetailsByPartName.nodes[0].testDetails)
         }
 
-            setCold({newData:data.cold,oldDat:data.cold})
-            setHot({newData:data.hot,oldDat:data.hot})
-            setCycleTime({newData:data.cycle_time_sec,oldDat:data.cycle_time_sec})
-            setTotalCycle({newData:data.total_cycle,oldDat:data.total_cycle})
-            setTestDurationMin({newData:data.test_duration_hr.min,oldDat:data.test_duration_hr.min})
-            setTestDurationMax({newData:data.test_duration_hr.max,oldDat:data.test_duration_hr.max})
-            setEquipmentRunning({newData:data.equipment_running,oldDat:data.equipment_running})
-            setSimultaneously({newData:data.simultaneously,oldDat:data.simultaneously})
-            setSampleQty({newData:data.sample_qty,oldDat:data.sample_qty})
+        setCold({ newData: data.cold, oldDat: data.cold })
+        setHot({ newData: data.hot, oldDat: data.hot })
+        setCycleTime({ newData: data.cycle_time_sec, oldDat: data.cycle_time_sec })
+        setTotalCycle({ newData: data.total_cycle, oldDat: data.total_cycle })
+        setTestDurationMin({ newData: data.test_duration_hr.min, oldDat: data.test_duration_hr.min })
+        setTestDurationMax({ newData: data.test_duration_hr.max, oldDat: data.test_duration_hr.max })
+        setEquipmentRunning({ newData: data.equipment_running, oldDat: data.equipment_running })
+        setSimultaneously({ newData: data.simultaneously, oldDat: data.simultaneously })
+        setSampleQty({ newData: data.sample_qty, oldDat: data.sample_qty })
 
         if (JSON.parse(val.thermalShockChamberTestDetailsByPartName.nodes[0].status) === 1) {
           setToggleEnable(true)
@@ -155,16 +172,17 @@ export default function ThermalShockChamber({ details, componentName, id }) {
       partName: id
     }).then((res) => {
       if (res.data) {
-        let obj = {"Cold (℃)":cold,
-                  "Hot (℃)":hot,
-                  "Cycle Time":cycleTime,
-                  "Total Cycle":totalCycle,
-                  "Equipment Running (Hour)":equipmentRunning,
-                   "Simultaneously":simultaneously,
-                   "Test Duration (Min)":testDurationMin,
-                   "Test Duration (Max)":testDurationMax,
-                   "Sample Quantity":sampleQty
-        } 
+        let obj = {
+          "Cold (℃)": cold,
+          "Hot (℃)": hot,
+          "Cycle Time": cycleTime,
+          "Total Cycle": totalCycle,
+          "Equipment Running (hr)": equipmentRunning,
+          "Simultaneously": simultaneously,
+          "Test Duration (hr min)": testDurationMin,
+          "Test Duration (hr max)": testDurationMax,
+          "Sample Quantity": sampleQty
+        }
         saveEquipmentHistory(
           {
             componentId: id,
@@ -172,8 +190,8 @@ export default function ThermalShockChamber({ details, componentName, id }) {
             testType: "Thermal Shock",
             updateValues: handleCompare(obj)
           }
-        ).then((res)=>{
-          console.log(res);
+        ).then((res) => {
+        alertAndLoaders("UNSHOW_ALERT", dispatch, "Thermal Shock Test Details Are Saved... ", "success")       
         })
       }
     })
@@ -194,12 +212,12 @@ export default function ThermalShockChamber({ details, componentName, id }) {
 
   }
   const toggleTrue = () => {
-    setEnabled(!enabled)
 
     saveThermalShockStatus({
       partName: id,
       status: (!toggleEnable ? 1 : 0)
     }).then((res) => {
+      toggleEnable ? alertAndLoaders("UNSHOW_ALERT", dispatch, "Thermal Shock Test Is Disabled... ", "warning") : alertAndLoaders("UNSHOW_ALERT", dispatch, "Themal Shock Test Is Enabled... ", "success")
     })
 
   }
@@ -210,13 +228,13 @@ export default function ThermalShockChamber({ details, componentName, id }) {
         <CardHeader
           action={
             <div>
-              {role.roles === 3 && <MuiToggleButton style={{ height: '30px', border: 'none' }}
+              {role.roles === 3 && <MuiToggleButton style={{ height: '30px', border: 'none' ,background:toggleEnable?"green":"red"}}
                 value="check"
                 selected={!selected}
                 selectedcolor="#BCE2BE"
                 onChange={toggleTrue}
               >
-                <p style={{ fontSize: '0.75rem', color: toggleEnable ? '#429D46' : '#d50000', fontWeight: 'bold' }}>{toggleEnable ? "Enabled" : "Disabled"}</p>
+                <p style={{ fontSize: '0.75rem', color:'white', fontWeight: 'bold' }}>{toggleEnable ? "Enabled" : "Disabled"}</p>
               </MuiToggleButton>}
               <IconButton
                 className={clsx(classes.expand, {
@@ -225,15 +243,17 @@ export default function ThermalShockChamber({ details, componentName, id }) {
                 onClick={() => setExpanded(!expanded)}
                 aria-expanded={expanded}
                 aria-label="show more"
+                color='info'
+
               >
                 <ExpandMoreIcon />
               </IconButton>
 
             </div>
           }
-          title={<MDTypography variant="h6" fontWeight="medium">Thermal Shock Chamber</MDTypography>}
-          subheader={toggleEnable ? <MDTypography style={{ color: 'green', fontSize: '14px', paddingTop: '1%' }}>Thermal Shock Test is Enabled</MDTypography> : <MDTypography style={{ color: '#D9534F', fontSize: '14px', paddingTop: '1%' }}>No Thermal Shock Test</MDTypography>}
-            // subheader={subheaderdata}
+          title={<MDTypography variant="h6" fontWeight="medium">Thermal Shock Test</MDTypography>}
+          subheader={toggleEnable ? <MDTypography style={{ color: 'green', fontSize: '14px', paddingTop: '1%' }}>Thermal Shock Test is Enabled</MDTypography> : <MDTypography style={{ color: 'red', fontSize: '14px', paddingTop: '1%' }}>No Thermal Shock Test</MDTypography>}
+        // subheader={subheaderdata}
         />
 
         <Collapse in={expanded} timeout="auto" unmountOnExit>
@@ -249,6 +269,12 @@ export default function ThermalShockChamber({ details, componentName, id }) {
                         newData: e.target.value
                       }))}
                       disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      className={toggleEnable ? "" : classes.disabledTextField}
+                      sx={{
+                        "& .MuiInputBase-input.Mui-disabled": {
+                          WebkitTextFillColor: "gray",
+                        },
+                      }}
                       value={cold.newData}
                       label="Cold (℃)"
                     />
@@ -260,7 +286,14 @@ export default function ThermalShockChamber({ details, componentName, id }) {
                         ...prevData,
                         newData: e.target.value
                       }))}
+                      sx={{
+                        "& .MuiInputBase-input.Mui-disabled": {
+                          WebkitTextFillColor: "gray",
+                        },
+                      }}
                       disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      className={toggleEnable ? "" : classes.disabledTextField}
+
                       value={hot.newData}
                       label="Hot (℃)"
                     />
@@ -272,7 +305,14 @@ export default function ThermalShockChamber({ details, componentName, id }) {
                         ...prevData,
                         newData: e.target.value
                       }))}
+                      sx={{
+                        "& .MuiInputBase-input.Mui-disabled": {
+                          WebkitTextFillColor: "gray",
+                        },
+                      }}
                       disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      className={toggleEnable ? "" : classes.disabledTextField}
+
                       value={cycleTime.newData}
                       label="Cycle Time"
                     />
@@ -284,7 +324,14 @@ export default function ThermalShockChamber({ details, componentName, id }) {
                         ...prevData,
                         newData: e.target.value
                       }))}
+                      sx={{
+                        "& .MuiInputBase-input.Mui-disabled": {
+                          WebkitTextFillColor: "gray",
+                        },
+                      }}
                       disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      className={toggleEnable ? "" : classes.disabledTextField}
+
                       value={totalCycle.newData}
                       label="Total Cycle"
                     />
@@ -296,9 +343,16 @@ export default function ThermalShockChamber({ details, componentName, id }) {
                         ...prevData,
                         newData: e.target.value
                       }))}
+                      sx={{
+                        "& .MuiInputBase-input.Mui-disabled": {
+                          WebkitTextFillColor: "gray",
+                        },
+                      }}
                       disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      className={toggleEnable ? "" : classes.disabledTextField}
+
                       value={testDurationMax.newData}
-                      label="Test Duration (Max)"
+                      label="Test Duration (hr max)"
                     />
                   </Grid>
                   <Grid item xs={12} sm={3}>
@@ -308,9 +362,16 @@ export default function ThermalShockChamber({ details, componentName, id }) {
                         ...prevData,
                         newData: e.target.value
                       }))}
+                      sx={{
+                        "& .MuiInputBase-input.Mui-disabled": {
+                          WebkitTextFillColor: "gray",
+                        },
+                      }}
                       disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      className={toggleEnable ? "" : classes.disabledTextField}
+
                       value={testDurationMin.newData}
-                      label="Test Duration (Min)"
+                      label="Test Duration (hr min)"
                     />
                   </Grid>
                   <Grid item xs={12} sm={3}>
@@ -320,7 +381,14 @@ export default function ThermalShockChamber({ details, componentName, id }) {
                         ...prevData,
                         newData: e.target.value
                       }))}
+                      sx={{
+                        "& .MuiInputBase-input.Mui-disabled": {
+                          WebkitTextFillColor: "gray",
+                        },
+                      }}
                       disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      className={toggleEnable ? "" : classes.disabledTextField}
+
                       value={simultaneously.newData}
                       label="Simultaneously"
                     />
@@ -332,20 +400,34 @@ export default function ThermalShockChamber({ details, componentName, id }) {
                         ...prevData,
                         newData: e.target.value
                       }))}
+                      sx={{
+                        "& .MuiInputBase-input.Mui-disabled": {
+                          WebkitTextFillColor: "gray",
+                        },
+                      }}
                       disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      className={toggleEnable ? "" : classes.disabledTextField}
+
                       value={sampleQty.newData}
                       label="Sample Quantity"
                     />
                   </Grid>
-                  <Grid item xs={12} sm={4}>
+                  <Grid item xs={12} sm={3}>
                     <TextField
                       onChange={(e) => setEquipmentRunning(prevData => ({
                         ...prevData,
                         newData: e.target.value
                       }))}
+                      sx={{
+                        "& .MuiInputBase-input.Mui-disabled": {
+                          WebkitTextFillColor: "gray",
+                        },
+                      }}
                       disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      className={toggleEnable ? "" : classes.disabledTextField}
+
                       value={equipmentRunning.newData}
-                      label="Equipment Running (Hour)"
+                      label="Equipment Running (hr)"
                     />
                   </Grid>
                 </Grid>

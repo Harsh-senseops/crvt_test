@@ -107,24 +107,15 @@ function MonthlyPlanner() {
 
   return (
     <DashboardLayout>
-      {store.showAlert ? (
-        <div style={{ zIndex: "2000", position: "fixed", width: "60%" }}>
-          <MDAlert color={store.color} dismissible={true}>
-            <h5>{store.message}</h5>
-          </MDAlert>
-        </div>
-      ) : (
-        ""
-      )}
       <MDBox width="calc(100% - 48px)" position="absolute" top="1.75rem">
         <DashboardNavbar dark absolute />
       </MDBox>
       <MDBox pt={10} pb={3}>
         <Card>
           <MDBox p={3} lineHeight={1}>
-            <MDTypography variant="h5" fontWeight="medium">
+            {/* <MDTypography variant="h5" fontWeight="medium">
               Monthly Planner
-            </MDTypography>
+            </MDTypography> */}
             <UnplannedListUpload />
             <Grid style={{background:"#394259"}} mt={3} pt={2} pr={1} pl={1} pb={3} bgcolor="#F7F7F7" borderRadius={3}>
               {test.map((props,i)=>{
