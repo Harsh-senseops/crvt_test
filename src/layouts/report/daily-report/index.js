@@ -24,9 +24,9 @@ function DailyReport() {
       <MDBox pt={10} pb={3}>
         <Card>
           <MDBox p={3} lineHeight={1}>
-            <MDTypography variant="h5" fontWeight="medium">
+            {/* <MDTypography variant="h5" fontWeight="medium">
               Daily Report
-            </MDTypography>
+            </MDTypography> */}
             <ReportEquipmentSelection />
             {/* <MDTypography variant="button" color="text">
               Please configure equipment details for all components

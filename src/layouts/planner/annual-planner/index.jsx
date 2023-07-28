@@ -189,9 +189,9 @@ function AnnualPlanner() {
 
         <Card>
           <MDBox p={3} lineHeight={1}>
-            <MDTypography variant="h5" fontWeight="medium">
+            {/* <MDTypography variant="h5" fontWeight="medium">
               Annual Planner
-            </MDTypography>
+            </MDTypography> */}
             {/* <MDTypography  variant="button" color="text">
               Please configure equipment details for all components
             </MDTypography> */}

@@ -16,7 +16,11 @@ import * as yearlyPlanner from "../../../../reduxSlices/yearlyPlanner";
 import { useDispatch, useSelector } from "react-redux";
 import alertAndLoaders from "utils/alertAndLoaders";
 
-import Backdrop from "@mui/material/Backdrop";
+import Backdrop from '@mui/material/Backdrop';
+import MDBox from "components/MDBox";
+import { Box ,Card,CardContent } from "@mui/material";
+import { position } from "stylis";
+
 
 function checkElement(val, array) {
   const pos = array.map((e) => e["vendor_code"]).indexOf(val);
@@ -34,14 +38,15 @@ const DropFileInput = (props) => {
   const [data, setData] = useState([]);
   const [fileList, setFileList] = useState([]);
   const [vendors, setVendors] = useState([]);
-  const [fileName, setFileName] = useState("");
+  const [fileName, setFileName] = useState("")
   const [shouldPause, setShouldPause] = useState(true);
   const [makePlanner, setMakePlanner] = useState(false);
   const [masterPartDetails, setMasterPartListDetails] = useState("");
 
+
   const store = useSelector((store) => {
-    return store.userRoles;
-  });
+    return store.userRoles
+  })
   const [createYearlyPlanner, rexYearlyPlanner] = useQuery({
     query: MAKE_YEARLY_PLANNER,
     variables: { makePlanner },
@@ -160,12 +165,14 @@ const DropFileInput = (props) => {
     }
   };
 
+
   const pushData = (e) => {
     e.preventDefault();
 
     const updatedList = [];
     setFileList(updatedList);
     props.onFileChange(updatedList);
+    setDragAndDrop(false);
     setMakePlanner(true);
 
     setOpen(true);
@@ -174,28 +181,24 @@ const DropFileInput = (props) => {
       setProgress((prev) => {
         let newProgress = prev + 1;
         if (prev === 100) {
-          setOpen(false);
-          clearInterval(timer);
-          alertAndLoaders(
-            "UNSHOW_ALERT",
-            dispatch,
-            "Successfully Created Yearly Planner",
-            "success"
-          );
-          newProgress = 0;
+          setOpen(false)
+          clearInterval(timer)
+          alertAndLoaders("UNSHOW_ALERT", dispatch, "Successfully Created Yearly Planner", "success");
+          newProgress = 0
         }
-        return newProgress;
-      });
+        return newProgress
+      }
+      )
     }, 40);
 
-    rexYearlyPlanner();
+    rexYearlyPlanner()
 
     createHistory({
       fileName,
-      empCode: store.empCode,
+      empCode: store.empCode
     }).then((result) => {
-      console.log(result, "result1234");
-    });
+      console.log(result, "result1234")
+    })
 
     masterPartDetails.map((val) => {
       val.partCode.map((val1) => {
@@ -212,7 +215,7 @@ const DropFileInput = (props) => {
           count: val.partCount,
           vendorDetails: JSON.stringify(val1.details.vendorsInfo),
         }).then((res) => {
-          dispatch(yearlyPlanner.setShouldPause(false));
+          dispatch(yearlyPlanner.setShouldPause(false))
         });
       });
     });
@@ -222,13 +225,14 @@ const DropFileInput = (props) => {
     <>
       <Grid mb={6} mt={2}>
         {fileList.length > 0 ? (
-          <div className="drop-file-preview">
-            <MDTypography variant="h5" fontWeight="medium">
-              Ready to upload
+          <Box className="drop-file-preview"   >
+          <Card >
+            <CardContent style={{textAlign:'center'}}>
+            <MDTypography  variant="h5" fontWeight="medium" style={{}}>
+              Ready to Upload
             </MDTypography>
-            <form>
               {fileList.map((item, index) => (
-                <div className="drop-file-preview__item">
+                <div className="drop-file-preview__item" style={{display:'flex',alignItems:'center'}}>
                   <img src={ImageConfig[item.type.split("/")[1]] || ImageConfig.default} alt="" />
                   <div className="drop-file-preview__item__info">
                     <MDTypography variant="button" fontWeight="regular">
@@ -237,20 +241,15 @@ const DropFileInput = (props) => {
                   </div>
                 </div>
               ))}
-
-              <MDButton color="dark" onClick={() => fileRemove()}>
-                Cancel
-              </MDButton>
-              <MDButton
-                style={{ marginLeft: "20px" }}
-                color="error"
-                type="submit"
-                onClick={(e) => pushData(e)}
-              >
+              <MDButton  color="error" type="submit" onClick={(e) => pushData(e)}>
                 Upload
               </MDButton>
-            </form>
-          </div>
+              <MDButton style={{marginLeft:"20px"}} color="dark" onClick={() => fileRemove()}>
+                Cancel
+              </MDButton>
+              </CardContent>
+            </Card>
+          </Box>
         ) : (
           <div
             style={{
@@ -280,33 +279,12 @@ const DropFileInput = (props) => {
           </div>
         )}
         <Backdrop
-          sx={{ color: "whitesmoke", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-          open={open}
-        >
+          sx={{ color: 'whitesmoke', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={open}      >
           <div style={{ display: "flex", flexDirection: "column" }}>
-            <div
-              style={{ width: "100%", height: "12px", background: "#202940", borderRadius: "12px" }}
-            >
-              <div
-                style={{
-                  width: `${progress}%`,
-                  background: "#F44335",
-                  borderRadius: "12px",
-                  transition: "width 0.2s",
-                  height: "12px",
-                }}
-              >
-                <span
-                  style={{
-                    fontSize: "10px",
-                    float: "right",
-                    fontWeight: "bolder",
-                    color: "whitesmoke",
-                    paddingBottom: "5px",
-                  }}
-                >
-                  {progress + "%"}
-                </span>
+            <div style={{ width: "100%", height: "12px", background: "#202940", borderRadius: "12px" }}>
+              <div style={{ width: `${progress}%`, background: "#F44335", borderRadius: "12px", transition: "width 0.2s", height: "12px" }}>
+                <span style={{ fontSize: "10px", float: "right", fontWeight: "bolder", color: "whitesmoke", paddingBottom: "5px",position:'relative',bottom:'2px' }}>{progress + "%"}</span>
               </div>
             </div>
             <br />
@@ -314,6 +292,7 @@ const DropFileInput = (props) => {
               We Appreciate Your Petience. Kindly hold on as we create Yearly planner...
             </MDTypography>
           </div>
+
         </Backdrop>
       </Grid>
     </>

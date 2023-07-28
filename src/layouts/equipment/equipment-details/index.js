@@ -14,12 +14,13 @@ import Footer from "examples/Footer";
 
 // Children components
 import ComponentsTable from "./componentsTable";
-
+// import DataTable from "examples/Tables/DataTable";
 
 function EquipmentDetails() {
+
  
   return (
-    <DashboardLayout>
+    <DashboardLayout >
       <MDBox width="calc(100% - 48px)" position="absolute" top="1.75rem">
         <DashboardNavbar dark absolute />
       </MDBox>
@@ -33,7 +34,11 @@ function EquipmentDetails() {
               Configure equipment details for all components
             </MDTypography>
           </MDBox>
-         <ComponentsTable />
+          <MDBox>
+            <Card>
+            <ComponentsTable />
+            </Card>
+          </MDBox>
         </Card>
       </MDBox>
       <Footer />

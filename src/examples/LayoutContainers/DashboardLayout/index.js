@@ -26,8 +26,13 @@ import MDBox from "components/MDBox";
 
 // Material Dashboard 2 PRO React context
 import { useMaterialUIController, setLayout } from "context";
+import { useSelector,useDispatch } from "react-redux";
+import MDAlert from "components/MDAlert";
+
 
 function DashboardLayout({ children }) {
+  const alertStore = useSelector((store) => store.alert)
+
   const [controller, dispatch] = useMaterialUIController();
   const { miniSidenav } = controller;
   const { pathname } = useLocation();
@@ -51,6 +56,14 @@ function DashboardLayout({ children }) {
         },
       })}
     >
+      {alertStore.showAlert ? (
+        <div style={{ zIndex: "2000", position: "fixed", width: "60%" }}>
+          <MDAlert color={alertStore.color} dismissible={true}>
+            <h5>{alertStore.message}</h5>
+          </MDAlert>
+        </div>
+      ) : (
+        "")}
       {children}
     </MDBox>
   );

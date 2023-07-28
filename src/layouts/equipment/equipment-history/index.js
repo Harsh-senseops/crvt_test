@@ -61,9 +61,9 @@ const [data,setData] = useState({columns,rows:[]})
       <MDBox pt={10} pb={3}>
         <Card>
           <MDBox p={3} lineHeight={1}>
-            <MDTypography variant="h5" fontWeight="medium">
+            {/* <MDTypography variant="h5" fontWeight="medium">
               Equipment History
-            </MDTypography>
+            </MDTypography> */}
         <DataTable canSearch={true} table={data}/>
           </MDBox>
         </Card>

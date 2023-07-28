@@ -19,109 +19,119 @@ import ThermalShockChamber from "../ThermalShockChamber";
 import Dust from "../Dust";
 import { EQUIPMENT_DETAILS } from "apis/queries";
 import OvenTest from "../OvenTest";
-
-
+import "./index.css"
 
 function ComponentsTable() {
-    const [componentDetails, setComponentDetails] = useState([])
-    const [detailsOpen, setDetailsOpen] = useState(false)
-    const [formtitle, setFormtitle] = useState(null)
-    const columns = [{ title: "Component", field: "partName", editable: "never", defaultSort: 'asc' }];
-    const [partId,setPartID]  = useState("");
-    
+  const [componentDetails, setComponentDetails] = useState([])
+  const [detailsOpen, setDetailsOpen] = useState(false)
+  const [formtitle, setFormtitle] = useState(null)
+  const columns = [
+    {
+      title: "Component",
+      field: "partName",
+      editable: "never",
+      defaultSort: 'asc',
 
-      const [getEquipment, getEquipmentResult] = useSubscription({
-        query: EQUIPMENT_DETAILS
-      })
+      headerStyle:
+      {
+        background: '#202940',
+        color: "#FFF !important",
+        borderRadius: "12px 0px 0px 12px",
+        
 
-      const { data: equipmentData, fetching: equipmentFetching, error: equipmentError} = getEquipment
+      },
+    }];
+  const actionsCellStyle = {
+    backgroundColor: '#202940',
+    borderRadius: "0px 12px 12px 0px",
+    color: 'white',
+  };
+  const [partId, setPartID] = useState("");
 
+  const [getEquipment, getEquipmentResult] = useSubscription({
+    query: EQUIPMENT_DETAILS
+  })
 
-      useEffect(()=>{
-        if (equipmentData) setComponentDetails(equipmentData.allComponentDetails.nodes)
-      },[equipmentData])
+  const { data: equipmentData, fetching: equipmentFetching, error: equipmentError } = getEquipment
 
-      const handleEdit = (rowdata) => {
-        setFormtitle(rowdata.partName)
-        setDetailsOpen(true)
-       setPartID(rowdata.dustTestDetailsByPartName.nodes[0].partName)   
-      }
-    
-      const handleFormClose = () => {
-        setDetailsOpen(false)
-      }
-      
-      if (equipmentFetching) return <p style={{color:"dark" ,fontWeight:"bold"}}>Loading Component...</p>
-      if (equipmentError) return <p>Oh no... {equipmentError.message}</p>
+  useEffect(() => {
+    if (equipmentData) setComponentDetails(equipmentData.allComponentDetails.nodes)
+  }, [equipmentData])
 
+  const handleEdit = (rowdata) => {
+    setFormtitle(rowdata.partName)
+    setDetailsOpen(true)
+    setPartID(rowdata.dustTestDetailsByPartName.nodes[0].partName)
+  }
+  const handleFormClose = () => {
+    setDetailsOpen(false)
+  }
+  if (equipmentFetching) return <p style={{ color: "dark", fontWeight: "bold" }}>Loading Component...</p>
+  if (equipmentError) return <p>Oh no... {equipmentError.message}</p>
 
-    return (
-        <Grid container spacing={3} >
-        <Grid item xs={detailsOpen ? 3 : 12} md={detailsOpen ? 3 : 12} lg={detailsOpen ? 3 : 12} ml={2} mb={2} mr={detailsOpen ? 0 : 2} >
-        <MaterialTable
-
-          style={{borderRadius:12}}
-          columns={columns}  
-          data={componentDetails}  
-          
-          options={{
-            lableRowsPerPage:'',
-            pageSize: 10,
-            actionsColumnIndex: -1, 
-            showFirstLastPageButtons:false,
-            showFirstLastPageButtons:false,
-            pageSizeOptions: [1], 
-            showTitle: false, 
-            rowStyle: rowData => ({fontSize: '1.01rem',})
-            
-
-              }} 
-          actions={!detailsOpen ? [
-                {   
-                    icon: () => <EditIcon />,
-                    tooltip: 'Edit machine data',
-                    onClick: (event, rowdata) => {handleEdit(rowdata)}
-                }
-            ] : null}
-             />
-            </Grid>
-            <Grid item xs={8.1} md={8.1} lg={8.1}>
-            {detailsOpen ? 
+  return (
+    <Grid >
+      {detailsOpen ?
+        <Grid item xs={12} md={12} lg={12} ml={3} mr={3} mb={3}>
+          <Card style={{ background: '#394259' }}>
             <MDBox>
-              <Card style={{ backgroundColor: 'transparent', shadowOpacity: 0, border: "none", boxShadow: "none" }}>
-          <CardHeader
-          action = {
-          <IconButton
-          
-          onClick={handleFormClose}
-          aria-label="show more"
-        >
-          <CloseIcon />
-        </IconButton>
-      }
-      titleTypographyProps={{variant:'subtitle1' }}
-      title={<MDTypography style={{fontSize: '1.2rem', fontWeight: 'bold', color: '#555555'}}>{formtitle}</MDTypography>}
-    />
-    {/* <Divider variant="middle"/> */}
-    
-
-      <Dust componentName = {formtitle} details={componentDetails}  id={partId} />
-      <OvenTest componentName = {formtitle} details={componentDetails} id={partId} />
-      <RepeatedOperation componentName = {formtitle} details={componentDetails} id={partId} />
-      <ShowerTesting componentName = {formtitle} details={componentDetails} id={partId} />
-      <ThermalShockChamber componentName={formtitle} details={componentDetails} id={partId} />
-      <ThermalCycleTestDetail componentName={formtitle} details={componentDetails} id={partId} />
-      <VibrationTest componentName = {formtitle} details={componentDetails} id={partId}/>
-      
-  
-    {/* 
-    <Report componentName = {formtitle} componentDetails={componentDetails} /> */}
-      </Card>
+              <Card style={{ backgroundColor: 'transparent', shadowOpacity: "10px", boxShadow: 'inherit', margin: "15px" }}>
+                <CardHeader
+                  action={
+                    <IconButton
+                      color="warning"
+                      onClick={handleFormClose}
+                      aria-label="show more"
+                    >
+                      <CloseIcon />
+                    </IconButton>
+                  }
+                  titleTypographyProps={{ variant: 'subtitle1' }}
+                  title={<MDTypography style={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'white' }}>{formtitle}</MDTypography>}
+                />
+                <Divider variant="middle" />
+                <Dust componentName={formtitle} details={componentDetails} id={partId} />
+                <OvenTest componentName={formtitle} details={componentDetails} id={partId} />
+                <RepeatedOperation componentName={formtitle} details={componentDetails} id={partId} />
+                <ShowerTesting componentName={formtitle} details={componentDetails} id={partId} />
+                <ThermalShockChamber componentName={formtitle} details={componentDetails} id={partId} />
+                <ThermalCycleTestDetail componentName={formtitle} details={componentDetails} id={partId} />
+                <VibrationTest componentName={formtitle} details={componentDetails} id={partId} />
+                {/* <Report componentName = {formtitle} componentDetails={componentDetails} /> */}
+              </Card>
             </MDBox>
-          : null}
+          </Card>
+        </Grid> :
+          <Grid ml={3} mb={3} mr={3} style={{ background: '#394259', borderRadius: 12 }} >
+            <MaterialTable
+              style={{ borderRadius: 12, background: '#394259', color: "white", borderBottom: "none" }}
+              columns={columns}
+              data={componentDetails}
+              actions={[
+                {
+                  icon: () => <EditIcon
+                  color="error" />,
+                  tooltip: 'Edit machine data',
+                  onClick: (event, rowdata) => { handleEdit(rowdata) }
+                }
+              ]}
+              options={{
+                lableRowsPerPage:"",
+                pageSize: 10,
+                actionsColumnIndex: -1,
+                paginationType:'stepped',
+                showFirstLastPageButtons: false,
+                showFirstLastPageButtons: false,
+                pageSizeOptions: [1],
+                showTitle: false,
+                rowStyle: rowData => ({ fontSize: '1.01rem', }),
+                headerStyle: actionsCellStyle,
+              }}
+            />
           </Grid>
-          </Grid>
-    )
+      }
+    </Grid>
+  )
 }
 
 export default ComponentsTable;
