@@ -20,7 +20,7 @@ import Select from "@mui/material/Select";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { IconButton, InputAdornment } from "@mui/material";
-import { ADD_USER,UPDATE_USER } from "apis/queries";
+import { ADD_USER, UPDATE_USER } from "apis/queries";
 import { useMutation } from "urql";
 
 export default function MDDialog({ updateOrAdd, title }) {
@@ -30,7 +30,9 @@ export default function MDDialog({ updateOrAdd, title }) {
   });
   const dispatch = useDispatch();
   const [addUserRes, addUser] = useMutation(ADD_USER);
-  const [updateUserRes, updateUser] = useMutation(UPDATE_USER,{empCode:store.employeeID});
+  const [updateUserRes, updateUser] = useMutation(UPDATE_USER, {
+    empCode: store.employeeID,
+  });
 
   const handleClickOpenAdd = (_, event) => {
     if (event === "backdropClick") {
@@ -38,9 +40,19 @@ export default function MDDialog({ updateOrAdd, title }) {
       return;
     }
     if (updateOrAdd === true) {
-      if(store.employeeID === "" || store.name === "" || store.password === "" || store.role === "" ){
-        alertAndLoaders("UNSHOW_ALERT",dispatch,"Fields cannot be empty", "warning");
-        return
+      if (
+        store.employeeID === "" ||
+        store.name === "" ||
+        store.password === "" ||
+        store.role === ""
+      ) {
+        alertAndLoaders(
+          "UNSHOW_ALERT",
+          dispatch,
+          "Fields cannot be empty",
+          "warning"
+        );
+        return;
       }
       addUser({
         eCode: store.employeeID,
@@ -48,14 +60,28 @@ export default function MDDialog({ updateOrAdd, title }) {
         pass: store.password,
         role: store.role,
       }).then((res) => {
-        if (res.error?.message.includes("duplicate key value violates unique constraint")) {
-          alertAndLoaders("UNSHOW_ALERT",dispatch,"Employee with same employee ID already exists.", "error");
+        if (
+          res.error?.message.includes(
+            "duplicate key value violates unique constraint"
+          )
+        ) {
+          alertAndLoaders(
+            "UNSHOW_ALERT",
+            dispatch,
+            "Employee with same employee ID already exists.",
+            "error"
+          );
           return;
-        }else if(res.data){
-          alertAndLoaders("UNSHOW_ALERT",dispatch,"User created successfully.", "success");
+        } else if (res.data) {
+          alertAndLoaders(
+            "UNSHOW_ALERT",
+            dispatch,
+            "User created successfully.",
+            "success"
+          );
         }
       });
-      handleClickClose()
+      handleClickClose();
       // dispatch(action.setOpenDialoge(false));
       // dispatch(action.setEmployeeId(""));
       // dispatch(action.setName(""));
@@ -70,21 +96,35 @@ export default function MDDialog({ updateOrAdd, title }) {
         password: store.password,
         role: store.role,
       }).then((res) => {
-        console.log(res)
-        if (res.error?.message.includes("duplicate key value violates unique constraint")) {
-          alertAndLoaders("UNSHOW_ALERT",dispatch,"Employee with same employee ID already exists.", "error");
+        console.log(res);
+        if (
+          res.error?.message.includes(
+            "duplicate key value violates unique constraint"
+          )
+        ) {
+          alertAndLoaders(
+            "UNSHOW_ALERT",
+            dispatch,
+            "Employee with same employee ID already exists.",
+            "error"
+          );
           return;
-        }else if(res.data){
-          console.log(res.data)
-          console.log(store.employeeID,store.name,store.password,store.role)
-          alertAndLoaders("UNSHOW_ALERT",dispatch,"User updated successfully.", "primary");
+        } else if (res.data) {
+          console.log(res.data);
+          console.log(store.employeeID, store.name, store.password, store.role);
+          alertAndLoaders(
+            "UNSHOW_ALERT",
+            dispatch,
+            "User updated successfully.",
+            "primary"
+          );
         }
         // dispatch(action.setOpenDialoge(false));
         // dispatch(action.setEmployeeId(""));
         // dispatch(action.setName(""));
         // dispatch(action.setPassword(""));
         // dispatch(action.setRole(""));
-        handleClickClose()
+        handleClickClose();
         dispatch(action.setRexecuteQuery(false));
       });
     }
@@ -98,7 +138,17 @@ export default function MDDialog({ updateOrAdd, title }) {
     dispatch(action.setRole(""));
   };
   return (
-    <Dialog fullWidth="true" maxWidth="sm" open={store.openDialoge} onClose={handleClickOpenAdd}>
+    <Dialog
+      PaperProps={{
+        style: {
+          backgroundColor: "#202940",
+        },
+      }}
+      fullWidth="true"
+      maxWidth="sm"
+      open={store.openDialoge}
+      onClose={handleClickOpenAdd}
+    >
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>
         <DialogContentText>{title}</DialogContentText>
@@ -172,5 +222,3 @@ export default function MDDialog({ updateOrAdd, title }) {
     </Dialog>
   );
 }
-
-

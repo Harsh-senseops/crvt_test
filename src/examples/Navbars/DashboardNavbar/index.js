@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import Popover from "@mui/material/Popover";
 import { makeStyles } from "@material-ui/core/styles";
 import React from "react";
 
@@ -12,18 +11,16 @@ import PropTypes from "prop-types";
 // @material-ui core components
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Menu from "@mui/material/Menu";
+
 import Icon from "@mui/material/Icon";
 
 // Material Dashboard 2 PRO React components
 import MDBox from "components/MDBox";
 // import MDInput from "components/MDInput";
-import MDBadge from "components/MDBadge";
 
 // Material Dashboard 2 PRO React example components
 import Breadcrumbs from "examples/Breadcrumbs";
-import NotificationItem from "examples/Items/NotificationItem";
+import { IconButton } from "@mui/material";
 
 // Custom styles for DashboardNavbar
 import {
@@ -57,7 +54,11 @@ import Box from "@mui/material/Box";
 import { useSelector, useDispatch } from "react-redux";
 import { NOTIFICATION_MESSAGE_BY_DATE } from "apis/queries";
 import { useQuery } from "urql";
-import { setShouldPauseNotification, setCounter } from "reduxSlices/notifications";
+import {
+  setShouldPauseNotification,
+  setCounter,
+  addNotifications,
+} from "reduxSlices/notifications";
 import MDTypography from "components/MDTypography";
 import OnHoverMenu from "components/PopOver";
 // import { Link } from "react-router-dom";
@@ -78,11 +79,7 @@ const useStyles = makeStyles((theme) => ({
 function DashboardNavbar({ absolute, light, isMini }) {
   const iconRef = React.useRef(null);
 
-  const messages = [
-    { id: 1, message: "Notification 1" },
-    { id: 2, message: "Notification 2" },
-    { id: 3, message: "Notification 3" },
-  ];
+  const messages = ["Notification 1", "Notification 2", "Notification 3"];
   const [navbarType, setNavbarType] = useState();
   const [controller, dispatch] = useMaterialUIController();
   const { miniSidenav, transparentNavbar, fixedNavbar, openConfigurator, darkMode } = controller;
@@ -91,7 +88,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
   const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
   const [openedPopover, setOpenedPopover] = useState(false);
-  const [openAlertPopOver, setOpenAlertPopover] = useState(false)
+  const [openAlertPopOver, setOpenAlertPopover] = useState(false);
   const popoverAnchor = useRef(null);
   const [noOfNotification, setNoOfNotification] = useState(0);
   const [notificationsState, setNotification] = useState([]);
@@ -171,10 +168,10 @@ function DashboardNavbar({ absolute, light, isMini }) {
       if (notificationMsgByDate.data.allNotifications.nodes.length !== 0) {
         for (let i = 0; i < notificationMsgByDate.data.allNotifications.nodes.length; i++) {
           if (i < 5) {
-            tempArr.push(notificationMsgByDate.data.allNotifications.nodes[i]);
+            tempArr.push(notificationMsgByDate.data.allNotifications.nodes[i].message);
           }
         }
-        setNotification(tempArr);
+        dispatchR(addNotifications(tempArr));
       }
       console.log(notificationMsgByDate.data.allNotifications.nodes.length);
       dispatchR(setCounter(notificationMsgByDate.data.allNotifications.nodes.length));
@@ -254,17 +251,33 @@ function DashboardNavbar({ absolute, light, isMini }) {
               >
                 <Icon sx={iconsStyle}>settings</Icon>
               </IconButton>
-              <OnHoverMenu messages={messages} badgeValue={messages.length} iconRef={iconRef} iconsStyle={iconsStyle} icon="priority_high"/>
-              <OnHoverMenu messages={notificationsState} badgeValue={nStore.counter} iconRef={popoverAnchor} iconsStyle={iconsStyle} icon="notifications"/>
+              <OnHoverMenu
+                messages={messages}
+                badgeValue={messages.length}
+                iconRef={iconRef}
+                iconsStyle={iconsStyle}
+                icon="priority_high"
+                link="/alertandnotification/alert"
+              />
+              <OnHoverMenu
+                messages={nStore.notifications}
+                badgeValue={nStore.counter}
+                iconRef={popoverAnchor}
+                iconsStyle={iconsStyle}
+                icon="notifications"
+                link="/alertandnotification/notification"
+              />
             </MDBox>
           </MDBox>
         )}
       </Toolbar>
       <Dialog
-      PaperProps={{ style:{
-        backgroundColor:"#202940"
-      }}}
-      // style={{background:"red"}}
+        PaperProps={{
+          style: {
+            backgroundColor: "#202940",
+          },
+        }}
+        // style={{background:"red"}}
         open={open}
         TransitionComponent={Transition}
         keepMounted

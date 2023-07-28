@@ -1,46 +1,21 @@
-/**
-=========================================================
-* Material Dashboard 2 PRO React - v2.0.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-pro-react
-* Copyright 2021 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
 import { useMemo, useEffect, useState } from "react";
-
-// prop-types is a library for typechecking of props
 import PropTypes from "prop-types";
-
-// react-table components
 import { useTable, usePagination, useGlobalFilter, useAsyncDebounce, useSortBy } from "react-table";
-
-// @mui material components
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
 import Icon from "@mui/material/Icon";
 import Autocomplete from "@mui/material/Autocomplete";
-
-// Material Dashboard 2 PRO React components
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import MDInput from "components/MDInput";
 import MDPagination from "components/MDPagination";
-
-// Material Dashboard 2 PRO React example components
 import DataTableHeadCell from "examples/Tables/DataTable/DataTableHeadCell";
 import DataTableBodyCell from "examples/Tables/DataTable/DataTableBodyCell";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
-import NotificationImportantIcon from '@mui/icons-material/NotificationImportant';
+import NotificationImportantIcon from "@mui/icons-material/NotificationImportant";
 
 function DataTable({
   entriesPerPage,
@@ -150,7 +125,7 @@ function DataTable({
   }
 
   return (
-    <TableContainer sx={{ boxShadow: "none" }} >
+    <TableContainer sx={{ boxShadow: "none" }}>
       {entriesPerPage || canSearch ? (
         <MDBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
           {entriesPerPage && (
@@ -187,23 +162,23 @@ function DataTable({
           )}
         </MDBox>
       ) : null}
-      <Table {...getTableProps()} style={{width:"100%"}}>
+      <Table {...getTableProps()} style={{ width: "100%" }}>
         <MDBox component="thead">
           {headerGroups.map((headerGroup) => (
             <>
-            <TableRow {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
-                <DataTableHeadCell
-                  {...column.getHeaderProps(isSorted && column.getSortByToggleProps())}
-                  width={column.width ? column.width : "auto"}
-                  align={column.align ? column.align : "left"}
-                  sorted={setSortedValue(column)}
-                >
-                  {column.render("Header")}
-                </DataTableHeadCell>
-              ))}
-            </TableRow>
-                  </>
+              <TableRow {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map((column) => (
+                  <DataTableHeadCell
+                    {...column.getHeaderProps(isSorted && column.getSortByToggleProps())}
+                    width={column.width ? column.width : "auto"}
+                    align={column.align ? column.align : "left"}
+                    sorted={setSortedValue(column)}
+                  >
+                    {column.render("Header")}
+                  </DataTableHeadCell>
+                ))}
+              </TableRow>
+            </>
           ))}
         </MDBox>
         <TableBody {...getTableBodyProps()}>
@@ -218,13 +193,13 @@ function DataTable({
                     {...cell.getCellProps()}
                   >
                     {cell.column.icon && cell.value === "success" && (
-                      <CheckCircleIcon style={{ color: "green"  }} fontSize="large" />
+                      <CheckCircleIcon style={{ color: "green" }} fontSize="large" />
                     )}
                     {cell.column.icon && cell.value === "failed" && (
-                      <CancelIcon style={{ color: "Red" }} fontSize="large"/>
+                      <CancelIcon style={{ color: "Red" }} fontSize="large" />
                     )}
                     {cell.column.icon && cell.value === "notification" && (
-                      <NotificationImportantIcon style={{ color: "green"  }} fontSize="large" />
+                      <NotificationImportantIcon style={{ color: "green" }} fontSize="large" />
                     )}
                     {!cell.column.icon && cell.render("Cell")}
                   </DataTableBodyCell>
@@ -252,7 +227,7 @@ function DataTable({
         {pageOptions.length > 1 && (
           <MDPagination
             variant={pagination.variant ? pagination.variant : "gradient"}
-            color={pagination.color ? pagination.color : "info"}
+            color={"error"}
           >
             {canPreviousPage && (
               <MDPagination item onClick={() => previousPage()}>

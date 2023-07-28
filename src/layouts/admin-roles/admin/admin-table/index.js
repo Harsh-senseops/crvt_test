@@ -32,6 +32,7 @@ import Button from "@mui/material/Button";
 import { TextField } from "@mui/material";
 import alertAndLoaders from "utils/alertAndLoaders";
 import { Tooltip } from "@mui/material";
+import MDTypography from "components/MDTypography";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -137,7 +138,8 @@ const AdminTable = () => {
   const handleSort = (sortBy) => {
     setState((prevState) => {
       const sortDirection =
-        prevState.sortBy === sortBy && prevState.sortDirection === SORT_DIRECTION.ASC
+        prevState.sortBy === sortBy &&
+        prevState.sortDirection === SORT_DIRECTION.ASC
           ? SORT_DIRECTION.DESC
           : SORT_DIRECTION.ASC;
       return { ...prevState, sortBy, sortDirection };
@@ -161,18 +163,30 @@ const AdminTable = () => {
       setCount(sortedData.length);
 
       dispatch(
-        action.setRows(sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage))
+        action.setRows(
+          sortedData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+        )
       );
 
       setState((prevState) => {
         const endIndex = (prevState.page + 1) * prevState.rowsPerPage;
-        const slicedData = sortedData.slice(prevState.page * prevState.rowsPerPage, endIndex);
+        const slicedData = sortedData.slice(
+          prevState.page * prevState.rowsPerPage,
+          endIndex
+        );
         return { ...prevState, rows: slicedData };
       });
 
       dispatch(action.setRexecuteQuery(true));
     }
-  }, [res.data, state.sortDirection, state.sortBy, page, rowsPerPage, searchTerm]);
+  }, [
+    res.data,
+    state.sortDirection,
+    state.sortBy,
+    page,
+    rowsPerPage,
+    searchTerm,
+  ]);
 
   const openDialoge = () => {
     dispatch(action.setOpenDialoge(true));
@@ -204,7 +218,12 @@ const AdminTable = () => {
       }
       dispatch(action.setRexecuteQuery(false));
       rexRes({ requestPolicy: "network-only" });
-      alertAndLoaders("UNSHOW_ALERT", dispatch, "User deleted successfully.", "warning");
+      alertAndLoaders(
+        "UNSHOW_ALERT",
+        dispatch,
+        "User deleted successfully.",
+        "warning"
+      );
     });
     setOpen(false);
   };
@@ -213,8 +232,13 @@ const AdminTable = () => {
     <Box sx={{ width: "100%" }}>
       <Card>
         <Grid container spacing={1}>
-          <Grid container xs={4} justifyContent="flex-start" alignItems="center">
-            <b style={{ marginTop: "6px", marginLeft: "30px", color:"#344767" }}>User Management</b>
+          <Grid
+            container
+            xs={4}
+            justifyContent="flex-start"
+            alignItems="center"
+          >
+      
           </Grid>
           <Grid container xs={8} p={2}>
             <Box
@@ -251,69 +275,90 @@ const AdminTable = () => {
             <TableRow>
               <TableCell>
                 <TableSortLabel onClick={() => handleSort(SORT_BY.NAME)}>
-                  <b>SLNO</b>
+                  <MDTypography variant="h6" fontWeight="medium">
+                    SLNO
+                  </MDTypography>
                 </TableSortLabel>
               </TableCell>
               <TableCell>
-                <TableSortLabel onClick={() => handleSort(SORT_BY.EMPLOYEE_CODE)}>
-                  <b>Employee Code</b>
+                <TableSortLabel
+                  onClick={() => handleSort(SORT_BY.EMPLOYEE_CODE)}
+                >
+                  <MDTypography variant="h6" fontWeight="medium">
+                    Employee Code
+                  </MDTypography>
                 </TableSortLabel>
               </TableCell>
               <TableCell>
                 <TableSortLabel onClick={() => handleSort(SORT_BY.NAME)}>
-                  <b>Name</b>
+                  <MDTypography variant="h6" fontWeight="medium">
+                    Name
+                  </MDTypography>
                 </TableSortLabel>
               </TableCell>
               <TableCell>
                 <TableSortLabel onClick={() => handleSort(SORT_BY.ROLE)}>
-                  <b>Role</b>{" "}
+                  <MDTypography variant="h6" fontWeight="medium">
+                    Role
+                  </MDTypography>
                 </TableSortLabel>
               </TableCell>
               <TableCell>
-                <b>Actions</b>{" "}
+                <MDTypography variant="h6" fontWeight="medium">
+                  Actions
+                </MDTypography>
               </TableCell>
             </TableRow>
             <TableBody>
               {store.rows.map((row, index) => (
                 <TableRow key={index}>
-                  <TableCell
-                  >
-                    {index + 1}
+                  <TableCell>
+                    <MDTypography variant="h6" fontWeight="light">
+                      {index + 1}
+                    </MDTypography>
                   </TableCell>
                   <TableCell>
-                    {row.employeeCode}
+                    <MDTypography variant="h6" fontWeight="light">
+                      {row.employeeCode}
+                    </MDTypography>
                   </TableCell>
                   <TableCell>
-                    {row.name}
+                    <MDTypography variant="h6" fontWeight="light">
+                      {row.name}
+                    </MDTypography>
                   </TableCell>
                   <TableCell>
-                    {returnRole(row.role)}
+                    <MDTypography variant="h6" fontWeight="light">
+                      {returnRole(row.role)}
+                    </MDTypography>
                   </TableCell>
                   <TableCell>
                     <IconButton
                       sx={{
                         "&:hover": {
                           background: "#f0f2f5",
-                          cursor:"pointer"
+                          cursor: "pointer",
                         },
                       }}
                       onClick={() => editUser(index)}
                     >
                       <Tooltip title="Edit">
-                        <ModeEditOutlineSharpIcon style={{ color: "#19A7CE" }} />
+                        <ModeEditOutlineSharpIcon
+                          style={{ color: "#19A7CE" }}
+                        />
                       </Tooltip>
                     </IconButton>
                     <IconButton
-                       sx={{
+                      sx={{
                         "&:hover": {
                           background: "#f0f2f5",
-                          cursor:"pointer"
+                          cursor: "pointer",
                         },
                       }}
                       onClick={() => openConfirmBar(index)}
                     >
                       <Tooltip title="Delete">
-                        <DeleteSharpIcon style={{ color: "#D25380" }} />
+                        <DeleteSharpIcon style={{ color: "#f44335" }} />
                       </Tooltip>
                     </IconButton>
                   </TableCell>
@@ -326,6 +371,7 @@ const AdminTable = () => {
               display: "grid",
               alignContent: "center",
               justifyContent: "center",
+              color:"white"
             }}
             rowsPerPageOptions={[5, 10, 50, 100]}
             component="div"
@@ -341,17 +387,26 @@ const AdminTable = () => {
         "Loading...."
       )}
 
-      <MDDialog title={updateOrAdd ? "Add user" : "Edit user"} updateOrAdd={updateOrAdd} />
+      <MDDialog
+        title={updateOrAdd ? "Add user" : "Edit user"}
+        updateOrAdd={updateOrAdd}
+      />
       <Dialog
         open={open}
         TransitionComponent={Transition}
         keepMounted
         onClose={handleClose}
+        PaperProps={{ style:{
+          backgroundColor:"#202940"
+        }}}
         aria-describedby="alert-dialog-slide-description"
       >
         <DialogTitle>{"Confirm delete"}</DialogTitle>
         <DialogContent>
-          <DialogContentText style={{ padding: "10px" }} id="alert-dialog-slide-description">
+          <DialogContentText
+            style={{ padding: "10px" }}
+            id="alert-dialog-slide-description"
+          >
             Are you sure you want to delete user <b>{`${userName}`}</b> ?
           </DialogContentText>
         </DialogContent>

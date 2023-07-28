@@ -12,10 +12,17 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import { useSelector, useDispatch } from "react-redux";
 import { useMutation } from "urql";
 import alertAndLoaders from "utils/alertAndLoaders";
-import { incrementCounter,setShouldPauseNotification } from "reduxSlices/notifications";
-import { ADD_MONTHLY_UPLOAD_HISTORY,ADD_NOTIFICATION } from "apis/queries";
+import { incrementCounter, setShouldPauseNotification,addNotifications } from "reduxSlices/notifications";
+import { ADD_MONTHLY_UPLOAD_HISTORY, ADD_NOTIFICATION } from "apis/queries";
 
-function ConfirmationDialogRaw({ onClose, value: valueProp, open, optionList,mutation, ...other }) {
+function ConfirmationDialogRaw({
+  onClose,
+  value: valueProp,
+  open,
+  optionList,
+  mutation,
+  ...other
+}) {
   const radioGroupRef = useRef(null);
   const [addMontlyPlannerResults, addMonthlyPlanner] = useMutation(mutation);
   const store = useSelector((store) => store.monthlyPlanner);
@@ -25,7 +32,7 @@ function ConfirmationDialogRaw({ onClose, value: valueProp, open, optionList,mut
   const [addMonthlyUploadHistoryResult, addMonthlyUploadHistory] = useMutation(
     ADD_MONTHLY_UPLOAD_HISTORY
   );
-  const [addNotificationResult, addNotification] = useMutation(ADD_NOTIFICATION)
+  const [addNotificationResult, addNotification] = useMutation(ADD_NOTIFICATION);
 
   useEffect(() => {
     if (!open) {
@@ -49,61 +56,61 @@ function ConfirmationDialogRaw({ onClose, value: valueProp, open, optionList,mut
     onClose();
   }, [onClose]);
 
-  const handleOk = useCallback(async() => {
+  const handleOk = useCallback(async () => {
     const [vendorName, vendorCode] = value.split("-");
-    if(vendorName){
-        addMonthlyPlanner({
+    if (vendorName) {
+      addMonthlyPlanner({
+        partCode: store.detailsToPush.partCode,
+        partName: store.detailsToPush.partName,
+        vendorDetails: JSON.stringify({ vendorName, vendorCode }),
+        status: 1,
+        month: store.date.month,
+      }).then((res) => {
+        if (res.error) {
+          console.log(res.error);
+          alertAndLoaders("UNSHOW_ALERT", dispatch, "Something went wrong.", "error");
+        } else if (res.data) {
+          addMonthlyUploadHistory({
             partCode: store.detailsToPush.partCode,
-            partName: store.detailsToPush.partName,
-            vendorDetails: JSON.stringify({ vendorName, vendorCode }),
-            status: 1,
-            month:store.date.month
+            description: `Successfully added in ${store.testName} test`,
+            status: "success",
+            empCode: userStore.empCode,
           }).then((res) => {
             if (res.error) {
               console.log(res.error);
-              alertAndLoaders("UNSHOW_ALERT", dispatch, "Something went wrong.", "error");
             } else if (res.data) {
-                addMonthlyUploadHistory({
-                    partCode:store.detailsToPush.partCode,
-                    description:`Successfully added in ${store.testName} test`,
-                    status: "success",
-                    empCode: userStore.empCode,
-                  }).then((res)=>{
-                      if(res.error){
-                          console.log(res.error)
-                      }else if(res.data){
-                        alertAndLoaders("UNSHOW_ALERT", dispatch, "Successfully nioce added monthly planner.", "success");
-                          addNotification({
-                            empCode:userStore.empCode,
-                            message: "New planner added",
-                            notificationFrom:`Planner`,
-                            description:`${userStore.empCode} Added ${store.detailsToPush.partName} with part code ${store.detailsToPush.partCode} to ${store.testName}`
-                          }).then((res2)=>{
-                            console.log(res2)
-                            if(res2.data){
-                              setShouldPauseNotification(false)
-                              // let nCount = localStorage.getItem("cn") || 0 
-                              // localStorage.setItem("cn",nCount+1)
-                              dispatch(incrementCounter(1))
-                            }
-                            
-                          })
-                       
-                      }
-                  })
-                   
-                    
-                
+              alertAndLoaders(
+                "UNSHOW_ALERT",
+                dispatch,
+                "Successfully nioce added monthly planner.",
+                "success"
+              );
+              addNotification({
+                empCode: userStore.empCode,
+                message: "New planner added",
+                notificationFrom: `Planner`,
+                description: `${userStore.empCode} Added ${store.detailsToPush.partName} with part code ${store.detailsToPush.partCode} to ${store.testName}`,
+              }).then((res2) => {
+                console.log(res2);
+                if (res2.data) {
+                  setShouldPauseNotification(false);
+                  // let nCount = localStorage.getItem("cn") || 0
+                  // localStorage.setItem("cn",nCount+1)
+                  dispatch(incrementCounter(1));
+                  dispatch(addNotifications("New planner added"))
+                }
+              });
             }
-          })
-         
-        //   alert(JSON.stringify(store.detailsToPush) + JSON.stringify({ vendorName, vendorCode }));
-          onClose(value);
-    }else{
-        alertAndLoaders("UNSHOW_ALERT", dispatch, "Please Select Vendor Name.", "warning");
-    }
+          });
+        }
+      });
 
-  }, [addMontlyPlannerResults,dispatch, onClose, store.detailsToPush, value]);
+      //   alert(JSON.stringify(store.detailsToPush) + JSON.stringify({ vendorName, vendorCode }));
+      onClose(value);
+    } else {
+      alertAndLoaders("UNSHOW_ALERT", dispatch, "Please Select Vendor Name.", "warning");
+    }
+  }, [addMontlyPlannerResults, dispatch, onClose, store.detailsToPush, value]);
 
   const handleChange = useCallback((event) => {
     setValue(event.target.value);
@@ -116,6 +123,11 @@ function ConfirmationDialogRaw({ onClose, value: valueProp, open, optionList,mut
       TransitionProps={{ onEntering: handleEntering }}
       open={open}
       {...other}
+      PaperProps={{
+        style: {
+          backgroundColor: "#202940",
+        },
+      }}
     >
       <DialogTitle>Select vendors.</DialogTitle>
       <DialogContent dividers>
@@ -151,10 +163,10 @@ ConfirmationDialogRaw.propTypes = {
   open: PropTypes.bool.isRequired,
   value: PropTypes.string.isRequired,
   optionList: PropTypes.array.isRequired,
-  mutation:PropTypes.string.isRequired
+  mutation: PropTypes.string.isRequired,
 };
 
-function DialogSelectComponent({ open, setOpen, option, setOption, mutation, }) {
+function DialogSelectComponent({ open, setOpen, option, setOption, mutation }) {
   const handleClose = useCallback(
     (newValue) => {
       setOpen(false);
@@ -183,5 +195,4 @@ function DialogSelectComponent({ open, setOpen, option, setOption, mutation, }) 
   );
 }
 
-export default React.memo(DialogSelectComponent)
-
+export default React.memo(DialogSelectComponent);

@@ -12,13 +12,13 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
 import { useQuery, useSubscription } from "urql";
-import {useSelector,useDispatch} from "react-redux"
+import { useSelector, useDispatch } from "react-redux";
 import DataTable from "examples/Tables/DataTable";
 import { setShouldPause } from "reduxSlices/yearlyPlanner";
-import { useCallback } from 'react';
+import { useCallback } from "react";
 import MDTypography from "components/MDTypography";
 
-const columns = [ 
+const columns = [
   "Components",
   "Apr",
   "May",
@@ -44,21 +44,25 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-export default function YearlyPlannerComponent({name,query,allPlanners}) {
+export default function YearlyPlannerComponent({
+  name,
+  query,
+  allPlanners,
+}) {
   const [expanded, setExpanded] = React.useState(false);
   // const [shouldPause, setShouldPause] = React.useState(false);
-  const yearlyPlannerStore = useSelector((store)=>{
-    return store.yearlyPlanner
+  const yearlyPlannerStore = useSelector((store) => {
+    return store.yearlyPlanner;
   });
   const dispatch = useDispatch();
   const [dustYearlyPlanner] = useSubscription({
-    query: query
+    query: query,
     // pause: yearlyPlannerStore.shouldPause
   });
   const [data, setData] = React.useState([]);
   React.useEffect(() => {
-    if(data.length === 0){
-      dispatch(setShouldPause(false))
+    if (data.length === 0) {
+      dispatch(setShouldPause(false));
     }
     if (dustYearlyPlanner.data) {
       const monthNames = [
@@ -99,7 +103,10 @@ export default function YearlyPlannerComponent({name,query,allPlanners}) {
               monthsArray.push("");
             }
           });
-          tempArr.push({ name: val.componentDetailByComponentId.partName, samples: monthsArray });
+          tempArr.push({
+            name: val.componentDetailByComponentId.partName,
+            samples: monthsArray,
+          });
         }
       });
 
@@ -107,25 +114,28 @@ export default function YearlyPlannerComponent({name,query,allPlanners}) {
         return a.name.localeCompare(b.name);
       });
       setData(sortedArray);
-      dispatch(setShouldPause(false))
+      dispatch(setShouldPause(false));
     }
   }, [dustYearlyPlanner]);
 
   const handleExpandClick = useCallback(() => {
     setExpanded((prevExpanded) => !prevExpanded);
   }, []);
-  
-  console.log(dustYearlyPlanner.data)
+
+  // console.log(dustYearlyPlanner.data);
   return (
-    <div style={{background:"#394259"}}>
-      <MDBox p={1} pt={1}  style={{background:"#394259"}}>
+    <div style={{ background: "#394259" }}>
+      <MDBox p={1} pt={1} style={{ background: "#394259" }}>
         <Card>
           <MDBox p={3} lineHeight={1}>
-            <CardActions disableSpacing style={{color:"white",height:"5px"}}>
-            <MDTypography variant="h6" fontWeight="medium">
-            {name}
-          </MDTypography>
-              
+            <CardActions
+              disableSpacing
+              style={{ color: "white", height: "5px" }}
+            >
+              <MDTypography variant="h6" fontWeight="medium">
+                {name}
+              </MDTypography>
+
               <ExpandMore
                 expand={expanded}
                 onClick={handleExpandClick}
@@ -136,36 +146,50 @@ export default function YearlyPlannerComponent({name,query,allPlanners}) {
               </ExpandMore>
             </CardActions>
             <MDTypography
-            style={{
-              color: "lime",
-              fontSize: "14px",
-              paddingTop: "1%",
-            }}
-          >
-            Total Components found {data.length}
-          </MDTypography>
+              style={{
+                color: "lime",
+                fontSize: "14px",
+                paddingTop: "1%",
+              }}
+            >
+              Total Components found {data.length}
+            </MDTypography>
             {/* <span style={{fontSize:"15px",color:"lime"}}></span> */}
-            <Collapse style={{ padding: "0px" }} in={expanded} timeout="auto" unmountOnExit>
+            <Collapse
+              style={{ padding: "0px" }}
+              in={expanded}
+              timeout="auto"
+              unmountOnExit
+            >
               {data.length !== 0 ? (
-                <TableContainer style={{marginTop:"20px"}}>
+                <TableContainer style={{ marginTop: "20px" }}>
                   <Table>
                     <TableRow style={{ background: "#003e66" }}>
                       {columns.map((column, i) => (
-                        <TableCell key={i} style={{color:"whitesmoke",fontWeight:"bold"}}>{column}</TableCell>
+                        <TableCell
+                          key={i}
+                          style={{ color: "whitesmoke", fontWeight: "bold" }}
+                        >
+                          {column}
+                        </TableCell>
                       ))}
                     </TableRow>
                     <TableBody>
                       {data
                         ? data.map((val, index) => {
                             return (
-                              <TableRow style={{
-                                  background: index % 2 === 0 ? "#d8e4e9" : "white",
+                              <TableRow
+                                style={{
+                                  background:
+                                    index % 2 === 0 ? "#d8e4e9" : "white",
                                   textAlign: "center",
-                                }} key={index}>
+                                }}
+                                key={index}
+                              >
                                 <TableCell>{val.name}</TableCell>
                                 {val.samples.map((val2, i) => {
                                   return (
-                                    <TableCell style={{textAlign:"center"}}>
+                                    <TableCell style={{ textAlign: "center" }}>
                                       {val2}
                                     </TableCell>
                                   );

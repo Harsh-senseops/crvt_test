@@ -15,7 +15,7 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import Masterpartlistupload from "./master-part-list-upload";
 import DropFileInput from "./drop-file-input";
-import { useSelector } from "react-redux"
+import { useSelector } from "react-redux";
 import MDAlert from "components/MDAlert";
 // import { DUST_YEARLY_PLANNER,OVEN_YEARLY_PLANNER } from "apis/queries";
 
@@ -123,45 +123,96 @@ subscription vibrationYearlyPlanner {
   }
 }
 `;
+let testData = [
+  {
+    name: "Dust",
+    query: DUST_YEARLY_PLANNER,
+    allPlanners: "allDustYearlyPlanners",
+    expanded: false,
+  },
+  {
+    name: "Oven",
+    query: OVEN_YEARLY_PLANNER,
+    allPlanners: "allOvenYearlyPlanners",
+    expanded: false,
+  },
+  {
+    name: "RO",
+    query: RO_YEARLY_PLANNER,
+    allPlanners: "allRoYearlyPlanners",
+    expanded: false,
+  },
+  {
+    name: "Shower",
+    query: SHOWER_YEARLY_PLANNER,
+    allPlanners: "allShowerYearlyPlanners",
+    expanded: false,
+  },
+  {
+    name: "Thermal Cycle",
+    query: THERMAL_CYCLE_YEARLY_PLANNER,
+    allPlanners: "allThermalCycleYearlyPlanners",
+    expanded: false,
+  },
+  {
+    name: "Thermal Shock",
+    query: THERMAL_SHOCK_YEARLY_PLANNER,
+    allPlanners: "allThermalShockYearlyPalnners",
+    expanded: false,
+  },
+  {
+    name: "Vibration",
+    query: VIBRATION_YEARLY_PLANNER,
+    allPlanners: "allVibrationYearlyPlanners",
+    expanded: false,
+  },
+]
 function AnnualPlanner() {
-  const alertStore = useSelector((store) => store.alert)
+  const alertStore = useSelector((store) => store.alert);
   const [testData, setTestData] = useState([
     {
       name: "Dust",
       query: DUST_YEARLY_PLANNER,
-      allPlanners: "allDustYearlyPlanners"
+      allPlanners: "allDustYearlyPlanners",
+      expanded: false,
     },
     {
       name: "Oven",
       query: OVEN_YEARLY_PLANNER,
-      allPlanners: "allOvenYearlyPlanners"
+      allPlanners: "allOvenYearlyPlanners",
+      expanded: false,
     },
     {
       name: "RO",
       query: RO_YEARLY_PLANNER,
-      allPlanners: "allRoYearlyPlanners"
+      allPlanners: "allRoYearlyPlanners",
+      expanded: false,
     },
     {
       name: "Shower",
       query: SHOWER_YEARLY_PLANNER,
-      allPlanners: "allShowerYearlyPlanners"
+      allPlanners: "allShowerYearlyPlanners",
+      expanded: false,
     },
     {
       name: "Thermal Cycle",
       query: THERMAL_CYCLE_YEARLY_PLANNER,
-      allPlanners: "allThermalCycleYearlyPlanners"
+      allPlanners: "allThermalCycleYearlyPlanners",
+      expanded: false,
     },
     {
       name: "Thermal Shock",
       query: THERMAL_SHOCK_YEARLY_PLANNER,
-      allPlanners: "allThermalShockYearlyPalnners"
+      allPlanners: "allThermalShockYearlyPalnners",
+      expanded: false,
     },
     {
       name: "Vibration",
       query: VIBRATION_YEARLY_PLANNER,
-      allPlanners: "allVibrationYearlyPlanners"
-    }
-  ])
+      allPlanners: "allVibrationYearlyPlanners",
+      expanded: false,
+    },
+  ]);
   const role = useSelector((store) => {
     return store.userRoles;
   });
@@ -169,6 +220,19 @@ function AnnualPlanner() {
     console.log(files);
   };
 
+  const handleExpandClick = (index) => {
+    // let obj = testData;
+    for (let i = 0; i < testData.length; i++) {
+      if (i === index) {
+        testData[i].expanded = true;
+        // console.log(testData);
+      }
+      testData[i].expanded = false;
+    }
+    // setTestData(obj);
+    console.log(testData);
+  };
+ 
   return (
     <DashboardLayout>
       {alertStore.showAlert ? (
@@ -178,20 +242,24 @@ function AnnualPlanner() {
           </MDAlert>
         </div>
       ) : (
-        "")}
+        ""
+      )}
       <MDBox width="calc(100% - 48px)" position="absolute" top="1.75rem">
         <DashboardNavbar dark absolute />
       </MDBox>
 
       {/* <MDBox pt={10} pb={3} style={{background:"#202940",borderRadius:"10px"}} > */}
 
-      <MDBox pt={10} pb={3} style={{ background: "#202940", borderRadius: "10px" }} >
-
+      <MDBox
+        pt={10}
+        pb={3}
+        style={{ background: "#202940", borderRadius: "10px" }}
+      >
         <Card>
           <MDBox p={3} lineHeight={1}>
-            <MDTypography variant="h5" fontWeight="medium">
+            {/* <MDTypography variant="h5" fontWeight="medium">
               Annual Planner
-            </MDTypography>
+            </MDTypography> */}
             {/* <MDTypography  variant="button" color="text">
               Please configure equipment details for all components
             </MDTypography> */}
@@ -213,14 +281,26 @@ function AnnualPlanner() {
           ) : (
             ""
           )}
-          <Grid style={{background:"#394259"}} mt={3} pt={2} pr={1} pl={1} pb={3} borderRadius={3}>
-            {testData.map((val)=>{
-              return(
-                 <YearlyPlannerComponent name={val.name} query={val.query} allPlanners={val.allPlanners}/>
-              ) 
-
-         
-
+          <Grid
+            style={{ background: "#394259" }}
+            mt={3}
+            pt={2}
+            pr={1}
+            pl={1}
+            pb={3}
+            borderRadius={3}
+          >
+            {testData.map((val, i) => {
+              return (
+                // <div onClick={() => handleExpandClick(i)}>
+                  <YearlyPlannerComponent
+                    name={val?.name}
+                    query={val?.query}
+                    allPlanners={val?.allPlanners}
+                    // expanded={val.expanded ? true : false}
+                  />
+                // </div>
+              );
             })}
           </Grid>
         </Card>

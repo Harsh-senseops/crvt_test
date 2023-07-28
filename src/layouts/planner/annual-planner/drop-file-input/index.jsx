@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import alertAndLoaders from "utils/alertAndLoaders";
 
 import Backdrop from "@mui/material/Backdrop";
+import { Diversity2Sharp } from "@mui/icons-material";
 
 function checkElement(val, array) {
   const pos = array.map((e) => e["vendor_code"]).indexOf(val);
@@ -285,28 +286,30 @@ const DropFileInput = (props) => {
         >
           <div style={{ display: "flex", flexDirection: "column" }}>
             <div
-              style={{ width: "100%", height: "12px", background: "#202940", borderRadius: "12px" }}
+              style={{ width: "100%", height: "12px", background: "black", borderRadius: "12px" }}
             >
               <div
                 style={{
-                  width: `${progress}%`,
+                  width: `${progress+2}%`,
                   background: "#F44335",
                   borderRadius: "12px",
                   transition: "width 0.2s",
                   height: "12px",
                 }}
               >
-                <span
+                <div
                   style={{
+                    height:"20px",
                     fontSize: "10px",
                     float: "right",
                     fontWeight: "bolder",
                     color: "whitesmoke",
-                    paddingBottom: "5px",
+                    // paddingBottom: "5px",
+                    // marginBottom:"5px"
                   }}
                 >
-                  {progress + "%"}
-                </span>
+                  {progress + "%"}{"   "}
+                </div>
               </div>
             </div>
             <br />

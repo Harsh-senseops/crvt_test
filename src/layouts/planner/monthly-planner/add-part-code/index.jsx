@@ -124,6 +124,9 @@ const AddPartCode = ({ buttonText, onAddPartCode }) => {
         open={open}
         keepMounted
         onClose={handleClose}
+        PaperProps={{ style:{
+          backgroundColor:"#202940"
+        }}}
         aria-describedby="alert-dialog-slide-description"
       >
         <DialogTitle>Add Part Code</DialogTitle>

@@ -358,7 +358,7 @@ mutation createPartCodeDetails($he6t: Int!, $hhhd: Int!, $hhhg: Int!, $hhhu: Int
   }
 }
 
-`
+`;
 const PARTDEAILS_BY_PART_CODE = `
 query MyQuery($partCode:String!) {
   partCodeDetailByPartCode(partCode: $partCode) {
@@ -375,11 +375,11 @@ query MyQuery($partCode:String!) {
     vendorDetails
   }
 }
-`
+`;
 
 const deleteTable = `query deleteTable($tableName:String!) {
   trancuateTable(tableName: $tableName)
-}`
+}`;
 
 const ADD_DUST_MONTHLY_PLANNER = `
 mutation add_dust_montly_planner($partCode:String!,$partName:String!,$status:Int!,$vendorDetails:JSON,$month:String!) {
@@ -387,49 +387,49 @@ mutation add_dust_montly_planner($partCode:String!,$partName:String!,$status:Int
     clientMutationId
   }
 }
-`
+`;
 const ADD_OVEN_MONTHLY_PLANNER = `
 mutation add_oven_montly_planner($partCode:String!,$partName:String!,$status:Int!,$vendorDetails:JSON,$month:String!) {
   createOvenMonthlyPlanner(input: {ovenMonthlyPlanner: {partCode: $partCode, partName: $partName, status: $status, vendorDetails: $vendorDetails,month:$month}}) {
     clientMutationId
   }
 }
-`
+`;
 const ADD_RO_MONTHLY_PLANNER = `
 mutation add_ro_montly_planner($partCode:String!,$partName:String!,$status:Int!,$vendorDetails:JSON,$month:String!) {
   createRoMonthlyPlanner(input: {roMonthlyPlanner: {partCode: $partCode, partName: $partName, status: $status, vendorDetails: $vendorDetails,month:$month}}) {
     clientMutationId
   }
 }
-`
+`;
 const ADD_SHOWER_MONTHLY_PLANNER = `
 mutation add_shower_montly_planner($partCode:String!,$partName:String!,$status:Int!,$vendorDetails:JSON,$month:String!) {
   createShowerMonthlyPlanner(input: {showerMonthlyPlanner: {partCode: $partCode, partName: $partName, status: $status, vendorDetails: $vendorDetails,month:$month}}) {
     clientMutationId
   }
 }
-`
+`;
 const ADD_THERMAL_CYCLE_MONTHLY_PLANNER = `
 mutation add_thermal_cylce_montly_planner($partCode:String!,$partName:String!,$status:Int!,$vendorDetails:JSON,$month:String!) {
   createThermalCycleMonthlyPlanner(input: {thermalCycleMonthlyPlanner: {partCode: $partCode, partName: $partName, status: $status, vendorDetails: $vendorDetails,month:$month}}) {
     clientMutationId
   }
 }
-`
+`;
 const ADD_THERMAL_SHOCK_MONTHLY_PLANNER = `
 mutation add_thermal_shock_montly_planner($partCode:String!,$partName:String!,$status:Int!,$vendorDetails:JSON,$month:String!) {
   createThermalShockMonthlyPlanner(input: {thermalShockMonthlyPlanner: {partCode: $partCode, partName: $partName, status: $status, vendorDetails: $vendorDetails,month:$month}}) {
     clientMutationId
   }
 }
-`
+`;
 const ADD_VIBRATION_MONTHLY_PLANNER = `
 mutation add_vibration_shock_montly_planner($partCode:String!,$partName:String!,$status:Int!,$vendorDetails:JSON,$month:String!) {
   createVibrationMonthlyPlanner(input: {vibrationMonthlyPlanner: {partCode: $partCode, partName: $partName, status: $status, vendorDetails: $vendorDetails,month:$month}}) {
     clientMutationId
   }
 }
-`
+`;
 
 const DUST_MONTHLY_PLANNER_BY_DATE = `
 subscription allDustMonthlyPlanners($month:String!) {
@@ -443,7 +443,7 @@ subscription allDustMonthlyPlanners($month:String!) {
     }
   }
 }
-`
+`;
 const OVEN_MONTHLY_PLANNER_BY_DATE = `
 subscription allOvenMonthlyPlanners($month:String!) {
   allOvenMonthlyPlanners(condition: {month: $month}) {
@@ -456,8 +456,8 @@ subscription allOvenMonthlyPlanners($month:String!) {
     }
   }
 }
-`
-const RO_MONTHLY_PLANNER_BY_DATE=`
+`;
+const RO_MONTHLY_PLANNER_BY_DATE = `
 subscription allRoMonthlyPlanners($month:String!) {
   allRoMonthlyPlanners(condition: {month: $month}) {
     nodes {
@@ -469,7 +469,7 @@ subscription allRoMonthlyPlanners($month:String!) {
     }
   }
 }
-`
+`;
 
 const SHOWER_MONTHLY_PLANNER_BY_DATE = `
 subscription allShowerMonthlyPlanners($month:String!) {
@@ -483,7 +483,7 @@ subscription allShowerMonthlyPlanners($month:String!) {
     }
   }
 }
-`
+`;
 
 const THERMAL_CYCLE_MONTHLY_PLANNER_BY_DATE = `
 subscription allThermalCycleMonthlyPlanners($month:String!) {
@@ -497,7 +497,7 @@ subscription allThermalCycleMonthlyPlanners($month:String!) {
     }
   }
 }
-`
+`;
 
 const THERMAL_SHOCK_MONTHLY_PLANNER_BY_DATE = `
 subscription allThermalShockMonthlyPlanners($month:String!) {
@@ -511,7 +511,7 @@ subscription allThermalShockMonthlyPlanners($month:String!) {
     }
   }
 }
-`
+`;
 
 const VIBRATION_MONTHLY_PLANNER_BY_DATE = `
 subscription allVibrationMonthlyPlanners($month:String!) {
@@ -525,7 +525,7 @@ subscription allVibrationMonthlyPlanners($month:String!) {
     }
   }
 }
-`
+`;
 
 const ADD_MONTHLY_UPLOAD_HISTORY = `
 mutation MyMutation($partCode: String!, $description: String!, $status: String!, $empCode: String!) {
@@ -537,7 +537,7 @@ mutation MyMutation($partCode: String!, $description: String!, $status: String!,
     }
   }
 }
-`
+`;
 const ALL_MONTHLY_HISTORY = `query allMonthlyUploadHistories {
   allMonthlyUploadHistories {
     nodes {
@@ -549,7 +549,7 @@ const ALL_MONTHLY_HISTORY = `query allMonthlyUploadHistories {
     }
   }
 }
-`
+`;
 const ADD_YEARLY_HISTORY = `mutation MyMutation($empCode:String!,$fileName:String!) {
   createYearlyPlannerHistory(
     input: {yearlyPlannerHistory: {empcode: $empCode, fileName: $fileName}}
@@ -557,7 +557,7 @@ const ADD_YEARLY_HISTORY = `mutation MyMutation($empCode:String!,$fileName:Strin
     clientMutationId
   }
 }
-`
+`;
 const ALL_YEARLY_PLANNER_HISTORY = `
 query yearlyPlannerHistory {
   allYearlyPlannerHistories {
@@ -568,66 +568,66 @@ query yearlyPlannerHistory {
     }
   }
 }
-`
+`;
 
-const ADD_DUST_STATUS=`mutation updateDustTestDetailByPartName($status:Int,$partName:Int!) {
+const ADD_DUST_STATUS = `mutation updateDustTestDetailByPartName($status:Int,$partName:Int!) {
 updateDustTestDetailByPartName(
   input: {dustTestDetailPatch: {status: $status}, partName: $partName}
 ) {
   clientMutationId
 }
-}`
-const ADD_THERMAL_CYCLE_STATUS=`mutation updateThermalCycleTestDetailByPartName($status:Int!,$partName:Int!) {
+}`;
+const ADD_THERMAL_CYCLE_STATUS = `mutation updateThermalCycleTestDetailByPartName($status:Int!,$partName:Int!) {
 updateThermalCycleTestDetailByPartName(
   input: {thermalCycleTestDetailPatch: {status: $status}, partName: $partName}
 ) {
   clientMutationId
 }
-}`
-const ADD_THERMAL_SHOCK_STATUS=`mutation updateThermalShockChamberTestDetailByPartName($status:Int!,$partName:Int!) {
+}`;
+const ADD_THERMAL_SHOCK_STATUS = `mutation updateThermalShockChamberTestDetailByPartName($status:Int!,$partName:Int!) {
 updateThermalShockChamberTestDetailByPartName(
   input: {thermalShockChamberTestDetailPatch: {status: $status}, partName: $partName}
 ) {
   clientMutationId
 }
-}`
-const ADD_VIBRATION_STATUS=`mutation updateVibrationTestDetailByPartName($status:Int!,$partName:Int!) {
+}`;
+const ADD_VIBRATION_STATUS = `mutation updateVibrationTestDetailByPartName($status:Int!,$partName:Int!) {
 updateVibrationTestDetailByPartName(
   input: {vibrationTestDetailPatch: {status: $status}, partName: $partName}
 ) {
   clientMutationId
 }
-}`
-const ADD_OVEN_STATUS=`mutation updateOvenTestDetailByPartName($status:Int!,$partName:Int!) 
+}`;
+const ADD_OVEN_STATUS = `mutation updateOvenTestDetailByPartName($status:Int!,$partName:Int!) 
 {updateOvenTestDetailByPartName(
   input: {ovenTestDetailPatch: {status:$status}, partName: $partName}
 ){
   clientMutationId
 }
-}`
-const ADD_REPEATED_OPERATION_STATUS=`mutation updateRepeatedOperationTestDetailByPartName($status:Int!,$partName:Int!) {
+}`;
+const ADD_REPEATED_OPERATION_STATUS = `mutation updateRepeatedOperationTestDetailByPartName($status:Int!,$partName:Int!) {
 updateRepeatedOperationTestDetailByPartName(
   input: {repeatedOperationTestDetailPatch: {status: $status}, partName: $partName}
 ) {
   clientMutationId
 }
-}`
-const ADD_SHOWER_STATUS=`mutation updateShowerTestDetailByPartName($status:Int!,$partName:Int!) {
+}`;
+const ADD_SHOWER_STATUS = `mutation updateShowerTestDetailByPartName($status:Int!,$partName:Int!) {
 updateShowerTestDetailByPartName(
   input: {showerTestDetailPatch: {status: $status}, partName: $partName}
 ) {
   clientMutationId
 }
-}` 
-const ADD_EQUIPMENT_UPDATE_HISTORY=`mutation createEquipmentUpdateHistory($componentId: Int!, $employeeCode: String!, $testType: String!,$updateValues:JSON!) {
+}`;
+const ADD_EQUIPMENT_UPDATE_HISTORY = `mutation createEquipmentUpdateHistory($componentId: Int!, $employeeCode: String!, $testType: String!,$updateValues:JSON!) {
 createEquipmentUpdateHistory(
   input: {equipmentUpdateHistory: {componentId: $componentId, employeeCode: $employeeCode, testType: $testType, updateValues: $updateValues}}
 ) {
   clientMutationId
 }
 }
-`
-const EQUIPMENT_HISTORY=`
+`;
+const EQUIPMENT_HISTORY = `
 query allEquipmentUpdateHistories {
 allEquipmentUpdateHistories {
   nodes {
@@ -642,7 +642,7 @@ allEquipmentUpdateHistories {
   }
 }
 }
-`
+`;
 const ADD_NOTIFICATION = `
 mutation MyMutation($empCode:String!,$message:String!,$notificationFrom:String!,$description:String!) {
   createNotification(
@@ -651,7 +651,7 @@ mutation MyMutation($empCode:String!,$message:String!,$notificationFrom:String!,
     clientMutationId
   }
 }
-`
+`;
 const NOTIFICATION_MESSAGE_BY_DATE = `
 query MyQuery($dateTime: Datetime!) {
   allNotifications(filter: {datetime: {greaterThan: $dateTime}}) {
@@ -660,7 +660,7 @@ query MyQuery($dateTime: Datetime!) {
     }
   }
 }
-`
+`;
 const ALL_NOTIFICATIONS = `
 query allNotifications {
   allNotifications {
@@ -672,8 +672,22 @@ query allNotifications {
     }
   }
 }
-
-`
+`;
+const ALL_ALERTS = `
+query allAlerts {
+  allAlerts {
+    nodes {
+      machineStatus
+      dateTime
+      counter
+      testingEquipmentByEquipmentName {
+        equipmentName
+      }
+      userName
+    }
+  }
+}
+`;
 export {
   AUTH,
   ADD_USER,
@@ -739,5 +753,6 @@ export {
   ADD_DUST_STATUS,
   ADD_NOTIFICATION,
   NOTIFICATION_MESSAGE_BY_DATE,
-  ALL_NOTIFICATIONS
+  ALL_NOTIFICATIONS,
+  ALL_ALERTS,
 };
