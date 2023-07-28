@@ -40,7 +40,7 @@ import {
   THERMAL_SHOCK_MONTHLY_PLANNER_BY_DATE,
   VIBRATION_MONTHLY_PLANNER_BY_DATE
 } from "apis/queries";
-import useCustomQuery from "customHooks/useCustomQuery";
+
 
 function MonthlyPlanner() {
   const store = useSelector((store) => {
