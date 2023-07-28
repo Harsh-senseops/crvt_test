@@ -257,6 +257,7 @@ const ReusabaleMonthlyPlannerTests = ({
               onClick={!toggleEnable ? handleExpandClick : null}
               aria-expanded={expanded}
               aria-label="show more"
+              color='info'
             >
               <ExpandMoreIcon />
             </IconButton>

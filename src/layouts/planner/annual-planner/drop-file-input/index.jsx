@@ -167,6 +167,7 @@ const DropFileInput = (props) => {
     const updatedList = [];
     setFileList(updatedList);
     props.onFileChange(updatedList);
+    setDragAndDrop(false);
     setMakePlanner(true);
 
     setOpen(true);
@@ -223,35 +224,34 @@ const DropFileInput = (props) => {
     <>
       <Grid mb={6} mt={2}>
         {fileList.length > 0 ? (
-          <div className="drop-file-preview">
-            <MDTypography variant="h5" fontWeight="medium">
-              Ready to upload
-            </MDTypography>
-            <form>
-              {fileList.map((item, index) => (
-                <div className="drop-file-preview__item">
-                  <img src={ImageConfig[item.type.split("/")[1]] || ImageConfig.default} alt="" />
-                  <div className="drop-file-preview__item__info">
-                    <MDTypography variant="button" fontWeight="regular">
-                      {item.name}
-                    </MDTypography>
+          <Box className="drop-file-preview">
+            <Card>
+              <CardContent style={{ textAlign: "center" }}>
+                <MDTypography variant="h5" fontWeight="medium" style={{}}>
+                  Ready to Upload
+                </MDTypography>
+                {fileList.map((item, index) => (
+                  <div
+                    className="drop-file-preview__item"
+                    style={{ display: "flex", alignItems: "center" }}
+                  >
+                    <img src={ImageConfig[item.type.split("/")[1]] || ImageConfig.default} alt="" />
+                    <div className="drop-file-preview__item__info">
+                      <MDTypography variant="button" fontWeight="regular">
+                        {item.name}
+                      </MDTypography>
+                    </div>
                   </div>
-                </div>
-              ))}
-
-              <MDButton color="dark" onClick={() => fileRemove()}>
-                Cancel
-              </MDButton>
-              <MDButton
-                style={{ marginLeft: "20px" }}
-                color="error"
-                type="submit"
-                onClick={(e) => pushData(e)}
-              >
-                Upload
-              </MDButton>
-            </form>
-          </div>
+                ))}
+                <MDButton color="error" type="submit" onClick={(e) => pushData(e)}>
+                  Upload
+                </MDButton>
+                <MDButton style={{ marginLeft: "20px" }} color="dark" onClick={() => fileRemove()}>
+                  Cancel
+                </MDButton>
+              </CardContent>
+            </Card>
+          </Box>
         ) : (
           <div
             style={{
@@ -290,7 +290,7 @@ const DropFileInput = (props) => {
             >
               <div
                 style={{
-                  width: `${progress+2}%`,
+                  width: `${progress + 2}%`,
                   background: "#F44335",
                   borderRadius: "12px",
                   transition: "width 0.2s",
@@ -299,7 +299,7 @@ const DropFileInput = (props) => {
               >
                 <div
                   style={{
-                    height:"20px",
+                    height: "20px",
                     fontSize: "10px",
                     float: "right",
                     fontWeight: "bolder",
@@ -308,7 +308,8 @@ const DropFileInput = (props) => {
                     // marginBottom:"5px"
                   }}
                 >
-                  {progress + "%"}{"   "}
+                  {progress + "%"}
+                  {"   "}
                 </div>
               </div>
             </div>

@@ -112,7 +112,13 @@ function Alert() {
       <MDBox pt={10} pb={3}>
         <Card style={{ background: "#4c5365" }}>
           <MDBox p={3} lineHeight={1}>
+<<<<<<< HEAD
             <MDHoverSearch onInputChange={(value) => setSearchTerm(value)} />
+=======
+            {/* <MDTypography variant="h5" fontWeight="medium">
+              Alert
+            </MDTypography> */}
+>>>>>>> 608382ee0f5ac97f0fa8c8dd3ccbd1987a5f1d4b
             <Grid mt={2}>
               <MDTable data={{ columns, rows: tableData }} searchTerm={searchTerm} onTouch={takeAction} />
             </Grid>

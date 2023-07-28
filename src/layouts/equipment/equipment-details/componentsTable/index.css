@@ -1,0 +1,7 @@
+.css-1qgma8u-MuiButtonBase-root-MuiTableSortLabel-root.Mui-active{
+    color: white !important;
+}
+.MuiTableBody-root tr:last-child td {
+    /* Remove bottom border from the last row in the table */
+    border-bottom: none !important;
+}

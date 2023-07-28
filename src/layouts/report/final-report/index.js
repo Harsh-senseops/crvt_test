@@ -27,9 +27,9 @@ function FinalReport() {
       <MDBox pt={10} pb={3}>
         <Card>
           <MDBox p={3} lineHeight={1}>
-            <MDTypography variant="h5" fontWeight="medium">
-              Final Report
-            </MDTypography>
+                {/* <MDTypography variant="h5" fontWeight="medium">
+                  Final Report
+                </MDTypography> */}
             {/* <PDFDownloadLink document={<MyDocument />} fileName="somename.pdf">
               {({ blob, url, loading, error }) =>
                 loading ? 'Loading document...' : 'Download now!'
