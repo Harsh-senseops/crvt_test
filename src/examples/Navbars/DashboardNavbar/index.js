@@ -162,7 +162,6 @@ function DashboardNavbar({ absolute, light, isMini }) {
     //   rexNMBD({ requestPolicy: 'network-only' })
     // }
     if (notificationMsgByDate.data) {
-      console.log(notificationMsgByDate.data.allNotifications.nodes);
       dispatchR(setShouldPauseNotification(true));
       let tempArr = [];
       if (notificationMsgByDate.data.allNotifications.nodes.length !== 0) {
@@ -173,7 +172,6 @@ function DashboardNavbar({ absolute, light, isMini }) {
         }
         dispatchR(addNotifications(tempArr));
       }
-      console.log(notificationMsgByDate.data.allNotifications.nodes.length);
       dispatchR(setCounter(notificationMsgByDate.data.allNotifications.nodes.length));
       setNoOfNotification(notificationMsgByDate.data.allNotifications.nodes.length);
     }

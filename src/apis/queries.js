@@ -100,6 +100,9 @@ const RO_YEARLY_PLANNER = `query roYearlyPlanner {
     nodes {
       componentDetailByComponentId {
         partName
+        equipmentRunningDetailByPartId{
+          repeatedOperationErt
+        }
       }
       componentId
       samples
@@ -115,6 +118,9 @@ query thermalShockYearlyPlanner {
     nodes {
       componentDetailByComponentId {
         partName
+        equipmentRunningDetailByPartId {
+          thermalShockErt
+        }
       }
       componentId
       samples
@@ -130,6 +136,9 @@ query showerYearlyPlanner {
     nodes {
       componentDetailByComponentId {
         partName
+        equipmentRunningDetailByPartId{
+          showerErt
+        }
       }
       componentId
       samples
@@ -145,6 +154,9 @@ query dustYearlyPlanner {
     nodes {
       componentDetailByComponentId {
         partName
+        equipmentRunningDetailByPartId{
+          dustErt
+        }
       }
       componentId
       samples
@@ -161,6 +173,9 @@ query vibrationYearlyPlanner {
     nodes {
       componentDetailByComponentId {
         partName
+        equipmentRunningDetailByPartId{
+          vibrationErt
+        }
       }
       componentId
       samples
@@ -175,6 +190,9 @@ const OVEN_YEARLY_PLANNER = `query ovenYearlyPlanner {
     nodes {
       componentDetailByComponentId {
         partName
+        equipmentRunningDetailByPartId{
+          ovenErt
+        }
       }
       componentId
       samples
@@ -189,6 +207,9 @@ const THERMAL_CYCLE_YEARLY_PLANNER = `query thermalCycleYearlyPlanner {
     nodes {
       componentDetailByComponentId {
         partName
+        equipmentRunningDetailByPartId{
+          thermalCycleErt
+        }
       }
       componentId
       samples
@@ -674,7 +695,7 @@ query allNotifications {
 }
 `;
 const ALL_ALERTS = `
-query allAlerts {
+subscription allAlerts {
   allAlerts {
     nodes {
       machineStatus
@@ -683,9 +704,214 @@ query allAlerts {
       testingEquipmentByEquipmentName {
         equipmentName
       }
+      timer
+      alertStatus
       userName
+      remarks
+      id
+      actionTaken
+      equipmentName
     }
   }
+}
+`;
+
+const START_TIMER = `mutation startTimer($id:Int!) {
+  startTimer(id: $id)
+}
+`;
+
+const STOP_TIMER = `mutation stopTimer($id:String!){
+  stopTimer(id:$id)
+}`;
+
+const UPDATE_ALERT_BY_ID = `mutation updateAlertById($alertStatus: Int!, $machineStatus: Int!, $remarks: String!, $userName: String!, $id: Int!, $actionTaken: String!) {
+  updateAlertById(
+    input: {alertPatch: {alertStatus: $alertStatus, machineStatus: $machineStatus, remarks: $remarks, userName: $userName, actionTaken: $actionTaken}, id: $id}
+  ) {
+    clientMutationId
+  }
+}
+`;
+const GET_ALL_TIMERS = `query getAllTimers {
+  getAllTimers
+}`;
+
+const ALL_COMPONENTS = `query MyQuery {
+  allComponentDetails {
+    nodes {
+      partName
+      id
+    }
+  }
+}`;
+
+const ALL_DUST_YEARLY_PLANNER_BY_ID = `
+  allDustYearlyPlanners(filter: {componentId: {equalTo: $id}}) {
+    nodes {
+      id
+      testDetails
+      totalSamplesTested
+      samples
+      componentId
+      componentDetailByComponentId {
+        partName
+      }
+    }
+}
+`;
+const ALL_OVEN_YEARLY_PLANNER_BY_ID = `
+  allOvenYearlyPlanners(filter: {componentId: {equalTo: $id}}) {
+      nodes {
+        id
+        testDetails
+        totalSamplesTested
+        samples
+        componentId
+        componentDetailByComponentId {
+          partName
+        } 
+    }
+  }
+`;
+const ALL_RO_YEARLY_PLANNER_BY_ID = `
+  allRoYearlyPlanners(filter: {componentId: {equalTo: $id}}) {
+      nodes {
+        id
+        testDetails
+        totalSamplesTested
+        samples
+        componentId
+        componentDetailByComponentId {
+          partName
+        }
+      }
+  }
+`;
+const ALL_SHOWER_YEARLY_PLANNER_BY_ID = `
+  allShowerYearlyPlanners(filter: {componentId: {equalTo: $id}}) {
+      nodes {
+        id
+        testDetails
+        totalSamplesTested
+        samples
+        componentId
+        componentDetailByComponentId {
+          partName
+        }
+    }
+}`;
+const ALL_THERMAL_CYCLE_YEARLY_PLANNER_BY_ID = `
+  allThermalCycleYearlyPlanners(filter: {componentId: {equalTo: $id}}) {
+      nodes {
+        id
+        testDetails
+        totalSamplesTested
+        samples
+        componentId
+        componentDetailByComponentId {
+          partName
+        }
+      }
+}`;
+const ALL_THERMAL_SHOCK_YEARLY_PLANNER_BY_ID = `
+  allThermalShockYearlyPalnners(filter: {componentId: {equalTo: $id}}) {
+      nodes {
+        id
+        testDetails
+        totalSamplesTested
+        samples
+        componentId
+        componentDetailByComponentId {
+          partName
+        }
+      }
+}`;
+const ALL_VIBRATION_YEARLY_PLANNER_BY_ID = `
+  allVibrationYearlyPlanners(filter: {componentId: {equalTo: $id}}) {
+      nodes {
+        id
+        testDetails
+        totalSamplesTested
+        samples
+        componentId
+        componentDetailByComponentId {
+          partName
+        }
+      }
+}`;
+const UPDATE_DUST_MONTHLY_PLANNER_BY_PART_CODE = `
+mutation updateDustMonthlyPlannerByPartCode($partCode: String!, $month: String!) {
+  updateDustMonthlyPlannerByPartCode(
+    input: {dustMonthlyPlannerPatch: {month: $month}, partCode: $partCode}
+  ) {
+    dustMonthlyPlanner {
+      month
+    }
+  }
+}
+`;
+const UPDATE_OVEN_MONTHLY_PLANNER_BY_PART_CODE = `mutation updateOvenMonthlyPlannerByPartCode($partCode: String!, $month: String!) {
+  updateOvenMonthlyPlannerByPartCode(
+    input: {ovenMonthlyPlannerPatch: {month: $month}, partCode: $partCode}
+  ) {
+    ovenMonthlyPlanner {
+      month
+    }
+  }
+}
+`;
+const UPDATE_RO_MONTHLY_PLANNER_BY_PART_CODE = `mutation updateRoMonthlyPlannerByPartCode($partCode: String!, $month: String!) {
+  updateRoMonthlyPlannerByPartCode(
+    input: {roMonthlyPlannerPatch: {month: $month}, partCode: $partCode}
+  ) {
+    roMonthlyPlanner {
+      month
+    }
+  }
+}`;
+const UPDATE_SHOWER_MONTHLY_PLANNER_BY_PART_CODE = `mutation updateShowerMonthlyPlannerByPartCode($partCode:String!,$month:String!) {
+  updateShowerMonthlyPlannerByPartCode(
+    input: {showerMonthlyPlannerPatch: {month: $month}, partCode: $partCode}
+  ) {
+    showerMonthlyPlanner {
+      month
+    }
+  }
+}
+`;
+const UPDATE_THERMAL_CYCLE_MONTHLY_PLANNER_BY_PART_CODE = `mutation updateThermalCycleMonthlyPlannerByPartCode($partCode:String!,$month:String!) {
+  updateThermalCycleMonthlyPlannerByPartCode(
+    input: {thermalCycleMonthlyPlannerPatch: {month: $month}, partCode: $partCode}
+  ) {
+    thermalCycleMonthlyPlanner {
+      month
+    }
+  }
+}
+`;
+const UPDATE_THERMAL_SHOCK_MONTHLY_PLANNER_BY_PART_CODE = `mutation updateThermalShockMonthlyPlannerByPartCode($partCode:String!,$month:String!) {
+  updateThermalShockMonthlyPlannerByPartCode(
+    input: {thermalShockMonthlyPlannerPatch: {month: $month}, partCode: $partCode}
+  ) {
+    thermalShockMonthlyPlanner {
+      month
+    }
+  }
+}
+`;
+const UPDATE_VIBRATION_MONTHLY_PLANNER_BY_PART_CODE = `mutation updateVibrationMonthlyPlannerByPartCode($partCode:String!,$month:String!) {
+  updateVibrationMonthlyPlannerByPartCode(
+    input: {vibrationMonthlyPlannerPatch: {month: $month}, partCode: $partCode}
+  ) {
+    vibrationMonthlyPlanner {
+      month
+    }
+  }
+}
+`;
+const UPDATE_UNPLANNED_LIST = `mutation MyMutation($details:String!) {
+  updateUnplannedList(details: $details)
 }
 `;
 export {
@@ -755,4 +981,24 @@ export {
   NOTIFICATION_MESSAGE_BY_DATE,
   ALL_NOTIFICATIONS,
   ALL_ALERTS,
+  START_TIMER,
+  UPDATE_ALERT_BY_ID,
+  STOP_TIMER,
+  GET_ALL_TIMERS,
+  ALL_COMPONENTS,
+  ALL_DUST_YEARLY_PLANNER_BY_ID,
+  ALL_OVEN_YEARLY_PLANNER_BY_ID,
+  ALL_RO_YEARLY_PLANNER_BY_ID,
+  ALL_SHOWER_YEARLY_PLANNER_BY_ID,
+  ALL_THERMAL_CYCLE_YEARLY_PLANNER_BY_ID,
+  ALL_THERMAL_SHOCK_YEARLY_PLANNER_BY_ID,
+  ALL_VIBRATION_YEARLY_PLANNER_BY_ID,
+  UPDATE_DUST_MONTHLY_PLANNER_BY_PART_CODE,
+  UPDATE_OVEN_MONTHLY_PLANNER_BY_PART_CODE,
+  UPDATE_RO_MONTHLY_PLANNER_BY_PART_CODE,
+  UPDATE_SHOWER_MONTHLY_PLANNER_BY_PART_CODE,
+  UPDATE_THERMAL_CYCLE_MONTHLY_PLANNER_BY_PART_CODE,
+  UPDATE_THERMAL_SHOCK_MONTHLY_PLANNER_BY_PART_CODE,
+  UPDATE_VIBRATION_MONTHLY_PLANNER_BY_PART_CODE,
+  UPDATE_UNPLANNED_LIST
 };

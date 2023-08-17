@@ -2,7 +2,7 @@
 import Card from "@mui/material/Card";
 
 // react imports
-import { useState,memo } from "react";
+import { useState,useEffect  } from "react";
 
 // Material Dashboard 2 PRO React components
 import MDBox from "components/MDBox";
@@ -41,69 +41,88 @@ import {
   VIBRATION_MONTHLY_PLANNER_BY_DATE
 } from "apis/queries";
 
-
+let testDataObj =     [
+  {
+    yearlyPlannerQuery: DUST_YEARLY_PLANNER,
+    testName: "DUST",
+    allTestNameYearlyPlanner: "allDustYearlyPlanners",
+    mutation:ADD_DUST_MONTHLY_PLANNER,
+    monthlyPlannerByDate:DUST_MONTHLY_PLANNER_BY_DATE,
+    allTestNameMonthlyPlanner:"allDustMonthlyPlanners",
+    expanded: false,
+  },
+  {
+    yearlyPlannerQuery: OVEN_YEARLY_PLANNER,
+    testName: "OVEN",
+    allTestNameYearlyPlanner: "allOvenYearlyPlanners",
+    mutation:ADD_OVEN_MONTHLY_PLANNER,
+    monthlyPlannerByDate:OVEN_MONTHLY_PLANNER_BY_DATE,
+    allTestNameMonthlyPlanner:"allOvenMonthlyPlanners",
+    expanded: false,
+  },
+  {
+    yearlyPlannerQuery: RO_YEARLY_PLANNER,
+    testName: "RO",
+    allTestNameYearlyPlanner: "allRoYearlyPlanners",
+    mutation:ADD_RO_MONTHLY_PLANNER,
+    monthlyPlannerByDate:RO_MONTHLY_PLANNER_BY_DATE,
+    allTestNameMonthlyPlanner:"allRoMonthlyPlanners",
+    expanded: false,
+  },
+  {
+    yearlyPlannerQuery: SHOWER_YEARLY_PLANNER,
+    testName: "SHOWER",
+    allTestNameYearlyPlanner: "allShowerYearlyPlanners",
+    mutation:ADD_SHOWER_MONTHLY_PLANNER,
+    monthlyPlannerByDate:SHOWER_MONTHLY_PLANNER_BY_DATE,
+    allTestNameMonthlyPlanner:"allShowerMonthlyPlanners",
+    expanded: false,
+  },
+  {
+    yearlyPlannerQuery: THERMAL_CYCLE_YEARLY_PLANNER,
+    testName: "THERMAL CYCLE",
+    allTestNameYearlyPlanner: "allThermalCycleYearlyPlanners",
+    mutation:ADD_THERMAL_CYCLE_MONTHLY_PLANNER,
+    monthlyPlannerByDate:THERMAL_CYCLE_MONTHLY_PLANNER_BY_DATE,
+    allTestNameMonthlyPlanner:"allThermalCycleMonthlyPlanners",
+    expanded: false,
+  },
+  {
+    yearlyPlannerQuery: THERMAL_SHOCK_YEARLY_PLANNER,
+    testName: "THERMAL SHOCK",
+    allTestNameYearlyPlanner: "allThermalShockYearlyPalnners",
+    mutation:ADD_THERMAL_SHOCK_MONTHLY_PLANNER,
+    monthlyPlannerByDate:THERMAL_SHOCK_MONTHLY_PLANNER_BY_DATE,
+    allTestNameMonthlyPlanner:"allThermalShockMonthlyPlanners",
+    expanded: false,
+  },
+  {
+    yearlyPlannerQuery: VIBRATION_YEARLY_PLANNER,
+    testName: "VIBRATION",
+    allTestNameYearlyPlanner: "allVibrationYearlyPlanners",
+    mutation:ADD_VIBRATION_MONTHLY_PLANNER,
+    monthlyPlannerByDate:VIBRATION_MONTHLY_PLANNER_BY_DATE,
+    allTestNameMonthlyPlanner:"allVibrationMonthlyPlanners",
+    expanded: false,
+  },
+]
 function MonthlyPlanner() {
   const store = useSelector((store) => {
     return store.alert;
   });
-  const [test, setTest] = useState([
-    {
-      yearlyPlannerQuery: DUST_YEARLY_PLANNER,
-      testName: "DUST",
-      allTestNameYearlyPlanner: "allDustYearlyPlanners",
-      mutation:ADD_DUST_MONTHLY_PLANNER,
-      monthlyPlannerByDate:DUST_MONTHLY_PLANNER_BY_DATE,
-      allTestNameMonthlyPlanner:"allDustMonthlyPlanners"
-    },
-    {
-      yearlyPlannerQuery: OVEN_YEARLY_PLANNER,
-      testName: "OVEN",
-      allTestNameYearlyPlanner: "allOvenYearlyPlanners",
-      mutation:ADD_OVEN_MONTHLY_PLANNER,
-      monthlyPlannerByDate:OVEN_MONTHLY_PLANNER_BY_DATE,
-      allTestNameMonthlyPlanner:"allOvenMonthlyPlanners"
-    },
-    {
-      yearlyPlannerQuery: RO_YEARLY_PLANNER,
-      testName: "RO",
-      allTestNameYearlyPlanner: "allRoYearlyPlanners",
-      mutation:ADD_RO_MONTHLY_PLANNER,
-      monthlyPlannerByDate:RO_MONTHLY_PLANNER_BY_DATE,
-      allTestNameMonthlyPlanner:"allRoMonthlyPlanners"
-    },
-    {
-      yearlyPlannerQuery: SHOWER_YEARLY_PLANNER,
-      testName: "SHOWER",
-      allTestNameYearlyPlanner: "allShowerYearlyPlanners",
-      mutation:ADD_SHOWER_MONTHLY_PLANNER,
-      monthlyPlannerByDate:SHOWER_MONTHLY_PLANNER_BY_DATE,
-      allTestNameMonthlyPlanner:"allShowerMonthlyPlanners"
-    },
-    {
-      yearlyPlannerQuery: THERMAL_CYCLE_YEARLY_PLANNER,
-      testName: "THERMAL CYCLE",
-      allTestNameYearlyPlanner: "allThermalCycleYearlyPlanners",
-      mutation:ADD_THERMAL_CYCLE_MONTHLY_PLANNER,
-      monthlyPlannerByDate:THERMAL_CYCLE_MONTHLY_PLANNER_BY_DATE,
-      allTestNameMonthlyPlanner:"allThermalCycleMonthlyPlanners"
-    },
-    {
-      yearlyPlannerQuery: THERMAL_SHOCK_YEARLY_PLANNER,
-      testName: "THERMAL SHOCK",
-      allTestNameYearlyPlanner: "allThermalShockYearlyPalnners",
-      mutation:ADD_THERMAL_SHOCK_MONTHLY_PLANNER,
-      monthlyPlannerByDate:THERMAL_SHOCK_MONTHLY_PLANNER_BY_DATE,
-      allTestNameMonthlyPlanner:"allThermalShockMonthlyPlanners"
-    },
-    {
-      yearlyPlannerQuery: VIBRATION_YEARLY_PLANNER,
-      testName: "VIBRATION",
-      allTestNameYearlyPlanner: "allVibrationYearlyPlanners",
-      mutation:ADD_VIBRATION_MONTHLY_PLANNER,
-      monthlyPlannerByDate:VIBRATION_MONTHLY_PLANNER_BY_DATE,
-      allTestNameMonthlyPlanner:"allVibrationMonthlyPlanners"
-    },
-  ]);
+  const [testData, setTestData] = useState([]);
+  useEffect(()=>{
+    setTestData(testDataObj)
+  },[])
+
+  const handleExpandClick = (index) => {
+    setTestData((prevTestData) =>
+      prevTestData.map((val, i) => ({
+        ...val,
+        expanded: i === index ? !val.expanded : false,
+      }))
+    );
+  };
 
   return (
     <DashboardLayout>
@@ -118,9 +137,9 @@ function MonthlyPlanner() {
             </MDTypography> */}
             <UnplannedListUpload />
             <Grid style={{background:"#394259"}} mt={3} pt={2} pr={1} pl={1} pb={3} bgcolor="#F7F7F7" borderRadius={3}>
-              {test.map((props,i)=>{
+              {testData.map((props,i)=>{
                 return(
-                  <Box mb={2}>
+                  // <Box mb={2} onClick={() => handleExpandClick(i)}>
                     <ReusabaleMonthlyPlannerTests
                     yearlyPlannerQuery={props.yearlyPlannerQuery}
                     testName={props.testName}
@@ -128,8 +147,9 @@ function MonthlyPlanner() {
                     mutation={props.mutation}
                     monthlyPlannerByDate={props.monthlyPlannerByDate}
                     allTestNameMonthlyPlanner = {props.allTestNameMonthlyPlanner}
+                    expanded={props.expanded}
                     />
-                  </Box>
+                  // </Box>
                 )
               })}
              

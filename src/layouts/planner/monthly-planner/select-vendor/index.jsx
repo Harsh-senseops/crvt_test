@@ -12,8 +12,13 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import { useSelector, useDispatch } from "react-redux";
 import { useMutation } from "urql";
 import alertAndLoaders from "utils/alertAndLoaders";
-import { incrementCounter, setShouldPauseNotification,addNotifications } from "reduxSlices/notifications";
+import {
+  incrementCounter,
+  setShouldPauseNotification,
+  addNotifications,
+} from "reduxSlices/notifications";
 import { ADD_MONTHLY_UPLOAD_HISTORY, ADD_NOTIFICATION } from "apis/queries";
+import { setSampleRemaining } from "reduxSlices/monthlyPlanner";
 
 function ConfirmationDialogRaw({
   onClose,
@@ -82,7 +87,7 @@ function ConfirmationDialogRaw({
               alertAndLoaders(
                 "UNSHOW_ALERT",
                 dispatch,
-                "Successfully nioce added monthly planner.",
+                "Successfully added monthly planner.",
                 "success"
               );
               addNotification({
@@ -96,8 +101,9 @@ function ConfirmationDialogRaw({
                   setShouldPauseNotification(false);
                   // let nCount = localStorage.getItem("cn") || 0
                   // localStorage.setItem("cn",nCount+1)
+                  dispatch(setSampleRemaining({testName:store.testName,componentName:store.detailsToPush.partName}))
                   dispatch(incrementCounter(1));
-                  dispatch(addNotifications("New planner added"))
+                  dispatch(addNotifications("New planner added"));
                 }
               });
             }
@@ -153,6 +159,8 @@ function ConfirmationDialogRaw({
           Cancel
         </Button>
         <Button onClick={handleOk}>Ok</Button>
+        {/* <Button onClick={()=>dispatch(setSampleRemaining({testName:store.testName,componentName:store.detailsToPush.partName}))}>nope</Button> */}
+
       </DialogActions>
     </Dialog>
   );

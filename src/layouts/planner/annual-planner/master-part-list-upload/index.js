@@ -1,54 +1,6 @@
-// import { Grid } from "@mui/material";
-// import MDButton from "components/MDButton";
-// import AddIcon from '@mui/icons-material/Add';
-
-// function Masterpartlistupload() {
-   
-//     return (
-//         <Grid>
-            // <MDButton
-            //           variant="gradient" 
-            //           startIcon={<AddIcon />}
-            //           color="dark" type="submit"
-            //           // onClick={!isLastStep ? handleNext : undefined}
-            //         >
-            //           {/* {isLastStep ? "send" : "next"} */}
-            //           Add master part list
-            //         </MDButton>
-//         </Grid>
-//     )
-// }
-
-// export default Masterpartlistupload;
-
-/**
-=========================================================
-* Material Dashboard 2 PRO React - v2.0.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-pro-react
-* Copyright 2021 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
 import { useState, useEffect } from "react";
-
-// prop-types is a library for typechecking of props.
 import PropTypes from "prop-types";
-
-// @mui material components
-import Card from "@mui/material/Card";
 import Grid from "@mui/material/Grid";
-import AppBar from "@mui/material/AppBar";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import Icon from "@mui/material/Icon";
-import AddIcon from '@mui/icons-material/Add';
 import { useTheme } from '@mui/material/styles';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -59,23 +11,8 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 
 // reactstrap components
 import {
-  Button,
-  ButtonGroup,
-  CardHeader,
-  CardBody,
-  CardTitle,
-  NavItem,
-  NavLink,
-  Nav,
-  TabContent,
-  TabPane,
-  Row,
-  Col,
   Form,
   CustomInput,
-  Input,
-  Badge,
-  Table,
 } from "reactstrap";
 import * as XLSX from "xlsx";
 

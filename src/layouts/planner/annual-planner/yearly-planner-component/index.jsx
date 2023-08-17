@@ -14,9 +14,13 @@ import TableRow from "@mui/material/TableRow";
 import { useQuery, useSubscription } from "urql";
 import { useSelector, useDispatch } from "react-redux";
 import DataTable from "examples/Tables/DataTable";
+import MDCard from "components/MDCard";
 import { setShouldPause } from "reduxSlices/yearlyPlanner";
 import { useCallback } from "react";
+import clsx from "clsx";
 import MDTypography from "components/MDTypography";
+import { makeStyles } from "@mui/styles";
+import { CardHeader } from "@mui/material";
 
 const columns = [
   "Components",
@@ -33,11 +37,45 @@ const columns = [
   "Feb",
   "Mar",
 ];
-
+const useStyles = makeStyles((theme) => ({
+  root: {
+    maxWidth: "100%",
+    margin: "1%",
+  },
+  expand: {
+    transform: "rotate(0deg)",
+    marginLeft: "auto",
+    transition: theme.transitions.create("transform", {
+      duration: theme.transitions.duration.shortest,
+    }),
+  },
+  expandOpen: {
+    transform: "rotate(180deg)",
+  },
+  formControl: {
+    minWidth: 174,
+  },
+  formControltest: {
+    minWidth: 174,
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2),
+  },
+  parentFlexRight: {
+    display: "flex",
+    justifyContent: "flex-end",
+    marginBottom: "2%",
+    marginRight: "3%",
+  },
+}));
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
-  return <IconButton {...other} 
-  style={{color:'#1A73E8'}}/>;
+  return (
+    <IconButton
+      {...other}
+      style={{ color: "#1A73E8", position: "relative", zIndex: "100" }}
+    />
+  );
 })(({ theme, expand }) => ({
   transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
   transition: theme.transitions.create("transform", {
@@ -49,12 +87,16 @@ export default function YearlyPlannerComponent({
   name,
   query,
   allPlanners,
+  expanded,
+  onClick,
 }) {
-  const [expanded, setExpanded] = React.useState(false);
+  // const [expanded, setExpanded] = React.useState(false);
   // const [shouldPause, setShouldPause] = React.useState(false);
   const yearlyPlannerStore = useSelector((store) => {
     return store.yearlyPlanner;
   });
+  const [toggleEnable, setToggleEnable] = useState(false);
+
   const dispatch = useDispatch();
   const [dustYearlyPlanner] = useSubscription({
     query: query,
@@ -119,96 +161,98 @@ export default function YearlyPlannerComponent({
     }
   }, [dustYearlyPlanner]);
 
-  const handleExpandClick = useCallback(() => {
-    setExpanded((prevExpanded) => !prevExpanded);
-  }, []);
+  const classes = useStyles();
 
-  // console.log(dustYearlyPlanner.data);
   return (
-    <div style={{ background: "#394259" }}>
-      <MDBox p={1} pt={1} style={{ background: "#394259" }}>
-        <Card>
-          <MDBox p={3} lineHeight={1}>
-            <CardActions
-              disableSpacing
-              style={{ color: "white", height: "5px" }}
+    <Card style={{ marginBottom: "0.7em",background:"#202940" }}>
+      <CardHeader
+        sx={{
+          transition: "all 250ms",
+          ":hover": {
+            boxShadow: 20,
+            cursor: "pointer",
+            backgroundColor: "#384158 !important",
+            borderRadius: "10px",
+            transform: "scale(1.02)",
+          },
+        }}
+        action={
+          <div>
+            <IconButton
+              className={clsx(classes.expand, {
+                [classes.expandOpen]: expanded,
+              })}
+              aria-expanded={expanded}
+              aria-label="show more"
+              color="info"
             >
-              <MDTypography variant="h6" fontWeight="medium">
-                {name}
-              </MDTypography>
-
-              <ExpandMore
-                expand={expanded}
-                onClick={handleExpandClick}
-                aria-expanded={expanded}
-                aria-label="show more"
-              >
-                <ExpandMoreIcon />
-              </ExpandMore>
-            </CardActions>
-            <MDTypography
-              style={{
-                color: "lime",
-                fontSize: "14px",
-                paddingTop: "1%",
-              }}
-            >
-              Total Components found {data.length}
-            </MDTypography>
-            {/* <span style={{fontSize:"15px",color:"lime"}}></span> */}
-            <Collapse
-              style={{ padding: "0px" }}
-              in={expanded}
-              timeout="auto"
-              unmountOnExit
-            >
-              {data.length !== 0 ? (
-                <TableContainer style={{ marginTop: "20px" }}>
-                  <Table>
-                    <TableRow style={{ background: "#003e66" }}>
-                      {columns.map((column, i) => (
-                        <TableCell
-                          key={i}
-                          style={{ color: "whitesmoke", fontWeight: "bold" }}
-                        >
-                          {column}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                    <TableBody>
-                      {data
-                        ? data.map((val, index) => {
-                            return (
-                              <TableRow
-                                style={{
-                                  background:
-                                    index % 2 === 0 ? "#d8e4e9" : "white",
-                                  textAlign: "center",
-                                }}
-                                key={index}
-                              >
-                                <TableCell>{val.name}</TableCell>
-                                {val.samples.map((val2, i) => {
-                                  return (
-                                    <TableCell style={{ textAlign: "center" }}>
-                                      {val2}
-                                    </TableCell>
-                                  );
-                                })}
-                              </TableRow>
-                            );
-                          })
-                        : "Loading"}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              ) : (
-                "No yearly planner created"
-              )}
-            </Collapse>
-          </MDBox>
-        </Card>
-      </MDBox>
-    </div>
+              <ExpandMoreIcon />
+            </IconButton>
+          </div>
+        }
+        title={
+          <MDTypography variant="h6" fontWeight="medium">
+            {name}
+          </MDTypography>
+        }
+        subheader={
+          <MDTypography
+            style={{
+              color: "lime",
+              fontSize: "14px",
+              paddingTop: "1%",
+            }}
+          >
+            Total Components found {data.length}
+          </MDTypography>
+        }
+      />
+      {!toggleEnable && (
+        <Collapse in={expanded} timeout="auto" unmountOnExit>
+          {data.length !== 0 ? (
+            <TableContainer style={{marginTop:"10px"}}>
+              <Table>
+                <TableRow style={{ background: "#003e66" }}>
+                  {columns.map((column, i) => (
+                    <TableCell
+                      key={i}
+                      style={{ color: "whitesmoke", fontWeight: "bold" }}
+                    >
+                      {column}
+                    </TableCell>
+                  ))}
+                </TableRow>
+                <TableBody>
+                  {data
+                    ? data.map((val, index) => {
+                        return (
+                          <TableRow
+                            style={{
+                              background: index % 2 === 0 ? "#d8e4e9" : "white",
+                              textAlign: "center",
+                            }}
+                            key={index}
+                          >
+                            <TableCell>{val.name}</TableCell>
+                            {val.samples.map((val2, i) => {
+                              return (
+                                <TableCell style={{ textAlign: "center" }}>
+                                  {val2}
+                                </TableCell>
+                              );
+                            })}
+                          </TableRow>
+                        );
+                      })
+                    : "Loading"}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          ) : (
+            "No yearly planner created"
+          )}
+        </Collapse>
+      )}
+    </Card>
   );
 }

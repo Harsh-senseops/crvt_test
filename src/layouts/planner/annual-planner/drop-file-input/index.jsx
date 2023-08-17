@@ -15,9 +15,8 @@ import { MAKE_YEARLY_PLANNER, PART_CODE_DETAILS, ADD_YEARLY_HISTORY } from "apis
 import * as yearlyPlanner from "../../../../reduxSlices/yearlyPlanner";
 import { useDispatch, useSelector } from "react-redux";
 import alertAndLoaders from "utils/alertAndLoaders";
-
 import Backdrop from "@mui/material/Backdrop";
-import { Diversity2Sharp } from "@mui/icons-material";
+import { Box,Card,CardContent } from "@material-ui/core";
 
 function checkElement(val, array) {
   const pos = array.map((e) => e["vendor_code"]).indexOf(val);
@@ -222,12 +221,12 @@ const DropFileInput = (props) => {
 
   return (
     <>
-      <Grid mb={6} mt={2}>
+      <Grid  mb={6} mt={2}>
         {fileList.length > 0 ? (
-          <Box className="drop-file-preview">
-            <Card>
+          <Box className="drop-file-preview" style={{borderRadius:"20px"}}>
+           <Card style={{background:"#394259"}}>
               <CardContent style={{ textAlign: "center" }}>
-                <MDTypography variant="h5" fontWeight="medium" style={{}}>
+                <MDTypography variant="h5" fontWeight="medium">
                   Ready to Upload
                 </MDTypography>
                 {fileList.map((item, index) => (

@@ -9,7 +9,17 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import React, { useState, useEffect } from "react";
 import MDTypography from "components/MDTypography";
-import {Button} from "@mui/material";
+import { Button } from "@mui/material";
+
+function formattedTime(dateTime) {
+  const dateTimeString = dateTime;
+  const dateTimeObj = new Date(dateTimeString);
+  let date = dateTime.split("T")[0];
+  const options = { hour: "numeric", minute: "numeric", second: "numeric", hour12: true };
+  const time = dateTimeObj.toLocaleTimeString("en-US", options);
+  return { date, time };
+}
+
 const useStyles = makeStyles((theme) => ({
   root: {
     "& .MuiPaginationItem-root": {
@@ -29,6 +39,24 @@ const useStyles = makeStyles((theme) => ({
       border: "none",
     },
   },
+  action: {
+    color: "#f44335",
+    cursor: "pointer",
+    fontWeight: "bold",
+    borderBottom: "2px solid transparent",
+    "&:hover": {
+      // borderBottom:"1px solid white",
+      color: "#3a94ee",
+    },
+  },
+  tableRow: {
+    "&:hover": {
+      background: "#4c5365a8",
+    },
+  },
+  actionTaken: {
+    color: "yellow",
+  },
 }));
 
 const SORT_DIRECTION = {
@@ -45,15 +73,18 @@ const SORT_BY = {
 
 const INITIAL_STATE = {
   page: 0,
-  rowsPerPage: 5,
+  rowsPerPage: 10,
   sortDirection: SORT_DIRECTION.ASC,
   sortBy: SORT_BY.NAME,
 };
 
 const sortData = (data, sortDirection, sortBy, searchTerm) => {
   const filteredData = data.filter((item) =>
-    Object.values(item).some((value) =>
-      value.toString().toLowerCase().includes(searchTerm.toString().toLowerCase())
+    Object.values(item).some(
+      (value) =>
+        value !== null &&
+        value !== undefined && // Check for null or undefined
+        value.toString().toLowerCase().includes(searchTerm.toString().toLowerCase())
     )
   );
 
@@ -79,7 +110,7 @@ const sortData = (data, sortDirection, sortBy, searchTerm) => {
 };
 
 function MDTable({ data, searchTerm, onTouch }) {
-  const ENTRIES_PER_PAGE = 5; // Number of entries to show per page
+  const ENTRIES_PER_PAGE = 10; // Number of entries to show per page
   const classes = useStyles();
   const [state, setState] = useState(INITIAL_STATE);
   const [rows, setRows] = useState([]);
@@ -90,7 +121,6 @@ function MDTable({ data, searchTerm, onTouch }) {
   useEffect(() => {
     if (data.rows) {
       const sortedData = sortData(data.rows, state.sortDirection, state.sortBy, searchTerm);
-      console.log(sortedData);
       setRows(sortedData);
     }
   }, [state.sortBy, state.sortDirection, searchTerm, data]);
@@ -138,29 +168,61 @@ function MDTable({ data, searchTerm, onTouch }) {
         <TableBody>
           {pageData &&
             pageData.map((row, i) => {
+              let isDisabled = row?.alertStatus === "Active" ? false : true;
+              let actionTaken = row?.ignore?.actionTaken || "None taken";
               return (
                 <TableRow
+                  className={classes.tableRow}
                   key={row.accessor}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  sx={{
+                    "&:last-child td, &:last-child th": { border: 0 },
+                    transition: "all 250ms",
+                    ":hover": {
+                      boxShadow: 20,
+                      cursor: "pointer",
+                      backgroundColor: "#384158 !important",
+                      borderRadius: "10px",
+                      transform: "scale(1.02)",
+                    },
+                  }}
                 >
                   {row &&
                     Object.entries(row).map(([key, value]) => {
-                         {JSON.stringify(key)}
-                      if (key !== "__typename") {
-                        return (
-                          <TableCell
-                            align={row.aign ? row.align : "left"}
-                            component="th"
-                            scope="row"
-                          >
-                            <MDTypography variant="p" fontWeight="light" style={{ color: "#fff" }}>
-                              <div>{value}</div>
+                      if (key === "ignore") return;
+                      return (
+                        <TableCell align={row.aign ? row.align : "left"} component="th" scope="row">
+                          <MDTypography variant="p" fontWeight="light" style={{ color: "#fff" }}>
+                            <div>
+                              {key.toLowerCase().includes("datetime") ? (
+                                <>
+                                  <span>
+                                    {formattedTime(value).date}
+                                    {key}
+                                  </span>
+                                  <br />
+                                  <span>{formattedTime(value).time}</span>
+                                </>
+                              ) : (
+                                value
+                              )}
+                            </div>
 
-                              {key === "machineStatus" ? <Button style={{background:"#f44335",color:"white",marginTop:"20px"}} onClick={()=>onTouch(i)}>Action</Button>:""}
-                            </MDTypography>
-                          </TableCell>
-                        );
-                      }
+                            {key === "machineStatus" ? (
+                              !isDisabled ? (
+                                <span onClick={() => onTouch(i)} className={classes.action}>
+                                  Actions
+                                </span>
+                              ) : (
+                                <span className={classes.actionTaken}>
+                                  Action Taken {actionTaken}
+                                </span>
+                              )
+                            ) : (
+                              ""
+                            )}
+                          </MDTypography>
+                        </TableCell>
+                      );
                     })}
                 </TableRow>
               );

@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { current } from "immer";
 
 let months = [
   { month: "April", id: 4 },
@@ -21,22 +22,24 @@ const initialState = {
     month: "",
     year: "",
   },
-  shouldPause:true,
-  detailsToPush:{
-    partCode:"",
-    partName:"",
-    status:""
+  shouldPause: true,
+  detailsToPush: {
+    partCode: "",
+    partName: "",
+    status: "",
   },
-  testName:"",
-  samplesDetails:{
-    "DUST":[],
-    "OVEN":[],
-    "RO":[],
-    "SHOWER":[],
-    "THERMAL CYCLE":[],
-    "THERMAL SHOCK":[],
-    "VIBRATION":[]
-  }
+  testName: "",
+  monthlyDetails: {
+    DUST: [],
+    OVEN: [],
+    RO: [],
+    SHOWER: [],
+    "THERMAL CYCLE": [],
+    "THERMAL SHOCK": [],
+    VIBRATION: [],
+  },
+  isExpanded: {
+  },
 };
 
 export const monthlyPlanner = createSlice({
@@ -45,34 +48,54 @@ export const monthlyPlanner = createSlice({
   reducers: {
     setDate: (state, actions) => {
       let index = months.findIndex((obj) => obj.id === actions.payload.month + 1);
-        if(index !== -1){
-            state.date.month = months[index].month
-        }
+      if (index !== -1) {
+        state.date.month = months[index].month;
+      }
       state.date.year = actions.payload.year;
     },
-    setShouldPause:(state,action)=>{
-        state.shouldPause = action.payload
+    setShouldPause: (state, action) => {
+      state.shouldPause = action.payload;
     },
-    setDetailsToPush:(state,action)=>{
-      state.detailsToPush = action.payload
+    setDetailsToPush: (state, action) => {
+      state.detailsToPush = action.payload;
     },
-    setTestName:(state,action) => {
-      state.testName = action.payload
+    setTestName: (state, action) => {
+      state.testName = action.payload;
     },
-    setSampleDetils:(state,action)=>{
-      let index = state.samplesDetails[action.payload.testName].findIndex((obj)=>obj.componentName === action.payload.componentName)
-      if(index === -1){
-        state.samplesDetails[action.payload.testName].push({
-          componentName:action.payload.componentName,
-          samples:action.payload.samples,
-          samplesRemaining:0,
-        })
+    setMonthlyPlanner: (state, action) => {
+      state.monthlyDetails[action.payload.testName] = action.payload.data;
+    },
+    setIsExpanded: (state, action) => {
+      let keys = Object.keys(state.isExpanded);
+      let payload = action.payload;
+      let keysIndex = keys.indexOf(payload);
+      if (keysIndex === -1) {
+        console.log("fdas")
+        state.isExpanded[payload] = true
+        return
+        }
+      for (let i = 0; i < keys.length; i++) {
+        if (keysIndex === -1) {
+          state.isExpanded[payload] = true;
+        } else if (keysIndex === i) {
+          state.isExpanded[keys[i]] = state.isExpanded[keys[i]] ? false : true;
+        } else if (keysIndex === -1 || keysIndex !== -1) {
+          state.isExpanded[keys[i]] = false;
+        }
       }
-     
-    }
+    },
   },
 });
 
-export const { setDate,setShouldPause,setDetailsToPush,setTestName,setSampleDetils } = monthlyPlanner.actions;
+export const {
+  setDate,
+  setShouldPause,
+  setDetailsToPush,
+  setTestName,
+  setSampleDetils,
+  setSampleRemaining,
+  setMonthlyPlanner,
+  setIsExpanded
+} = monthlyPlanner.actions;
 
 export default monthlyPlanner.reducer;

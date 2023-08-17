@@ -18,7 +18,7 @@ import DialogSelectComponent from "../select-vendor";
 import alertAndLoaders from "utils/alertAndLoaders";
 import { PARTDEAILS_BY_PART_CODE } from "apis/queries";
 import { ADD_MONTHLY_UPLOAD_HISTORY } from "apis/queries";
-// import {useSelector} from "react-redux";
+import { setMonthlyPlanner } from "../../../../reduxSlices/monthlyPlanner";
 
 const columns = [
   { Header: "part name", accessor: "partName" },
@@ -69,17 +69,16 @@ function findIndex(arr, componentName) {
   return index;
 }
 
-function checkIsPartCodeEmpty(arr,name,code){
-    console.log(arr)
-	let flag = false
-	for(let i = 0; i<arr.length; i++){
-		if(arr[i].partName === name  && arr[i].partCode.length === 0){
-			return {isTrue:true}
-		}if(arr[i].partCode === code){
-            return {isTrue:false,msg:"This part code already exists"}
-        }
-	}
-	return {isTrue:false,msg:"Slot is full"}
+function checkIsPartCodeEmpty(arr, name, code) {
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i].partName === name && arr[i].partCode.length === 0) {
+      return { isTrue: true };
+    }
+    if (arr[i].partCode === code) {
+      return { isTrue: false, msg: "This part code already exists" };
+    }
+  }
+  return { isTrue: false, msg: "Slot is full" };
 }
 
 const ReusabaleMonthlyPlannerTests = ({
@@ -87,10 +86,11 @@ const ReusabaleMonthlyPlannerTests = ({
   testName,
   allTestNameYearlyPlanner,
   mutation,
+  expanded,
   monthlyPlannerByDate,
   allTestNameMonthlyPlanner,
 }) => {
-  const [expanded, setExpanded] = useState(false);
+  // const [expanded, setExpanded] = useState(false);
   const dispatch = useDispatch();
   const [data, setData] = useState({ columns, rows: [] });
   const [toggleEnable, setToggleEnable] = useState(false);
@@ -123,14 +123,11 @@ const ReusabaleMonthlyPlannerTests = ({
     ADD_MONTHLY_UPLOAD_HISTORY
   );
 
-  const handleExpandClick = useCallback(() => {
-    setExpanded((prevState) => !prevState);
-  }, []);
   useEffect(() => {
     if (partDetails.data?.partCodeDetailByPartCode === null && partCode.length !== 0) {
       alertAndLoaders("UNSHOW_ALERT", dispatch, `No Parts found in ${testName}.`, "warning");
-      alert("Holla",JSON.stringify(partDetails.data?.partCodeDetailByPartCode))
-      console.log(partDetails.data?.partCodeDetailByPartCode)
+      alert("Holla", JSON.stringify(partDetails.data?.partCodeDetailByPartCode));
+      // console.log(partDetails.data?.partCodeDetailByPartCode);
       setPartCode("");
     }
     if (partDetails.data?.partCodeDetailByPartCode) {
@@ -140,38 +137,48 @@ const ReusabaleMonthlyPlannerTests = ({
       setOption(parseVendorsDetails);
       const partName = partDetails.data.partCodeDetailByPartCode.partName;
       const partCode = partDetails.data.partCodeDetailByPartCode.partCode;
-      const index = data.rows.findIndex((obj) => obj.partName === partName);
+      const index = monthlyPlannerStore.monthlyDetails[testName].findIndex(
+        (obj) => obj.partName === partName
+      );
       if (index !== -1) {
-        if(checkIsPartCodeEmpty(data.rows,partName,partCode).isTrue === false){
-            alertAndLoaders("UNSHOW_ALERT", dispatch, checkIsPartCodeEmpty(data.rows,partName,partCode).msg, "warning");
-            setPartCode("");
-        }else{
-            setOpen(true);
-            dispatch(
-              monthlyPlannerAction.setDetailsToPush({
-                partCode,
-                partName,
-                status: 1,
-              })
-            );
-            dispatch(monthlyPlannerAction.setTestName(testName))
-            setPartCode("");
+        if (
+          checkIsPartCodeEmpty(monthlyPlannerStore.monthlyDetails[testName], partName, partCode)
+            .isTrue === false
+        ) {
+          alertAndLoaders(
+            "UNSHOW_ALERT",
+            dispatch,
+            checkIsPartCodeEmpty(monthlyPlannerStore.monthlyDetails[testName], partName, partCode)
+              .msg,
+            "warning"
+          );
+          setPartCode("");
+        } else {
+          setOpen(true);
+          dispatch(
+            monthlyPlannerAction.setDetailsToPush({
+              partCode,
+              partName,
+              status: 1,
+            })
+          );
+          dispatch(monthlyPlannerAction.setTestName(testName));
+          setPartCode("");
         }
-      }
-       else {
+      } else {
         addMonthlyUploadHistory({
           partCode,
-          description:`No Parts found in ${testName}.`,
+          description: `No Parts found in ${testName}.`,
           status: "failed",
           empCode: userStore.empCode,
-        }).then((res)=>{
-            if(res.error){
-                alert("Failed To upadate")
-                console.log(res.error)
-            }else if(res.data){
-                alertAndLoaders("UNSHOW_ALERT", dispatch, `No Parts found in ${testName}.`, "warning");
-            }
-        })
+        }).then((res) => {
+          if (res.error) {
+            alert("Failed To upadate");
+            console.log(res.error);
+          } else if (res.data) {
+            alertAndLoaders("UNSHOW_ALERT", dispatch, `No Parts found in ${testName}.`, "warning");
+          }
+        });
         setPartCode("");
       }
     }
@@ -183,8 +190,34 @@ const ReusabaleMonthlyPlannerTests = ({
     }
     let tempArray = [];
     if (testNameYp.data && monthlyPlannerStore.date.year >= 2012) {
+      let isSevenDaysRunning = "";
       dispatch(monthlyPlannerAction.setShouldPause(true));
       testNameYp.data[allTestNameYearlyPlanner]?.nodes.forEach((val, i) => {
+        if (testName === "DUST")
+          isSevenDaysRunning = JSON.parse(
+            val.componentDetailByComponentId.equipmentRunningDetailByPartId.dustErt
+          )["7daysrunning"];
+        if (testName === "OVEN")isSevenDaysRunning = JSON.parse(
+          val.componentDetailByComponentId.equipmentRunningDetailByPartId.ovenErt
+        )["7daysrunning"];
+        if (testName === "RO")
+        isSevenDaysRunning = JSON.parse(
+          val.componentDetailByComponentId.equipmentRunningDetailByPartId.repeatedOperationErt
+        )["7daysrunning"];
+        if (testName === "SHOWER")
+        isSevenDaysRunning = JSON.parse(
+          val.componentDetailByComponentId.equipmentRunningDetailByPartId.showerErt
+        )["7daysrunning"];
+        if (testName === "THERMAL CYCLE")  isSevenDaysRunning = JSON.parse(
+          val.componentDetailByComponentId.equipmentRunningDetailByPartId.thermalCycleErt
+        )["7daysrunning"];
+        if (testName === "THERMAL SHOCK")
+          isSevenDaysRunning = JSON.parse(
+            val.componentDetailByComponentId.equipmentRunningDetailByPartId.thermalShockErt
+          )["7daysrunning"];
+          if (testName === "VIBRATION")  isSevenDaysRunning = JSON.parse(
+            val.componentDetailByComponentId.equipmentRunningDetailByPartId.vibrationErt
+          )["7daysrunning"];
         JSON.parse(val.testDetails).forEach((val2) => {
           const [month, year] = val2.startDate.split("-");
           if (month === monthlyPlannerStore.date.month) {
@@ -195,13 +228,11 @@ const ReusabaleMonthlyPlannerTests = ({
                 partName: val.componentDetailByComponentId.partName,
                 vendorName: "",
                 status: "",
+                sevenDaysRunning: isSevenDaysRunning === 0 ? false : true,
+                testDuration:val2?.testDuration
               };
-              dispatch(monthlyPlannerAction.setSampleDetils({
-                componentName:val.componentDetailByComponentId.partName,
-                samples:val.samples,
-                testName
-              }))
             }
+            // console.log(val2?.testDuration,"testDuration")
           }
         });
       });
@@ -215,9 +246,9 @@ const ReusabaleMonthlyPlannerTests = ({
       for (let i = 0; i < mp.length; i++) {
         index = findIndex(tempArry2, mp[i].partName);
         tempArry2[index].partCode = mp[i].partCode;
-        tempArry2[index].status = "Progress";
+        tempArry2[index].status = mp[i].status === 0 ? "Scheduled" : "Progress";
         tempArry2[index].vendorName = JSON.parse(mp[i].vendorDetails).vendorName;
-        tempArry2[index].samples === undefined || null ? 0 : tempArry2[index].samples += 1;
+        tempArry2[index].samples === undefined || null ? 0 : (tempArry2[index].samples += 1);
       }
       tempArry2.sort((a, b) => {
         if (a.partCode === "" && b.partCode !== "") {
@@ -232,7 +263,8 @@ const ReusabaleMonthlyPlannerTests = ({
         }
       });
     }
-    setData({ columns, rows: tempArry2 });
+    dispatch(setMonthlyPlanner({ testName, data: tempArry2 }));
+    // setData({ columns, rows: tempArry2 });
   }, [testNameYp.data, monthlyPlannerStore.shouldPause, dispatch, monthMP.data]);
 
   const handleAddPartCode = useCallback((partCode) => {
@@ -246,18 +278,29 @@ const ReusabaleMonthlyPlannerTests = ({
   const classes = useStyles();
 
   return (
-    <Card>
+    <Card style={{ marginBottom: "15px" }}>
       <CardHeader
+        onClick={() => dispatch(monthlyPlannerAction.setIsExpanded(testName))}
+        sx={{
+          transition: "all 250ms",
+          ":hover": {
+            boxShadow: 20,
+            cursor: "pointer",
+            backgroundColor: "#384158 !important",
+            borderRadius: "10px",
+            transform: "scale(1.02)",
+          },
+        }}
         action={
           <div>
             <IconButton
               className={clsx(classes.expand, {
-                [classes.expandOpen]: expanded,
+                [classes.expandOpen]: monthlyPlannerStore?.isExpanded[testName],
               })}
-              onClick={!toggleEnable ? handleExpandClick : null}
-              aria-expanded={expanded}
+              aria-expanded={monthlyPlannerStore?.isExpanded[testName]}
               aria-label="show more"
-              color='info'
+              color="info"
+              // onClick={()=>alert(testName)}
             >
               <ExpandMoreIcon />
             </IconButton>
@@ -276,16 +319,24 @@ const ReusabaleMonthlyPlannerTests = ({
               paddingTop: "1%",
             }}
           >
-            {Math.floor(data.rows.length / 2)} components scheduled
+            {Math.floor(monthlyPlannerStore.monthlyDetails[testName].length / 2)} components
+            scheduled
           </MDTypography>
         }
       />
       {!toggleEnable && (
-        <Collapse in={expanded} timeout="auto" unmountOnExit>
+        <Collapse in={monthlyPlannerStore?.isExpanded[testName]} timeout="auto" unmountOnExit>
           <CardContent>
-            {userStore.roles === 3 ? <AddPartCode onAddPartCode={handleAddPartCode} buttonText="Add PartCode" />:""}
+            {userStore.roles === 3 ? (
+              <AddPartCode onAddPartCode={handleAddPartCode} buttonText="Add PartCode" />
+            ) : (
+              ""
+            )}
             <MDBox pr={1}>
-              <DataTable table={data} canSearch={true} />
+              <DataTable
+                table={{ columns, rows: monthlyPlannerStore.monthlyDetails[testName] }}
+                canSearch={true}
+              />
             </MDBox>
           </CardContent>
         </Collapse>

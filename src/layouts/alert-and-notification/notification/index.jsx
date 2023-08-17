@@ -25,7 +25,7 @@ const columns = [
   { Header: "Description", accessor: "description" },
   { Header: "Employee Code", accessor: "empCode" },
   { Header: "Planner/Report", accessor: "notificationFrom" },
-  // { Header: "Edit", accessor: "notificationFrom" },
+  { Header: "Edit", accessor: "notificationFrom" },
 ];
 function Notification() {
   const [searchTerm, setSearchTerm] = useState("");

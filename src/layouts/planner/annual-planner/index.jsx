@@ -3,7 +3,7 @@ import Card from "@mui/material/Card";
 import { Grid } from "@mui/material";
 import YearlyPlannerComponent from "./yearly-planner-component";
 // react imports
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // Material Dashboard 2 PRO React components
 import MDBox from "components/MDBox";
@@ -123,7 +123,7 @@ subscription vibrationYearlyPlanner {
   }
 }
 `;
-let testData = [
+let testDataObj = [
   {
     name: "Dust",
     query: DUST_YEARLY_PLANNER,
@@ -169,68 +169,25 @@ let testData = [
 ]
 function AnnualPlanner() {
   const alertStore = useSelector((store) => store.alert);
-  const [testData, setTestData] = useState([
-    {
-      name: "Dust",
-      query: DUST_YEARLY_PLANNER,
-      allPlanners: "allDustYearlyPlanners",
-      expanded: false,
-    },
-    {
-      name: "Oven",
-      query: OVEN_YEARLY_PLANNER,
-      allPlanners: "allOvenYearlyPlanners",
-      expanded: false,
-    },
-    {
-      name: "RO",
-      query: RO_YEARLY_PLANNER,
-      allPlanners: "allRoYearlyPlanners",
-      expanded: false,
-    },
-    {
-      name: "Shower",
-      query: SHOWER_YEARLY_PLANNER,
-      allPlanners: "allShowerYearlyPlanners",
-      expanded: false,
-    },
-    {
-      name: "Thermal Cycle",
-      query: THERMAL_CYCLE_YEARLY_PLANNER,
-      allPlanners: "allThermalCycleYearlyPlanners",
-      expanded: false,
-    },
-    {
-      name: "Thermal Shock",
-      query: THERMAL_SHOCK_YEARLY_PLANNER,
-      allPlanners: "allThermalShockYearlyPalnners",
-      expanded: false,
-    },
-    {
-      name: "Vibration",
-      query: VIBRATION_YEARLY_PLANNER,
-      allPlanners: "allVibrationYearlyPlanners",
-      expanded: false,
-    },
-  ]);
+  const [testData, setTestData] = useState([]
+  );
   const role = useSelector((store) => {
     return store.userRoles;
   });
   const onFileChange = (files) => {
     console.log(files);
   };
+  useEffect(()=>{
+    setTestData(testDataObj)
+  },[])
 
   const handleExpandClick = (index) => {
-    // let obj = testData;
-    for (let i = 0; i < testData.length; i++) {
-      if (i === index) {
-        testData[i].expanded = true;
-        // console.log(testData);
-      }
-      testData[i].expanded = false;
-    }
-    // setTestData(obj);
-    console.log(testData);
+    setTestData((prevTestData) =>
+      prevTestData.map((val, i) => ({
+        ...val,
+        expanded: i === index ? !val.expanded : false,
+      }))
+    );
   };
  
   return (
@@ -247,34 +204,23 @@ function AnnualPlanner() {
       <MDBox width="calc(100% - 48px)" position="absolute" top="1.75rem">
         <DashboardNavbar dark absolute />
       </MDBox>
-
-      {/* <MDBox pt={10} pb={3} style={{background:"#202940",borderRadius:"10px"}} > */}
-
       <MDBox
         pt={10}
         pb={3}
         style={{ background: "#202940", borderRadius: "10px" }}
       >
-        <Card>
+        <Card style={{background:"#202940"}}>
           <MDBox p={3} lineHeight={1}>
-            {/* <MDTypography variant="h5" fontWeight="medium">
-              Annual Planner
-            </MDTypography> */}
-            {/* <MDTypography  variant="button" color="text">
-              Please configure equipment details for all components
-            </MDTypography> */}
           </MDBox>
           {role.roles === 3 ? (
             <Grid
-              // item xs={12} md={6} xl={4}
               container
               spacing={0}
               direction="column"
               alignItems="center"
               justifyContent="center"
             >
-              <Grid item xs={3}>
-                {/* <Masterpartlistupload /> */}
+              <Grid item xs={3} >
                 <DropFileInput onFileChange={(files) => onFileChange(files)} />
               </Grid>
             </Grid>
@@ -292,14 +238,14 @@ function AnnualPlanner() {
           >
             {testData.map((val, i) => {
               return (
-                // <div onClick={() => handleExpandClick(i)}>
+                <div key={i}  onClick={() => handleExpandClick(i)}>
                   <YearlyPlannerComponent
                     name={val?.name}
                     query={val?.query}
                     allPlanners={val?.allPlanners}
-                    // expanded={val.expanded ? true : false}
+                    expanded={val.expanded}
                   />
-                // </div>
+                 </div>
               );
             })}
           </Grid>
