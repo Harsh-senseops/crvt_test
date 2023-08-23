@@ -200,7 +200,6 @@ export default function OvenTest({ details, componentName, id }) {
   }
 
   const toggleTrue = () => {
-
     saveOvenStatus({
       partName: id,
       status: (!toggleEnable ? 1 : 0)
@@ -223,7 +222,6 @@ export default function OvenTest({ details, componentName, id }) {
                 <p style={{ fontSize: '0.75rem', color: 'white', fontWeight: 'bold' }}>
                   {toggleEnable ? "Enabled" : "Disabled"}</p>
               </MuiToggleButton>}
-
               <IconButton
                 className={clsx(classes.expand, {
                   [classes.expandOpen]: expanded,
@@ -239,17 +237,15 @@ export default function OvenTest({ details, componentName, id }) {
             </div>
           }
           title={<MDTypography variant="h6" fontWeight="medium">Oven Test</MDTypography>}
-          subheader={toggleEnable ? <MDTypography style={{ color: 'green', fontSize: '14px', paddingTop: '1%' }}>Oven Test is Enabled</MDTypography> : <MDTypography style={{ color: 'red', fontSize: '14px', paddingTop: '1%' }}>No Oven Test</MDTypography>}
+          subheader={toggleEnable ? <MDTypography style={{ color: 'lime', fontSize: '14px', paddingTop: '1%' }}>Oven Test is Enabled</MDTypography> : <MDTypography style={{ color: 'red', fontSize: '14px', paddingTop: '1%' }}>No Oven Test</MDTypography>}
         // subheader={subheaderdata}
         />
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <form onSubmit={(e) => handleFormSubmit(e)}>
             <CardContent>
               <MDBox pr={1}>
-
                 <Grid container spacing={3}>
                   <Grid item xs={12} sm={3}>
-
                     <TextField
                       onChange={(e) => setCold(prevData => ({
                         ...prevData,
@@ -262,7 +258,6 @@ export default function OvenTest({ details, componentName, id }) {
                       }}
                       disabled={role.roles === 1 || role.roles === 2 || !enabled}
                       className={toggleEnable ? "" : classes.disabledTextField}
-
                       value={cold.newData}
                       label="Cold (℃)"
                     />
@@ -280,7 +275,6 @@ export default function OvenTest({ details, componentName, id }) {
                       }}
                       disabled={role.roles === 1 || role.roles === 2 || !enabled}
                       className={toggleEnable ? "" : classes.disabledTextField}
-
                       value={hot.newData}
                       label="Hot (℃)"
                     />
@@ -298,7 +292,6 @@ export default function OvenTest({ details, componentName, id }) {
                       }}
                       disabled={role.roles === 1 || role.roles === 2 || !enabled}
                       className={toggleEnable ? "" : classes.disabledTextField}
-
                       value={testDurationMin.newData}
                       label="Test Duration (hr min)"
                     />
@@ -316,7 +309,6 @@ export default function OvenTest({ details, componentName, id }) {
                       }}
                       disabled={role.roles === 1 || role.roles === 2 || !enabled}
                       className={toggleEnable ? "" : classes.disabledTextField}
-
                       value={testDurationMax.newData}
                       label="Test Duration (hr max)"
                     />
@@ -334,7 +326,6 @@ export default function OvenTest({ details, componentName, id }) {
                       }}
                       disabled={role.roles === 1 || role.roles === 2 || !enabled}
                       className={toggleEnable ? "" : classes.disabledTextField}
-
                       value={equipmentRunning.newData}
                       label="Equipment Running (hr)"
                     />
@@ -350,10 +341,8 @@ export default function OvenTest({ details, componentName, id }) {
                           WebkitTextFillColor: "gray",
                         },
                       }}
-                      
                       disabled={role.roles === 1 || role.roles === 2 || !enabled}
                       className={toggleEnable ? "" : classes.disabledTextField}
-
                       value={simultaneously.newData}
                       label="Simultaneously"
                     />
@@ -371,7 +360,6 @@ export default function OvenTest({ details, componentName, id }) {
                       }}
                       disabled={role.roles === 1 || role.roles === 2 || !enabled}
                       className={toggleEnable ? "" : classes.disabledTextField}
-
                       value={sampleQty.newData}
                       label="Sample Quantity"
                     />

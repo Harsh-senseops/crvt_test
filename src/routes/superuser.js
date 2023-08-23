@@ -78,6 +78,7 @@ import MainDashboard from "layouts/dashboards/main-dashboard";
 import AnnualUploadHistory from "layouts/planner/upload-history/annual-upload-history";
 import MonthlyUploadHistory from "layouts/planner/upload-history/monthly-upload-history";
 import ProtectedRoute from "utils/ProtectedRoute";
+import PrePostResult from "layouts/equipment/equipment-details/PrePostResults";
 
 // Material Dashboard 2 PRO React components
 import MDAvatar from "components/MDAvatar";
@@ -156,7 +157,6 @@ const superUserRoutes = [
         key: "alert",
         route: "/alertandnotification/alert",
         component: <ProtectedRoute Component={Alert}/>,
-
       },
       {
         name: "Notification",
@@ -231,6 +231,12 @@ const superUserRoutes = [
         key: "equipment-details",
         route: "/equipment/equipment-details",
         component: <ProtectedRoute Component={EquipmentDetails}/>,
+      },
+      {
+        name:"Pre-Post Details",
+        key: "pre-post-details",
+        route: "/equipment/pre-post-details",
+        component: <ProtectedRoute Component={PrePostResult}/>,
       },
       {
         name: "History",

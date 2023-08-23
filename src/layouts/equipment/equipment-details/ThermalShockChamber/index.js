@@ -107,7 +107,6 @@ export default function ThermalShockChamber({ details, componentName, id }) {
       let constValues = JSON.parse(thermalShockdetailByID.data.thermalShockChamberTestDetailByPartName.testDetails, "datadetails")
       setOldData({ eName: constValues.name, running: constValues["7daysrunning"] })
 
-
       setCold({ newData: constValues.cold, oldDat: constValues.cold })
       setHot({ newData: constValues.hot, oldDat: constValues.hot })
       setCycleTime({ newData: constValues.cycle_time_sec, oldDat: constValues.cycle_time_sec })
@@ -122,13 +121,10 @@ export default function ThermalShockChamber({ details, componentName, id }) {
     details.map((val) => {
       let data = ""
       if (val.partName == componentName) {
-
         setToggleEnable(true)
-
         if (val.thermalShockChamberTestDetailsByPartName.nodes.length !== 0) {
           data = JSON.parse(val.thermalShockChamberTestDetailsByPartName.nodes[0].testDetails)
         }
-
         setCold({ newData: data.cold, oldDat: data.cold })
         setHot({ newData: data.hot, oldDat: data.hot })
         setCycleTime({ newData: data.cycle_time_sec, oldDat: data.cycle_time_sec })
@@ -146,7 +142,6 @@ export default function ThermalShockChamber({ details, componentName, id }) {
           setToggleEnable(false)
           setEnabled(false)
         }
-
       }
     })
   }, [details, thermalShockdetailByID])
@@ -165,7 +160,6 @@ export default function ThermalShockChamber({ details, componentName, id }) {
       "7daysrunning": oldData.running,
       sample_qty: parseInt(sampleQty.newData)
     })
-
 
     saveThermalDetailDetails({
       testDetails: data,
@@ -244,7 +238,6 @@ export default function ThermalShockChamber({ details, componentName, id }) {
                 aria-expanded={expanded}
                 aria-label="show more"
                 color='info'
-
               >
                 <ExpandMoreIcon />
               </IconButton>
@@ -252,10 +245,9 @@ export default function ThermalShockChamber({ details, componentName, id }) {
             </div>
           }
           title={<MDTypography variant="h6" fontWeight="medium">Thermal Shock Test</MDTypography>}
-          subheader={toggleEnable ? <MDTypography style={{ color: 'green', fontSize: '14px', paddingTop: '1%' }}>Thermal Shock Test is Enabled</MDTypography> : <MDTypography style={{ color: 'red', fontSize: '14px', paddingTop: '1%' }}>No Thermal Shock Test</MDTypography>}
+          subheader={toggleEnable ? <MDTypography style={{ color: 'lime', fontSize: '14px', paddingTop: '1%' }}>Thermal Shock Test is Enabled</MDTypography> : <MDTypography style={{ color: 'red', fontSize: '14px', paddingTop: '1%' }}>No Thermal Shock Test</MDTypography>}
         // subheader={subheaderdata}
         />
-
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <form onSubmit={(e) => handleFormSubmit(e)}>
             <CardContent>
@@ -299,7 +291,6 @@ export default function ThermalShockChamber({ details, componentName, id }) {
                     />
                   </Grid>
                   <Grid item xs={12} sm={3}>
-
                     <TextField
                       onChange={(e) => setCycleTime(prevData => ({
                         ...prevData,
@@ -318,7 +309,6 @@ export default function ThermalShockChamber({ details, componentName, id }) {
                     />
                   </Grid>
                   <Grid item xs={12} sm={3}>
-
                     <TextField
                       onChange={(e) => setTotalCycle(prevData => ({
                         ...prevData,
@@ -337,7 +327,6 @@ export default function ThermalShockChamber({ details, componentName, id }) {
                     />
                   </Grid>
                   <Grid item xs={12} sm={3}>
-
                     <TextField
                       onChange={(e) => setTestDurationMax(prevData => ({
                         ...prevData,

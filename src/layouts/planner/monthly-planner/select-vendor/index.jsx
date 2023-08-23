@@ -19,6 +19,8 @@ import {
 } from "reduxSlices/notifications";
 import { ADD_MONTHLY_UPLOAD_HISTORY, ADD_NOTIFICATION } from "apis/queries";
 import { setSampleRemaining } from "reduxSlices/monthlyPlanner";
+import { PRE_RESULT_SAMPLE } from "apis/queries";
+import { POST_RESULT_SAMPLE } from "apis/queries";
 
 function ConfirmationDialogRaw({
   onClose,
@@ -38,6 +40,9 @@ function ConfirmationDialogRaw({
     ADD_MONTHLY_UPLOAD_HISTORY
   );
   const [addNotificationResult, addNotification] = useMutation(ADD_NOTIFICATION);
+  const [addPreResults, addPreResultsPart] = useMutation(PRE_RESULT_SAMPLE);
+  const [addPostResults, addPostResultsPart] = useMutation(POST_RESULT_SAMPLE);
+  
 
   useEffect(() => {
     if (!open) {
@@ -101,9 +106,22 @@ function ConfirmationDialogRaw({
                   setShouldPauseNotification(false);
                   // let nCount = localStorage.getItem("cn") || 0
                   // localStorage.setItem("cn",nCount+1)
-                  dispatch(setSampleRemaining({testName:store.testName,componentName:store.detailsToPush.partName}))
+                  // dispatch(setSampleRemaining({testName:store.testName,componentName:store.detailsToPush.partName}))
                   dispatch(incrementCounter(1));
                   dispatch(addNotifications("New planner added"));
+                  addPreResultsPart({
+                  partCode: store.detailsToPush.partCode,
+                  partName: store.detailsToPush.partName,
+                 }).then((res)=>{
+                  if(res.data){
+                    addPostResultsPart({
+                      partCode: store.detailsToPush.partCode,
+                      partName: store.detailsToPush.partName,
+                    })
+                  }
+                  console.log(res)
+                 })
+                  
                 }
               });
             }
