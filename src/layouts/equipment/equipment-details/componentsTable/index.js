@@ -20,6 +20,10 @@ import Dust from "../Dust";
 import { EQUIPMENT_DETAILS } from "apis/queries";
 import OvenTest from "../OvenTest";
 import "./index.css"
+import PrePostTest from "../PrePostTest";
+import PreResult from "../PrePostResults/PreResult";
+
+
 
 function ComponentsTable() {
   const [componentDetails, setComponentDetails] = useState([])
@@ -90,7 +94,8 @@ function ComponentsTable() {
                   title={<MDTypography style={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'white' }}>{formtitle}</MDTypography>}
                 />
                 <Divider variant="middle" />
-                <Dust componentName={formtitle} details={componentDetails} id={partId} />
+                <PrePostTest details={componentDetails} id={partId}/>
+                <Dust componentName={formtitle} details={componentDetails}  />
                 <OvenTest componentName={formtitle} details={componentDetails} id={partId} />
                 <RepeatedOperation componentName={formtitle} details={componentDetails} id={partId} />
                 <ShowerTesting componentName={formtitle} details={componentDetails} id={partId} />

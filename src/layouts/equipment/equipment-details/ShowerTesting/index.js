@@ -234,7 +234,7 @@ export default function ShowerTesting({ details, componentName, id }) {
             </div>
           }
           title={<MDTypography variant="h6" fontWeight="medium">Shower Test</MDTypography>}
-          subheader={toggleEnable ? <MDTypography style={{ color: 'green', fontSize: '14px', paddingTop: '1%' }}>Shower Test is Enabled</MDTypography> : <MDTypography style={{ color: 'red', fontSize: '14px', paddingTop: '1%' }}>No Shower Test</MDTypography>}
+          subheader={toggleEnable ? <MDTypography style={{ color: 'lime', fontSize: '14px', paddingTop: '1%' }}>Shower Test is Enabled</MDTypography> : <MDTypography style={{ color: 'red', fontSize: '14px', paddingTop: '1%' }}>No Shower Test</MDTypography>}
         />
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <form onSubmit={(e) => handleFormSubmit(e)}>
