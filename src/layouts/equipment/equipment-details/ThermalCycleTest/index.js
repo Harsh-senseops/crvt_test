@@ -22,8 +22,6 @@ import { ADD_THERMAL_CYCLE_STATUS } from 'apis/queries';
 import { ADD_EQUIPMENT_UPDATE_HISTORY } from 'apis/queries';
 import alertAndLoaders from 'utils/alertAndLoaders';
 
-
-
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: '100%',
@@ -45,11 +43,9 @@ const useStyles = makeStyles((theme) => ({
       color: "gray" // or black
     },
 
-
     "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
       borderColor: "gray"
     },
-
 
   },
   formControl: {
@@ -96,7 +92,6 @@ export default function ThermalCycleTestDetail({ details, componentName, id }) {
   const [thermalCycleStatusRes, saveThermalCycleStatus] = useMutation(ADD_THERMAL_CYCLE_STATUS)
   const [equipmentHistoryRes, saveEquipmentHistory] = useMutation(ADD_EQUIPMENT_UPDATE_HISTORY)
 
-
   useEffect(() => {
 
     if (thermalCycledeailsByID.data) {
@@ -130,7 +125,6 @@ export default function ThermalCycleTestDetail({ details, componentName, id }) {
           setToggleEnable(false)
           setEnabled(false)
         }
-
       }
     })
   }, [details, thermalCycledeailsByID])
@@ -179,14 +173,12 @@ export default function ThermalCycleTestDetail({ details, componentName, id }) {
       }
     }
     return JSON.stringify(newObj);
-
   }
 
   const handleFormSubmit = (e) => {
     e.preventDefault()
   }
   const toggleTrue = () => {
-
     saveThermalCycleStatus({
       partName: id,
       status: (!toggleEnable ? 1 : 0)
@@ -220,12 +212,10 @@ export default function ThermalCycleTestDetail({ details, componentName, id }) {
               >
                 <ExpandMoreIcon />
               </IconButton>
-
             </div>
           }
           title={<MDTypography variant="h6" fontWeight="medium">Thermal Cycle Test</MDTypography>}
-          subheader={toggleEnable ? <MDTypography style={{ color: 'green', fontSize: '14px', paddingTop: '1%' }}>Thermal Cycle Test is Enabled</MDTypography> : <MDTypography style={{ color: 'red', fontSize: '14px', paddingTop: '1%' }}>No Thermal Cycle Test</MDTypography>}
-        // subheader={subheaderdata}
+          subheader={toggleEnable ? <MDTypography style={{ color: 'lime', fontSize: '14px', paddingTop: '1%' }}>Thermal Cycle Test is Enabled</MDTypography> : <MDTypography style={{ color: 'red', fontSize: '14px', paddingTop: '1%' }}>No Thermal Cycle Test</MDTypography>}
         />
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <form onSubmit={(e) => handleFormSubmit(e)}>

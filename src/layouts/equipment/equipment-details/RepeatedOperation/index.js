@@ -246,7 +246,7 @@ export default function RepeatedOperation({ details, componentName, id }) {
             </div>
           }
           title={<MDTypography variant="h6" fontWeight="medium">Repeated Operation</MDTypography>}
-          subheader={toggleEnable ? <MDTypography style={{ color: 'green', fontSize: '14px', paddingTop: '1%' }}> Repeated Operation is Enabled</MDTypography> : <MDTypography style={{ color: 'red', fontSize: '14px', paddingTop: '1%' }}>No Repeated Operation Test</MDTypography>}
+          subheader={toggleEnable ? <MDTypography style={{ color: 'lime', fontSize: '14px', paddingTop: '1%' }}> Repeated Operation is Enabled</MDTypography> : <MDTypography style={{ color: 'red', fontSize: '14px', paddingTop: '1%' }}>No Repeated Operation Test</MDTypography>}
         // subheader={subheaderdata}
         />
 

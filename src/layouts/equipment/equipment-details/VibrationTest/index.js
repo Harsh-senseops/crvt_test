@@ -259,7 +259,7 @@ export default function VibrationTest({ details, componentName, id }) {
             </div>
           }
           title={<MDTypography variant="h6" fontWeight="medium">Vibration Test</MDTypography>}
-          subheader={toggleEnable ? <MDTypography style={{ color: 'green', fontSize: '14px', paddingTop: '1%' }}>Vibration Test is Enabled</MDTypography> : <MDTypography style={{ color: 'red', fontSize: '14px', paddingTop: '1%' }}>No Vibration Test</MDTypography>}
+          subheader={toggleEnable ? <MDTypography style={{ color: 'lime', fontSize: '14px', paddingTop: '1%' }}>Vibration Test is Enabled</MDTypography> : <MDTypography style={{ color: 'red', fontSize: '14px', paddingTop: '1%' }}>No Vibration Test</MDTypography>}
         // subheader={subheaderdata}
         />
         <Collapse in={expanded} timeout="auto" unmountOnExit>

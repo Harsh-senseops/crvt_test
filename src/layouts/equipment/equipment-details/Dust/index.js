@@ -14,17 +14,13 @@ import { makeStyles } from '@mui/styles';
 import MDBox from 'components/MDBox';
 import { CardActions, TextField } from '@mui/material';
 import { useSubscription, useMutation, useQuery } from 'urql'
-
 import Grid from "@mui/material/Grid";
-
 import { useSelector, useDispatch } from "react-redux";
 import { DUST_TEST_DETAILS } from 'apis/queries';
 import { SAVE_DUST_DETAILS } from 'apis/queries';
 import { ADD_EQUIPMENT_UPDATE_HISTORY } from 'apis/queries'
 import { ADD_DUST_STATUS } from 'apis/queries';
 import alertAndLoaders from "utils/alertAndLoaders";
-
-
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -87,18 +83,15 @@ export default function DustTest({ details, componentName, id }) {
     return store.userRoles
   });
 
-
   const dispatch = useDispatch();
 
-
   const [saveDustDetailRes, saveDustDetails] = useMutation(SAVE_DUST_DETAILS)
-  const [dustdetailByID, rexDustDetailByID] = useSubscription({
-    query: DUST_TEST_DETAILS,
-    variables: { partName: id }
-  })
+      const [dustdetailByID, rexDustDetailByID] = useSubscription({
+        query: DUST_TEST_DETAILS,
+        variables: { partName: id }
+      })
   const [dustStatus, saveDustStatus] = useMutation(ADD_DUST_STATUS)
   const [equipmentHistoryRes, saveEquipmentHistory] = useMutation(ADD_EQUIPMENT_UPDATE_HISTORY)
-
 
   useEffect(() => {
     if (dustdetailByID.data) {
@@ -111,7 +104,6 @@ export default function DustTest({ details, componentName, id }) {
       setEquipmentRunning({ newData: constValues.equipment_running, oldData: constValues.equipment_running })
       setSimultaneously({ newData: constValues.simultaneously, oldData: constValues.simultaneously })
       setSampleQty({ newData: constValues.sample_qty, oldData: constValues.sample_qty })
-
     }
 
     details.map((val) => {
@@ -197,16 +189,13 @@ export default function DustTest({ details, componentName, id }) {
 
   const handleFormSubmit = (e) => {
     e.preventDefault()
-
   }
   const toggleTrue = () => {
-
     saveDustStatus({
       partName: id,
       status: !toggleEnable ? 1 : 0
     }).then((res) => {
       toggleEnable ? alertAndLoaders("UNSHOW_ALERT", dispatch, "Dust Test Is Disabled...", "warning") : alertAndLoaders("UNSHOW_ALERT", dispatch, "Dust Test Is Enabled... ", "success")
-
     })
   }
 
@@ -243,7 +232,7 @@ export default function DustTest({ details, componentName, id }) {
             </div>
           }
           title={<MDTypography variant="h6" fontWeight="medium">Dust</MDTypography>}
-          subheader={toggleEnable ? <MDTypography style={{ color: 'green', fontSize: '14px', paddingTop: '1%' }}>Dust Test is Enabled</MDTypography> : <MDTypography style={{ color: 'red', fontSize: '14px', paddingTop: '1%' }}>No Dust Test</MDTypography>}
+          subheader={toggleEnable ? <MDTypography style={{ color: 'lime', fontSize: '14px', paddingTop: '1%' }}>Dust Test is Enabled</MDTypography> : <MDTypography style={{ color: 'red', fontSize: '14px', paddingTop: '1%' }}>No Dust Test</MDTypography>}
         // subheader={subheaderdata}
         />
         <Collapse in={expanded} timeout="auto" unmountOnExit>
@@ -281,7 +270,6 @@ export default function DustTest({ details, componentName, id }) {
                       }}
                       disabled={role.roles === 1 || role.roles === 2 || !enabled}
                       className={toggleEnable ? "" : classes.disabledTextField}
-
                       value={rest.newData}
                       label="Rest (mins)"
                     />
@@ -299,7 +287,6 @@ export default function DustTest({ details, componentName, id }) {
                       }}
                       disabled={role.roles === 1 || role.roles === 2 || !enabled}
                       className={toggleEnable ? "" : classes.disabledTextField}
-
                       value={testDurationMin.newData}
                       label="Test Duration (hr min)"
                     />
@@ -317,7 +304,6 @@ export default function DustTest({ details, componentName, id }) {
                       }}
                       disabled={role.roles === 1 || role.roles === 2 || !enabled}
                       className={toggleEnable ? "" : classes.disabledTextField}
-
                       value={testDurationMax.newData}
                       label="Test Duration (hr max)"
                     />
@@ -335,7 +321,6 @@ export default function DustTest({ details, componentName, id }) {
                       }}
                       disabled={role.roles === 1 || role.roles === 2 || !enabled}
                       className={toggleEnable ? "" : classes.disabledTextField}
-
                       value={equipmentRunning.newData}
                       label="Equipment Running (hr)"
                     />
@@ -389,13 +374,6 @@ export default function DustTest({ details, componentName, id }) {
           </form>
         </Collapse>
       </Card>
-      {/*:<Card style={{marginTop: '2%'}}>
-      <CardHeader 
-      title={<MDTypography variant="h6" fontWeight="medium">Dust</MDTypography>}
-      subheader={<MDTypography style={{color: 'red', fontSize: '14px', paddingTop: '1%'}}>No Dust Test</MDTypography>}
-      >
-      </CardHeader>
-      </Card>}*/}
     </>
   );
 }
