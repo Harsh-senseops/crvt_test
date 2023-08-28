@@ -1,8 +1,8 @@
 import * as React from "react";
 import { useState, useEffect, useCallback } from "react";
 import Card from "@mui/material/Card";
-import IconButton from '@mui/material/IconButton';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import IconButton from "@mui/material/IconButton";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
 import InputLabel from "@mui/material/InputLabel";
@@ -15,37 +15,38 @@ import { useSelector, useDispatch } from "react-redux";
 import MDBox from "components/MDBox";
 import { CardHeader, TextField } from "@mui/material";
 import { useMutation, useQuery, useSubscription } from "urql";
-import Collapse from '@mui/material/Collapse';
+import Collapse from "@mui/material/Collapse";
 import Grid from "@mui/material/Grid";
 import alertAndLoaders from "utils/alertAndLoaders";
 import { ALL_COMPONENT } from "apis/queries";
-import { UPDATE_POST_RESULT } from "apis/queries";
-import { CREATE_POST_RESULT } from "apis/queries";
+import { POST_CURRENT, POST_FREQUENCY, POST_INSULATION, POST_SOUND } from "apis/queries";
 import { FATCH_POST_RESULT } from "apis/queries";
+import { setNoOfSamples } from "reduxSlices/prePost";
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        maxWidth: '100%',
-        margin: '1%'
+        maxWidth: "100%",
+        margin: "1%",
     },
     disabledTextField: {
         color: "gray",
         "& .MuiFormLabel-root": {
-            color: "gray" // or black
+            color: "gray", // or black
         },
         "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-            borderColor: "gray"
+            borderColor: "gray",
         },
     },
     expand: {
-        transform: 'rotate(0deg)',
-        marginLeft: 'auto',
-        transition: theme.transitions.create('transform', {
+        transform: "rotate(0deg)",
+        marginLeft: "auto",
+        transition: theme.transitions.create("transform", {
             duration: theme.transitions.duration.shortest,
         }),
     },
     expandOpen: {
-        transform: 'rotate(180deg)',
+        transform: "rotate(180deg)",
     },
     formControl: {
         // margin: theme.spacing(1),
@@ -61,96 +62,182 @@ const useStyles = makeStyles((theme) => ({
     parentFlexRight: {
         display: "flex",
         justifyContent: "flex-end",
-        marginBottom: '2%',
-        marginRight: '3%'
+        marginBottom: "2%",
+        marginRight: "3%",
     },
 }));
 
-export default function PreResult({ partCode }) {
+export default function PostResult({ partCode }) {
     const [expanded, setExpanded] = React.useState(false);
-    const [show, setShow] = useState(false)
-    const [pledge, setPledge] = useState(true)
-    const [component, setComponent] = useState(true)
-    const [ptcurrent, setPtCurrent] = useState({})
-    const [ptfrequency, setPtFreuency] = useState({})
-    const [ptinsulation, setPtInsulation] = useState({})
-    const [ptsound, setPtSound] = useState({})
+    const [show, setShow] = useState(false);
+    const [ptcurrent, setPtCurrent] = useState({});
+    const [ptfrequency, setPtFrequency] = useState({});
+    const [ptinsulation, setPtInsulation] = useState({});
+    const [ptsound, setPtSound] = useState({});
     const classes = useStyles();
-    const [updatePostData, updatePostDataResults] = useMutation(UPDATE_POST_RESULT);
-    const [createPostData, createPostDataResults] = useMutation(CREATE_POST_RESULT);
+    const [updatePostCurrent, updatePostCurrentResults] = useMutation(POST_CURRENT);
+    const [updatePostFrequency, updatePostFrequencyResults] = useMutation(POST_FREQUENCY);
+    const [updatePostInsulation, updatePostInsulationResults] = useMutation(POST_INSULATION);
+    const [updatePostSound, updatePostSoundResults] = useMutation(POST_SOUND);
+
 
     const prePostStore = useSelector((store) => {
         return store.prePost;
-    })
+    });
     const [fatchPostData, rexFatchPostData] = useSubscription({
-        query:FATCH_POST_RESULT,
-        variables: { partCode:partCode}
-    })
+        query: FATCH_POST_RESULT,
+        variables: { partCode: partCode },
+    });
 
     const [plannerByName, rexPlannerByName] = useQuery({
-        query: ALL_COMPONENT
-    })
+        query: ALL_COMPONENT,
+    });
     const dispatch = useDispatch();
 
     useEffect(() => {
         if (fatchPostData.data) {
             if (fatchPostData.data.postResultTableByPartCode) {
-                let data=fatchPostData.data.postResultTableByPartCode
-                setPtCurrent(JSON.parse(data.ptCurrent))
-                setPtFreuency(JSON.parse(data.ptFrequency))
-                setPtInsulation(JSON.parse(data.ptInsulationRs))
-                setPtSound(JSON.parse(data.ptSoundLvl))
-            }
+                let data = fatchPostData.data.postResultTableByPartCode
+                console.log(data,"DDD")
+                let flag = true;
+                if (JSON.parse(data?.ptCurrent) && flag) {
+                    let len = Object.keys(JSON.parse(data?.ptCurrent)).length;
+                    dispatch(setNoOfSamples(len))
+                    flag = false
+                } else if (JSON.parse(data?.ptFrequency) && flag) {
+                    let len = Object.keys(JSON.parse(data?.ptFrequency)).length;
+                    dispatch(setNoOfSamples(len))
+                    flag = false
+                } else if (JSON.parse(data?.ptInsulationRs) && flag) {
+                    let len = Object.keys(JSON.parse(data?.ptInsulationRs)).length;
+                    dispatch(setNoOfSamples(len))
+                    flag = false
+                }
+                else if (JSON.parse(data?.ptSoundLvl) && flag) {
+                    let len = Object.keys(JSON.parse(data?.ptSoundLvl)).length;
+                    dispatch(setNoOfSamples(len))
+                    flag = false
+                }
+                setPtCurrent(JSON.parse(data?.ptCurrent) || "")
+                setPtFrequency(JSON.parse(data?.ptFrequency) || "")
+                setPtSound(JSON.parse(data?.ptSoundLvl) || "")
+                setPtInsulation(JSON.parse(data?.ptInsulationRs) || "")
 
-        }
-        if (plannerByName.data) {
-            if (plannerByName.data.allPreResultTables) {
-                let data = plannerByName.data.allPreResultTables
-                setPledge(true)
-            } else {
-                setPledge(false)
             }
         }
-    }, [plannerByName.data, fatchPostData.data])
+        // if (plannerByName.data) {
+        //     if (plannerByName.data.allPreResultTables) {
+        //         let data = plannerByName.data.allPreResultTables;
+        //         setPledge(true);
+        //     } else {
+        //         setPledge(false);
+        //     }
+        // }
+    }, [plannerByName.data, fatchPostData.data]);
 
     const saveValues = () => {
-        let currentVal = JSON.stringify(ptcurrent)
-        let frequencyVal = JSON.stringify(ptfrequency)
-        let insulationVal = JSON.stringify(ptinsulation)
-        let soundVal = JSON.stringify(ptsound)
-        if (pledge === true) {
-            updatePostDataResults({
+        let currentVal = ptcurrent === "" ? null : JSON.stringify(ptcurrent);
+        let frequencyVal = ptfrequency === "" ? null : JSON.stringify(ptfrequency);
+        let insulationVal = ptinsulation === "" ? null : JSON.stringify(ptinsulation);
+        let soundVal = ptsound === "" ? null : JSON.stringify(ptsound);
+        if (currentVal) {
+            for (let i = 0; i < prePostStore.noOFSamples.length; i++) {
+                if (!ptcurrent[`n${i + 1}`]) {
+                    alertAndLoaders(
+                        "UNSHOW_ALERT",
+                        dispatch,
+                        "Please ensure that all current fields are filled",
+                        "warning"
+                    );
+                    return;
+                }
+            }
+            updatePostCurrentResults({
                 partCode: partCode,
                 ptCurrent: currentVal,
-                ptFrequency: frequencyVal,
-                ptInsulationRs: insulationVal,
-                ptSoundLvl: soundVal
+
             }).then((res) => {
                 console.log(res);
                 if (res.data !== null) {
-                    alertAndLoaders("UNSHOW_ALERT", dispatch, "Post Test Results Are Saved... ", "success");
-                } else if (res.error) {
-                    alertAndLoaders("UNSHOW_ALERT", dispatch, "Something Went Wrong... ", "error");
-                }
-            });
-        } else {
-            createPostDataResults({
-                partCode: partCode,
-                ptCurrent: currentVal,
-                ptFrequency: frequencyVal,
-                ptInsulationRs: insulationVal,
-                ptSoundLvl: soundVal
-
-            }).then((res) => {
-                console.log(res);
-                if (res.data) {
-                    alertAndLoaders("UNSHOW_ALERT", dispatch, "Post Test Results Are Saved... ", "success");
+                    alertAndLoaders("UNSHOW_ALERT", dispatch, "Post Test Current Values Are Saved... ", "success");
                 } else if (res.error) {
                     alertAndLoaders("UNSHOW_ALERT", dispatch, "Something Went Wrong... ", "error");
                 }
             });
         }
-    }
+        if (soundVal) {
+            for (let i = 0; i < prePostStore.noOFSamples.length; i++) {
+                if (!ptsound[`n${i + 1}`]) {
+                    alertAndLoaders(
+                        "UNSHOW_ALERT",
+                        dispatch,
+                        "Please ensure that all sound fields are filled",
+                        "warning"
+                    );
+                    return;
+                }
+            }
+            updatePostSoundResults({
+                partCode: partCode,
+                ptSoundLvl: soundVal,
+            }).then((res) => {
+                console.log(res);
+                if (res.data !== null) {
+                    alertAndLoaders("UNSHOW_ALERT", dispatch, "Post Test Sound Values Are Saved... ", "success");
+                } else if (res.error) {
+                    alertAndLoaders("UNSHOW_ALERT", dispatch, "Something Went Wrong... ", "error");
+                }
+            });
+        }
+        if (insulationVal) {
+            for (let i = 0; i < prePostStore.noOFSamples.length; i++) {
+                if (!ptinsulation[`n${i + 1}`]) {
+                    alertAndLoaders(
+                        "UNSHOW_ALERT",
+                        dispatch,
+                        "Please ensure that all insulation fields are filled",
+                        "warning"
+                    );
+                    return;
+                }
+            }
+            updatePostInsulationResults({
+                partCode: partCode,
+                ptInsulationRs: insulationVal,
+            }).then((res) => {
+                console.log(res);
+                if (res.data !== null) {
+                    alertAndLoaders("UNSHOW_ALERT", dispatch, "Post Test Insulation Values Are Saved... ", "success");
+                } else if (res.error) {
+                    alertAndLoaders("UNSHOW_ALERT", dispatch, "Something Went Wrong... ", "error");
+                }
+            });
+        }
+        if (frequencyVal) {
+            for (let i = 0; i < prePostStore.noOFSamples.length; i++) {
+                if (!ptfrequency[`n${i + 1}`]) {
+                    alertAndLoaders(
+                        "UNSHOW_ALERT",
+                        dispatch,
+                        "Please ensure that all frequency fields are filled",
+                        "warning"
+                    );
+                    return;
+                }
+            }
+            updatePostFrequencyResults({
+                partCode: partCode,
+                ptFrequency: frequencyVal,
+            }).then((res) => {
+                console.log(res);
+                if (res.data !== null) {
+                    alertAndLoaders("UNSHOW_ALERT", dispatch, "Post Test Frequency Values Are Saved... ", "success");
+                } else if (res.error) {
+                    alertAndLoaders("UNSHOW_ALERT", dispatch, "Something Went Wrong... ", "error");
+                }
+            });
+        }
+    };
 
     return (
         <>
@@ -174,7 +261,7 @@ export default function PreResult({ partCode }) {
                             </MDTypography>
                         </Grid>
                         <Grid container marginBottom={2} style={{ display: "flex", justifyContent: "space-evenly" }} >
-                            {prePostStore.noOFSamples.map((val) => {
+                            {prePostStore.noOFSamples.map((val, id) => {
                                 const handleChange = (event) => {
                                     const { name, value } = event.target;
                                     setPtCurrent((prevValues) => ({
@@ -185,10 +272,10 @@ export default function PreResult({ partCode }) {
                                 return (
                                     <Grid sm={2} m={1}>
                                         {show ? <TextField name={`n${val}`}
-                                            value={ptcurrent?ptcurrent[`n${val}`] : ''}
-                                            onChange={handleChange} /> : <MDTypography variant="h6" fontWeight="small" style={{ textAlign: "center", background: "#394259", padding: "5px 0px", borderRadius: "8px" }}>{ptcurrent?ptcurrent[`n${val}`] : "N/A"}</MDTypography>}
+                                            value={ptcurrent ? ptcurrent[`n${val}`] : ''}
+                                            onChange={handleChange} /> : <MDTypography variant="h6" fontWeight="small" style={{ textAlign: "center", background: "#394259", padding: "5px 0px", borderRadius: "8px" }}>{ptcurrent ? ptcurrent[`n${val}`] : "N/A"}</MDTypography>}
                                     </Grid>
-                                    
+
                                 )
                             })}
                         </Grid>
@@ -209,10 +296,9 @@ export default function PreResult({ partCode }) {
                                 return (
                                     <Grid sm={2} m={1}>
                                         {show ? <TextField name={`n${val}`}
-                                            value={ptsound?ptsound[`n${val}`] : ''}
-                                            onChange={handleChange} /> : <MDTypography variant="h6" fontWeight="small" style={{ textAlign: "center", background: "#394259", padding: "5px 0px", borderRadius: "8px" }}>{ptsound?ptsound[`n${val}`] : "N/A"}</MDTypography>}
+                                            value={ptsound ? ptsound[`n${val}`] : ''}
+                                            onChange={handleChange} /> : <MDTypography variant="h6" fontWeight="small" style={{ textAlign: "center", background: "#394259", padding: "5px 0px", borderRadius: "8px" }}>{ptsound ? ptsound[`n${val}`] : "N/A"}</MDTypography>}
                                     </Grid>
-                                    
                                 )
                             })}
                         </Grid>
@@ -225,7 +311,7 @@ export default function PreResult({ partCode }) {
                             {prePostStore.noOFSamples.map((val) => {
                                 const handleChange = (event) => {
                                     const { name, value } = event.target;
-                                    setPtFreuency((prevValues) => ({
+                                    setPtFrequency((prevValues) => ({
                                         ...prevValues,
                                         [name]: value,
                                     }));
@@ -233,10 +319,9 @@ export default function PreResult({ partCode }) {
                                 return (
                                     <Grid sm={2} m={1}>
                                         {show ? <TextField name={`n${val}`}
-                                            value={ptfrequency?ptfrequency[`n${val}`] : ''}
-                                            onChange={handleChange} /> : <MDTypography variant="h6" fontWeight="small" style={{ textAlign: "center", background: "#394259", padding: "5px 0px", borderRadius: "8px" }}>{ptfrequency?ptfrequency[`n${val}`] : "N/A"}</MDTypography>}
+                                            value={ptfrequency ? ptfrequency[`n${val}`] : ''}
+                                            onChange={handleChange} /> : <MDTypography variant="h6" fontWeight="small" style={{ textAlign: "center", background: "#394259", padding: "5px 0px", borderRadius: "8px" }}>{ptfrequency ? ptfrequency[`n${val}`] : "N/A"}</MDTypography>}
                                     </Grid>
-                                    
                                 )
                             })}
                         </Grid>
@@ -257,10 +342,9 @@ export default function PreResult({ partCode }) {
                                 return (
                                     <Grid sm={2} m={1}>
                                         {show ? <TextField name={`n${val}`}
-                                            value={ptinsulation?ptinsulation[`n${val}`] : ''}
-                                            onChange={handleChange} /> : <MDTypography variant="h6" fontWeight="small" style={{ textAlign: "center", background: "#394259", padding: "5px 0px", borderRadius: "8px" }}>{ptinsulation?ptinsulation[`n${val}`] : "N/A"}</MDTypography>}
+                                            value={ptinsulation ? ptinsulation[`n${val}`] : ''}
+                                            onChange={handleChange} /> : <MDTypography variant="h6" fontWeight="small" style={{ textAlign: "center", background: "#394259", padding: "5px 0px", borderRadius: "8px" }}>{ptinsulation ? ptinsulation[`n${val}`] : "N/A"}</MDTypography>}
                                     </Grid>
-                                    
                                 )
                             })}
                         </Grid>
@@ -278,6 +362,5 @@ export default function PreResult({ partCode }) {
                         </Grid></>}
             </Card>
         </>
-
-    )
+    );
 }

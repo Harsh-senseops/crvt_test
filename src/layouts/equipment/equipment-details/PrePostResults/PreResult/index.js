@@ -15,8 +15,7 @@ import { CardHeader, TextField } from "@mui/material";
 import { useMutation, useQuery, useSubscription } from "urql";
 import Grid from "@mui/material/Grid";
 import { ALL_COMPONENT } from "apis/queries";
-import { CREATE_PRE_RESULT } from "apis/queries";
-import { UPDATE_PRE_RESULT } from "apis/queries";
+import { PRE_CURRENT,PRE_FREQUENCY,PRE_INSULATION,PRE_SOUND } from "apis/queries";
 import alertAndLoaders from "utils/alertAndLoaders";
 import { FATCH_PRE_RESULT } from "apis/queries";
 import { setNoOfSamples } from "reduxSlices/prePost";
@@ -74,8 +73,10 @@ export default function PreResult({ partCode }) {
     const [insulation, setInsulation] = useState({})
     const [showSamples, setShowSamples] = useState(false);
     const [noOfSamples, setNoOSamples] = useState([])
-    const [createPreDataRes, createPreData] = useMutation(CREATE_PRE_RESULT);
-    const [updatePreData, updatePreDataResults] = useMutation(UPDATE_PRE_RESULT);
+    const [updatePreCurrent, updatePreCurrentResults] = useMutation(PRE_CURRENT);
+    const [updatePreFrequency, updatePreFrequencyResults] = useMutation(PRE_FREQUENCY);
+    const [updatePreInsulation, updatePreInsulationResults] = useMutation(PRE_INSULATION);
+    const [updatePreSound, updatePreSoundResults] = useMutation(PRE_SOUND);
     const prePostStore = useSelector((store) => {
         return store.prePost;
     })
@@ -91,34 +92,34 @@ export default function PreResult({ partCode }) {
 
     useEffect(() => {
         if (fatchPreData.data) {
-            if (fatchPreData.data.preResultTableByPartCode) {
-                let data = fatchPreData.data.preResultTableByPartCode
-                // console.log(JSON.parse(data?.frequency,"fdsafasfa"))
-                let flag = true;
-                if (JSON.parse(data?.current) && flag) {
-                    let len = Object.keys(JSON.parse(data?.current)).length;
-                    dispatch(setNoOfSamples(len))
-                    flag = false
-                } else if (JSON.parse(data?.frequency) && flag) {
-                    let len = Object.keys(JSON.parse(data?.frequency)).length;
-                    dispatch(setNoOfSamples(len))
-                    flag = false
-                } else if (JSON.parse(data?.insulationRs) && flag) {
-                    let len = Object.keys(JSON.parse(data?.insulationRs)).length;
-                    dispatch(setNoOfSamples(len))
-                    flag = false
-                }
-                else if (JSON.parse(data?.soundLvl) && flag) {
-                    let len = Object.keys(JSON.parse(data?.soundLvl)).length;
-                    dispatch(setNoOfSamples(len))
-                    flag = false
-                }
-                setCurrent(JSON.parse(data?.current) || "")
-                setFrequency(JSON.parse(data?.frequency) || "")
-                setSound(JSON.parse(data?.soundLvl) || "")
-                setInsulation(JSON.parse(data?.insulationRs) || "")
+                if (fatchPreData.data.preResultTableByPartCode) {
+                    let data = fatchPreData.data.preResultTableByPartCode
+                    // console.log(JSON.parse(data?.frequency,"fdsafasfa"))
+                    let flag = true;
+                    if (JSON.parse(data?.current) && flag) {
+                        let len = Object.keys(JSON.parse(data?.current)).length;
+                        dispatch(setNoOfSamples(len))
+                        flag = false
+                    } else if (JSON.parse(data?.frequency) && flag) {
+                        let len = Object.keys(JSON.parse(data?.frequency)).length;
+                        dispatch(setNoOfSamples(len))
+                        flag = false
+                    } else if (JSON.parse(data?.insulationRs) && flag) {
+                        let len = Object.keys(JSON.parse(data?.insulationRs)).length;
+                        dispatch(setNoOfSamples(len))
+                        flag = false
+                    }
+                    else if (JSON.parse(data?.soundLvl) && flag) {
+                        let len = Object.keys(JSON.parse(data?.soundLvl)).length;
+                        dispatch(setNoOfSamples(len))
+                        flag = false
+                    }
+                    setCurrent(JSON.parse(data?.current) || "")
+                    setFrequency(JSON.parse(data?.frequency) || "")
+                    setSound(JSON.parse(data?.soundLvl) || "")
+                    setInsulation(JSON.parse(data?.insulationRs) || "")
 
-            }
+                }
         }
         if (plannerByName.data) {
             if (plannerByName.data.allPreResultTables) {
@@ -131,29 +132,125 @@ export default function PreResult({ partCode }) {
     }, [plannerByName.data, fatchPreData.data])
 
     const saveValues = () => {
-        let currentVal = JSON.stringify(current)
-        let frequencyVal = JSON.stringify(frequency)
-        let insulationVal = JSON.stringify(insulation)
-        let soundVal = JSON.stringify(sound)
-
-        if (pledge === true) {
-            updatePreDataResults({
+        let currentVal = current === "" ? null : JSON.stringify(current);
+        let frequencyVal = frequency === "" ? null : JSON.stringify(frequency);
+        let insulationVal = insulation === "" ? null : JSON.stringify(insulation);
+        let soundVal = sound === "" ? null : JSON.stringify(sound);
+        if (currentVal) {
+            for (let i = 0; i < prePostStore.noOFSamples.length; i++) {
+                if (!current[`n${i + 1}`]) {
+                    alertAndLoaders(
+                        "UNSHOW_ALERT",
+                        dispatch,
+                        "Please ensure that all current fields are filled",
+                        "warning"
+                    );
+                    return;
+                }
+            }
+            updatePreCurrentResults({
                 partCode: partCode,
                 current: currentVal,
-                frequency: frequencyVal,
-                insulationRs: insulationVal,
-                soundLvl: soundVal
-
             }).then((res) => {
                 console.log(res);
                 if (res.data) {
-                    alertAndLoaders("UNSHOW_ALERT", dispatch, "Pre Test Results Are Saved... ", "success");
+                    alertAndLoaders("UNSHOW_ALERT", dispatch, "Pre Test Current Values Are Saved... ", "success");
                 } else if (res.error) {
                     alertAndLoaders("UNSHOW_ALERT", dispatch, "Something Went Wrong... ", "error");
                 }
             });
         }
-    }
+        if (soundVal) {
+            for (let i = 0; i < prePostStore.noOFSamples.length; i++) {
+                if (!sound[`n${i + 1}`]) {
+                    alertAndLoaders(
+                        "UNSHOW_ALERT",
+                        dispatch,
+                        "Please ensure that all sound fields are filled",
+                        "warning"
+                    );
+                    return;
+                }
+            }
+            updatePreSoundResults({
+                partCode: partCode,
+                soundLvl: soundVal
+            }).then((res) => {
+                console.log(res);
+                if (res.data) {
+                    alertAndLoaders("UNSHOW_ALERT", dispatch, "Pre Test Sound Values Are Saved... ", "success");
+                } else if (res.error) {
+                    alertAndLoaders("UNSHOW_ALERT", dispatch, "Something Went Wrong... ", "error");
+                }
+            });
+        }
+        if (insulationVal) {
+            for (let i = 0; i < prePostStore.noOFSamples.length; i++) {
+                console.log(insulation[`n${i + 1}`], i + 1);
+                if (!insulation[`n${i + 1}`]) {
+                    alertAndLoaders(
+                        "UNSHOW_ALERT",
+                        dispatch,
+                        "Please ensure that all insulation fields are filled",
+                        "warning"
+                    );
+                    return;
+                }
+            }
+            updatePreInsulationResults({
+                partCode: partCode,
+                insulationRs: insulationVal,
+            }).then((res) => {
+                console.log(res);
+                if (res.data) {
+                    alertAndLoaders("UNSHOW_ALERT", dispatch, "Pre Test Insulation Values Are Saved... ", "success");
+                } else if (res.error) {
+                    alertAndLoaders("UNSHOW_ALERT", dispatch, "Something Went Wrong... ", "error");
+                }
+            });
+        }
+        if (frequencyVal) {
+            for (let i = 0; i < prePostStore.noOFSamples.length; i++) {
+                if (!frequency[`n${i + 1}`]) {
+                    alertAndLoaders(
+                        "UNSHOW_ALERT",
+                        dispatch,
+                        "Please ensure that all frequency fields are filled",
+                        "warning"
+                    );
+                    return;
+                }
+            }
+            updatePreFrequencyResults({
+                partCode: partCode,
+                frequency: frequencyVal,
+            }).then((res) => {
+                console.log(res);
+                if (res.data) {
+                    alertAndLoaders("UNSHOW_ALERT", dispatch, "Pre Test Frequency Values Are Saved... ", "success");
+                } else if (res.error) {
+                    alertAndLoaders("UNSHOW_ALERT", dispatch, "Something Went Wrong... ", "error");
+                }
+            });
+        }
+
+        // if (pledge === true) {
+        //     updatePreDataResults({
+        //         partCode: partCode,
+        //         current: currentVal,
+        //         frequency: frequencyVal,
+        //         insulationRs: insulationVal,
+        //         soundLvl: soundVal
+        //     }).then((res) => {
+        //         console.log(res);
+        //         if (res.data) {
+        //             alertAndLoaders("UNSHOW_ALERT", dispatch, "Pre Test Results Are Saved... ", "success");
+        //         } else if (res.error) {
+        //             alertAndLoaders("UNSHOW_ALERT", dispatch, "Something Went Wrong... ", "error");
+        //         }
+        //     });
+        // }
+    };
 
     const handleSamples = (event) => {
         // alert(event.target.value)
@@ -195,10 +292,10 @@ export default function PreResult({ partCode }) {
                                 return (
                                     <Grid sm={2} m={1}>
                                         {show ? <TextField name={`n${val}`}
-                                            value={current?current[`n${val}`] :''}
-                                            onChange={handleChange} /> : <MDTypography variant="h6" fontWeight="small" style={{ textAlign: "center", background: "#394259", padding: "5px 0px", borderRadius: "8px" }}>{current?current[`n${val}`] : "N/A"}</MDTypography>}
+                                            value={current ? current[`n${val}`] : ''}
+                                            onChange={handleChange} /> : <MDTypography variant="h6" fontWeight="small" style={{ textAlign: "center", background: "#394259", padding: "5px 0px", borderRadius: "8px" }}>{current ? current[`n${val}`] : "N/A"}</MDTypography>}
                                     </Grid>
-                                    
+
                                 )
                             })}
                         </Grid>
@@ -217,11 +314,10 @@ export default function PreResult({ partCode }) {
                                     }));
                                 };
                                 return (
-                                   
                                     <Grid sm={2} m={1}>
                                         {show ? <TextField name={`n${val}`}
-                                            value={sound?sound[`n${val}`] : ''}
-                                            onChange={handleChange} /> : <MDTypography variant="h6" fontWeight="small" style={{ textAlign: "center", background: "#394259", padding: "5px 0px", borderRadius: "8px" }}>{sound?sound[`n${val}`] : "N/A"}</MDTypography>}
+                                            value={sound ? sound[`n${val}`] : ''}
+                                            onChange={handleChange} /> : <MDTypography variant="h6" fontWeight="small" style={{ textAlign: "center", background: "#394259", padding: "5px 0px", borderRadius: "8px" }}>{sound ? sound[`n${val}`] : "N/A"}</MDTypography>}
                                     </Grid>
                                 )
                             })}
@@ -243,10 +339,9 @@ export default function PreResult({ partCode }) {
                                 return (
                                     <Grid sm={2} m={1}>
                                         {show ? <TextField name={`n${val}`}
-                                            value={frequency?frequency[`n${val}`] : ''}
-                                            onChange={handleChange} /> : <MDTypography variant="h6" fontWeight="small" style={{ textAlign: "center", background: "#394259", padding: "5px 0px", borderRadius: "8px" }}>{frequency?frequency[`n${val}`] : "N/A"}</MDTypography>}
+                                            value={frequency ? frequency[`n${val}`] : ''}
+                                            onChange={handleChange} /> : <MDTypography variant="h6" fontWeight="small" style={{ textAlign: "center", background: "#394259", padding: "5px 0px", borderRadius: "8px" }}>{frequency ? frequency[`n${val}`] : "N/A"}</MDTypography>}
                                     </Grid>
-                                    
                                 )
                             })}
                         </Grid>
@@ -267,11 +362,9 @@ export default function PreResult({ partCode }) {
                                 return (
                                     <Grid sm={2} m={1}>
                                         {show ? <TextField name={`n${val}`}
-                                            value={insulation?insulation[`n${val}`] : ''}
-                                            onChange={handleChange} /> : <MDTypography variant="h6" fontWeight="small" style={{ textAlign: "center", background: "#394259", padding: "5px 0px", borderRadius: "8px" }}>{insulation?insulation[`n${val}`] : "N/A"}</MDTypography>}
+                                            value={insulation ? insulation[`n${val}`] : ''}
+                                            onChange={handleChange} /> : <MDTypography variant="h6" fontWeight="small" style={{ textAlign: "center", background: "#394259", padding: "5px 0px", borderRadius: "8px" }}>{insulation ? insulation[`n${val}`] : "N/A"}</MDTypography>}
                                     </Grid>
-                                   
-
                                 )
                             })}
                         </Grid>

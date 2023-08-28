@@ -972,13 +972,63 @@ const CREATE_POST_RESULT = `mutation createPostResultTable($partCode:String!,$n1
     clientMutationId
   }
 }`
-const UPDATE_POST_RESULT = `mutation updatePostResultTableByPartCode($ptCurrent: JSON!, $ptFrequency: JSON!, $ptInsulationRs: JSON!, $ptSoundLvl: JSON!, $partCode: String!) {
-  updatePostResultTableByPartCode(
-    input: {postResultTablePatch: {ptCurrent: $ptCurrent, ptFrequency: $ptFrequency, ptInsulationRs: $ptInsulationRs, ptSoundLvl: $ptSoundLvl}, partCode: $partCode}
+const PRE_CURRENT=`mutation preCurrent($current: JSON! $partCode: String!) {
+  updatePreResultTableByPartCode(
+    input: {preResultTablePatch: {current: $current}, partCode: $partCode}
   ) {
     clientMutationId
   }
 }`
+const PRE_FREQUENCY=`mutation preFrequency($frequency: JSON!, $partCode: String!) {
+  updatePreResultTableByPartCode(
+    input: {preResultTablePatch: {frequency: $frequency}, partCode: $partCode}
+  ) {
+    clientMutationId
+  }
+}`
+const PRE_SOUND=`mutation preSound($soundLvl: JSON!, $partCode: String!) {
+  updatePreResultTableByPartCode(
+    input: {preResultTablePatch: {soundLvl: $soundLvl}, partCode: $partCode}
+  ) {
+    clientMutationId
+  }
+}`
+const PRE_INSULATION=`mutation preInsulation($insulationRs: JSON!, $partCode: String!) {
+  updatePreResultTableByPartCode(input: {preResultTablePatch: {insulationRs: $insulationRs}, partCode: $partCode}
+  ) {
+    clientMutationId
+  }
+}`
+
+const POST_CURRENT=`mutation postCurrent($ptCurrent:JSON! ,$partCode:String!) {
+  updatePostResultTableByPartCode(
+    input: {postResultTablePatch: {ptCurrent: $ptCurrent}, partCode: $partCode}
+  ) {
+    clientMutationId
+  }
+}`
+const POST_FREQUENCY=`mutation postFrequency($ptFrequency: JSON, $partCode: String!) {
+  updatePostResultTableByPartCode(
+    input: {postResultTablePatch: {ptFrequency: $ptFrequency}, partCode: $partCode}
+  ) {
+    clientMutationId
+  }
+}`
+const POST_SOUND=`mutation postSound($ptSoundLvl: JSON, $partCode: String!) {
+  updatePostResultTableByPartCode(
+    input: {postResultTablePatch: {ptSoundLvl: $ptSoundLvl}, partCode: $partCode}
+  ) {
+    clientMutationId
+  }
+}`
+const POST_INSULATION=`mutation postInsulation($ptInsulationRs: JSON, $partCode: String!) {
+  updatePostResultTableByPartCode(
+    input: {postResultTablePatch: {ptInsulationRs:$ptInsulationRs }, partCode: $partCode}
+  ) {
+    clientMutationId
+  }
+}`
+
 const PRE_RESULT_SAMPLE = `mutation createPreResultTable($partCode:String!, $partName:String!) {
   createPreResultTable(input: {preResultTable: {partCode: $partCode partName: $partName}}) {
     clientMutationId
@@ -1158,7 +1208,6 @@ export {
   CREATE_PRE_RESULT,
   CREATE_POST_RESULT,
   UPDATE_PRE_RESULT,
-  UPDATE_POST_RESULT,
   PRE_RESULT_SAMPLE,
   POST_RESULT_SAMPLE,
   FATCH_PRE_RESULT,
@@ -1167,4 +1216,12 @@ export {
   UPDATE_DIFF_DATA,
   FATCH_DIFF_RESULTS,
   FATCH_DIFFERENCE,
+  PRE_CURRENT,
+  PRE_FREQUENCY,
+  PRE_INSULATION,
+  PRE_SOUND,
+  POST_SOUND,
+  POST_FREQUENCY,
+  POST_INSULATION,
+  POST_CURRENT,
 };
