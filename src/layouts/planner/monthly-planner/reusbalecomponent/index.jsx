@@ -126,8 +126,6 @@ const ReusabaleMonthlyPlannerTests = ({
   useEffect(() => {
     if (partDetails.data?.partCodeDetailByPartCode === null && partCode.length !== 0) {
       alertAndLoaders("UNSHOW_ALERT", dispatch, `No Parts found in ${testName}.`, "warning");
-      alert("Holla", JSON.stringify(partDetails.data?.partCodeDetailByPartCode));
-      // console.log(partDetails.data?.partCodeDetailByPartCode);
       setPartCode("");
     }
     if (partDetails.data?.partCodeDetailByPartCode) {
@@ -197,25 +195,28 @@ const ReusabaleMonthlyPlannerTests = ({
           isSevenDaysRunning = JSON.parse(
             val.componentDetailByComponentId.equipmentRunningDetailByPartId.dustErt
           )["7daysrunning"];
-        if (testName === "OVEN")isSevenDaysRunning = JSON.parse(
-          val.componentDetailByComponentId.equipmentRunningDetailByPartId.ovenErt
-        )["7daysrunning"];
+        if (testName === "OVEN")
+          isSevenDaysRunning = JSON.parse(
+            val.componentDetailByComponentId.equipmentRunningDetailByPartId.ovenErt
+          )["7daysrunning"];
         if (testName === "RO")
-        isSevenDaysRunning = JSON.parse(
-          val.componentDetailByComponentId.equipmentRunningDetailByPartId.repeatedOperationErt
-        )["7daysrunning"];
+          isSevenDaysRunning = JSON.parse(
+            val.componentDetailByComponentId.equipmentRunningDetailByPartId.repeatedOperationErt
+          )["7daysrunning"];
         if (testName === "SHOWER")
-        isSevenDaysRunning = JSON.parse(
-          val.componentDetailByComponentId.equipmentRunningDetailByPartId.showerErt
-        )["7daysrunning"];
-        if (testName === "THERMAL CYCLE")  isSevenDaysRunning = JSON.parse(
-          val.componentDetailByComponentId.equipmentRunningDetailByPartId.thermalCycleErt
-        )["7daysrunning"];
+          isSevenDaysRunning = JSON.parse(
+            val.componentDetailByComponentId.equipmentRunningDetailByPartId.showerErt
+          )["7daysrunning"];
+        if (testName === "THERMAL CYCLE")
+          isSevenDaysRunning = JSON.parse(
+            val.componentDetailByComponentId.equipmentRunningDetailByPartId.thermalCycleErt
+          )["7daysrunning"];
         if (testName === "THERMAL SHOCK")
           isSevenDaysRunning = JSON.parse(
             val.componentDetailByComponentId.equipmentRunningDetailByPartId.thermalShockErt
           )["7daysrunning"];
-          if (testName === "VIBRATION")  isSevenDaysRunning = JSON.parse(
+        if (testName === "VIBRATION")
+          isSevenDaysRunning = JSON.parse(
             val.componentDetailByComponentId.equipmentRunningDetailByPartId.vibrationErt
           )["7daysrunning"];
         JSON.parse(val.testDetails).forEach((val2) => {
@@ -229,7 +230,7 @@ const ReusabaleMonthlyPlannerTests = ({
                 vendorName: "",
                 status: "",
                 sevenDaysRunning: isSevenDaysRunning === 0 ? false : true,
-                testDuration:val2?.testDuration
+                testDuration: val2?.testDuration,
               };
             }
             // console.log(val2?.testDuration,"testDuration")

@@ -99,11 +99,10 @@ function ConfirmationDialogRaw({
                 console.log(res2);
                 if (res2.data) {
                   setShouldPauseNotification(false);
-                  // let nCount = localStorage.getItem("cn") || 0
-                  // localStorage.setItem("cn",nCount+1)
-                  dispatch(setSampleRemaining({testName:store.testName,componentName:store.detailsToPush.partName}))
+                  // dispatch(setSampleRemaining({testName:store.testName,componentName:store.detailsToPush.partName}))
                   dispatch(incrementCounter(1));
                   dispatch(addNotifications("New planner added"));
+
                 }
               });
             }
