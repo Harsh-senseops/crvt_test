@@ -6,6 +6,7 @@ import monthlyPlanner from "reduxSlices/monthlyPlanner";
 import yearlyPlanner from "reduxSlices/yearlyPlanner";
 import notifications from "reduxSlices/notifications";
 import prePost from "reduxSlices/prePost";
+import machineAlerts from "reduxSlices/machineAlerts";
 
 export const store = configureStore({
   reducer: {
@@ -15,6 +16,7 @@ export const store = configureStore({
     monthlyPlanner,
     yearlyPlanner,
     notifications,
-    prePost
+    prePost,
+    machineAlerts
   },
 });

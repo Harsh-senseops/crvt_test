@@ -168,8 +168,8 @@ function MDTable({ data, searchTerm, onTouch }) {
         <TableBody>
           {pageData &&
             pageData.map((row, i) => {
-              let isDisabled = row?.alertStatus === "Active" ? false : true;
-              let actionTaken = row?.ignore?.actionTaken || "None taken";
+              let isDisabled = row?.ignore?.alertStatus ? false : true;
+              let actionTaken = row?.actionTaken || "None taken";
               return (
                 <TableRow
                   className={classes.tableRow}
@@ -197,7 +197,7 @@ function MDTable({ data, searchTerm, onTouch }) {
                                 <>
                                   <span>
                                     {formattedTime(value).date}
-                                    {key}
+                                  
                                   </span>
                                   <br />
                                   <span>{formattedTime(value).time}</span>

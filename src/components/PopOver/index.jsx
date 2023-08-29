@@ -115,7 +115,7 @@ export default function OnHoverMenu({ messages, iconRef, iconsStyle, badgeValue,
                 <Icon style={{ marginRight: "10px", color: "white" }}>sentiment_dissatisfied</Icon>
 
                 <MDTypography variant="h6" fontWeight="regular">
-                  No new notifications
+                  No new messages
                 </MDTypography>
               </div>
               <div

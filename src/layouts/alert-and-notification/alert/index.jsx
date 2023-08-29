@@ -1,21 +1,27 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Card from "@mui/material/Card";
 import MDBox from "components/MDBox";
-// import MDTypography from "components/MDTypography";
+import MDTypography from "components/MDTypography";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import Grid from "@mui/material/Grid";
-import { useQuery } from "urql";
-// import Table from "@mui/material/Table";
-// import TableBody from "@mui/material/TableBody";
-// import TableCell from "@mui/material/TableCell";
-// import TableContainer from "@mui/material/TableContainer";
-// import TableRow from "@mui/material/TableRow";
-// import Paper from "@mui/material/Paper";
-import { ALL_ALERTS } from "apis/queries";
+import { useMutation, useQuery, useSubscription } from "urql";
+import MDDialog from "components/MDDilouge";
+import { ALL_ALERTS, START_TIMER, STOP_TIMER, GET_ALL_TIMERS,UPDATE_ALERT_BY_ID,UPDATE_ALERT_STATUS_BY_ID } from "apis/queries";
 import MDTable from "components/MDTable";
 import MDHoverSearch from "components/MDHoverSearch";
+import { FormControl, FormControlLabel, Radio, DialogActions } from "@mui/material";
+import { RadioGroup } from "@mui/material";
+import MDButton from "components/MDButton";
+import {useSelector,useDispatch} from "react-redux"
+import * as alerts from "../../../reduxSlices/machineAlerts"
+import alertAndLoaders from "utils/alertAndLoaders";
+//Constant popuo radio button values
+
+const ERROR_RESOLVED = "Error Resolved";
+const TEST_COMPLITION = "Test-Completion";
+const IGNORE_ERROR = "Ignore Error";
 
 function fromattedTime(dateTime) {
   const dateTimeString = dateTime;
@@ -30,25 +36,31 @@ const columns = [
   { Header: "DateTime", accessor: "dateTime" },
   { Header: "Machine Name", accessor: "machineName" },
   { Header: "Machine Status", accessor: "machineStatus" },
-  { Header: "Number of snoozes", accessor: "counter" },
+  { Header: "Action Taken", accessor: "actionTaken" },
   { Header: "Employee Code", accessor: "empCode" },
-  // { Header: "Edit", accessor: "notificationFrom" },
 ];
 function Alert() {
   const [searchTerm, setSearchTerm] = useState("");
   const [shouldPause, setShouldPause] = useState(true);
-  const [showTimer] = useQuery({
-    query: `query showTimer{
-      showTimer(machineName:"Dust")
-    }`,
-    variables: { machineName: "Dust" },
-  });
-
-  const [allAlert, rexAllAlerts] = useQuery({
+  const [open, setOpen] = useState(false);
+  const [remark, setRemark] = useState(null);
+  const [allAlert, rexAllAlerts] = useSubscription({
     query: ALL_ALERTS,
-    pause: shouldPause,
   });
-
+  const userStore = useSelector((store)=>{
+    return store.userRoles
+  })
+  const [allTimers, rexAllTimers] = useQuery({
+    query: GET_ALL_TIMERS,
+    pause: true,
+  });
+  const dispatch = useDispatch();
+  const [machineId, setMachineId] = useState(0);
+  const [resStartTimer, startTimer] = useMutation(START_TIMER);
+  const [resUpdateResultsById,updateResultsById] = useMutation(UPDATE_ALERT_BY_ID);
+  const [resUpdateAlertStatusById,updateAlertStatusById] = useMutation(UPDATE_ALERT_STATUS_BY_ID );
+  const [resStopTimer,stopTimer] = useMutation(STOP_TIMER) 
+  const [actionTakenValue, setActionTakenValue] = useState("");
   const [timer, setTimer] = useState(0);
   const [tableData, setTableData] = useState([]);
 
@@ -58,68 +70,148 @@ function Alert() {
     }
     if (allAlert.data) {
       setShouldPause(true);
-      setTableData([])
+      setTableData([]);
       allAlert.data.allAlerts.nodes.map((val) => {
+        if(val.alertStatus){
+          dispatch(alerts.setAlerts(val.testingEquipmentByEquipmentName.equipmentName + "Stopped Running"))
+          dispatch(alerts.setCounter(+1))
+        }
         setTableData((prev) => [
           ...prev,
           {
             dateTime: val.dateTime,
             machineName: val.testingEquipmentByEquipmentName.equipmentName,
-            machineStatus:val.machineStatus === 0 ? "Stopped" : "Running",
-            counter:val.counter,
-            empCode:val.userName,
+            machineStatus: val.machineStatus === 0 ? "Stopped" : "Running",
+            actionTaken: val.actionTaken,
+            empCode: val.userName,
+            ignore: { alertStatus: val.alertStatus, machineId: val.equipmentName, id: val.id },
           },
         ]);
       });
-      console.log(tableData);
     }
   }, [allAlert.data]);
-  useEffect(() => {
-    const interval = setInterval(() => {
-      rexAllTimers({ requestPolicy: "network-only" });
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [allTimers]);
 
   useEffect(() => {
-    if (!allTimers.fetching && !allTimers.error && allTimers.data) {
-      setTimer(allTimers.data.getAllTimers);
-    }
-
-    if (timer.length > 5 && !stop) {
-      JSON.parse(timer).forEach((val) => {
-        if (val.timer === 0) {
-          const index1 = tableData.findIndex((obj) => obj.ignore.id === Number(val.id));
-          if (index1 !== -1 ) {
-            updateAlertById({
-              alertStatus: 1,
-              machineStatus: 0,
-              remarks: "again ignored",
-              userName: userStore.empCode,
-              id: Number(tableData[index1].ignore.id),
-              actionTaken: "Ignored",
-            }).then((res) => {
-              if (res.data) {
-                // alertAndLoaders("UNSHOW_ALERT", dispatch, "Alert started.", "info");
-              }
-              if (res.error) {
-                console.log(res.error);
-                // alertAndLoaders("UNSHOW_ALERT", dispatch, "Something went wrong.", "error");
-              }
-            });
-          }
+    let timerArray = {}
+    if (allTimers.data) {
+      console.log(JSON.parse(allTimers.data.getAllTimers))
+      JSON.parse(allTimers.data.getAllTimers).map((val)=>{
+        if(val.timer === 0){
+          updateAlertStatusById({
+            alertStatus:1,
+            id:Number(val.id)
+          })
+          stopTimer({
+            machineId:Number(val.id)
+          })
         }
-      });
+        console.log(val.id);
+        timerArray[val.id] = {};
+        timerArray[val.id].timer = val.timer
+        timerArray[val.id].interval = setInterval(() => {
+          timerArray[val.id].timer++
+          if(timerArray[val.id].timer === 30){
+            clearInterval(timerArray[val.id].interval)
+            updateAlertStatusById({
+              alertStatus:1,
+              id:Number(val.id)
+            })
+          }
+          console.log(timerArray[val.id].timer,val.id)
+        }, 1000);
+      })
     }
-
     return () => {
-      clearInterval(timeInterval);
-    };
-  }, [showTimer.data]);
+      // for(key in timerArray){
+      //   clearInterval(timerArray[key])
+      // }
+    }
+  }, [allTimers.data]);
 
   const takeAction = (i) => {
-    alert(i)
-  }
+    setOpen(true);
+    setMachineId({ machineId: tableData[i].ignore.machineId, tableId: tableData[i].ignore.id });
+  };
+  const handleOnClose = () => {
+    setOpen(!open);
+  };
+
+  const handleRadioChange = (e) => {
+    setActionTakenValue(e.target.value);
+  };
+
+  const save = () => {
+    if (!remark) {
+      alert("Please add remark");
+      setRemark(null);
+      return;
+    }
+    if (actionTakenValue === ERROR_RESOLVED) {
+      updateResultsById({
+        alertStatus:0,
+        machineStatus:1,
+        remarks:remark,
+        userName:userStore.empCode,
+        actionTaken:actionTakenValue,
+        id:Number(machineId.tableId)
+      }).then((res)=>{
+        console.log(res)
+        if(res.data){
+          alertAndLoaders("UNSHOW_ALERT", dispatch, `Successfully updated`, "success");
+        }
+      })
+      setOpen((prev)=>!prev)
+      setRemark(null);
+      return;
+    }
+    if (actionTakenValue === TEST_COMPLITION) {
+      updateResultsById({
+        alertStatus:0,
+        machineStatus:0,
+        remarks:remark,
+        userName:userStore.empCode,
+        actionTaken:actionTakenValue,
+        id:Number(machineId.tableId)
+      }).then((res)=>{
+        console.log(res)
+        if(res.data){
+          alertAndLoaders("UNSHOW_ALERT", dispatch, `Successfully updated`, "success");
+        }
+      })
+      setRemark(null);
+      setOpen((prev)=>!prev)
+      return;
+    }
+    if (actionTakenValue === IGNORE_ERROR) {
+      startTimer({
+        machineId: machineId.tableId,
+      }).then((res) => {
+        if (res.data) {
+          updateResultsById({
+            alertStatus:0,
+            machineStatus:0,
+            remarks:remark,
+            userName:userStore.empCode,
+            actionTaken:actionTakenValue,
+            id:Number(machineId.tableId)
+          }).then((res)=>{
+            console.log(res)
+            if(res.data){
+              alertAndLoaders("UNSHOW_ALERT", dispatch, `Successfully updated`, "success");
+            }
+          })
+        }
+      });
+      rexAllTimers({ requestPolicy: "network-only" });
+      setRemark(null);
+      setOpen((prev)=>!prev)
+      return;
+    }
+    alert("Please select an option");
+    rexAllTimers({ requestPolicy: "network-only" });
+    setRemark(null);
+    return;
+  };
 
   return (
     <DashboardLayout>
@@ -130,11 +222,12 @@ function Alert() {
         <Card style={{ background: "#4c5365" }}>
           <MDBox p={3} lineHeight={1}>
             <MDHoverSearch onInputChange={(value) => setSearchTerm(value)} />
-            {/* <MDTypography variant="h5" fontWeight="medium">
-              Alert
-            </MDTypography> */}
             <Grid mt={2}>
-              <MDTable data={{ columns, rows: tableData }} searchTerm={searchTerm} onTouch={takeAction} />
+              <MDTable
+                data={{ columns, rows: tableData }}
+                searchTerm={searchTerm}
+                onTouch={takeAction}
+              />
             </Grid>
           </MDBox>
         </Card>
@@ -146,7 +239,11 @@ function Alert() {
               name="controlled-radio-buttons-group"
               onChange={handleRadioChange}
             >
-              <FormControlLabel value="Test-Completion" control={<Radio />} label="Test-Completion" />
+              <FormControlLabel
+                value="Test-Completion"
+                control={<Radio />}
+                label="Test-Completion"
+              />
               <FormControlLabel value="Error Resolved" control={<Radio />} label="Error Resolved" />
               <FormControlLabel value="Ignore Error" control={<Radio />} label="Ignore Error" />
             </RadioGroup>
@@ -154,7 +251,7 @@ function Alert() {
           <textarea
             rows="3"
             cols="45"
-            onChange={(e)=>setRemark(e.target.value)}
+            onBlur={(e) => setRemark(e.target.value)}
             placeholder="Remark"
             style={{ resize: "none", borderRadius: "4px", padding: "1em", marginTop: "10px" }}
           />
@@ -174,4 +271,3 @@ function Alert() {
 }
 
 export default Alert;
-

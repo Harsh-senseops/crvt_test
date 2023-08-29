@@ -59,7 +59,7 @@ import {
   setCounter,
   addNotifications,
 } from "reduxSlices/notifications";
-import MDTypography from "components/MDTypography";
+// import machineAlerts from "reduxSlices/machineAlerts";
 import OnHoverMenu from "components/PopOver";
 // import { Link } from "react-router-dom";
 
@@ -79,7 +79,7 @@ const useStyles = makeStyles((theme) => ({
 function DashboardNavbar({ absolute, light, isMini }) {
   const iconRef = React.useRef(null);
 
-  const messages = ["Notification 1", "Notification 2", "Notification 3"];
+  const messages = [];
   const [navbarType, setNavbarType] = useState();
   const [controller, dispatch] = useMaterialUIController();
   const { miniSidenav, transparentNavbar, fixedNavbar, openConfigurator, darkMode } = controller;
@@ -96,6 +96,9 @@ function DashboardNavbar({ absolute, light, isMini }) {
   const nStore = useSelector((store) => {
     return store.notifications;
   });
+  const mAlers = useSelector((store)=>{
+    return store.machineAlerts;
+  })
   const date = new Date(); // Replace with your desired date object
   const dispatchR = useDispatch();
   const year = date.getFullYear();
@@ -250,8 +253,8 @@ function DashboardNavbar({ absolute, light, isMini }) {
                 <Icon sx={iconsStyle}>settings</Icon>
               </IconButton>
               <OnHoverMenu
-                messages={messages}
-                badgeValue={messages.length}
+                messages={mAlers.alerts}
+                badgeValue={mAlers.counter}
                 iconRef={iconRef}
                 iconsStyle={iconsStyle}
                 icon="priority_high"
