@@ -2,7 +2,7 @@ import MaterialTable from "material-table";
 import { useSubscription, useMutation, useQuery } from 'urql'
 import { useState, useEffect } from "react";
 import Card from "@mui/material/Card";
-
+import { TablePagination } from '@mui/material';
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import EditIcon from '@mui/icons-material/Edit';
@@ -21,9 +21,6 @@ import { EQUIPMENT_DETAILS } from "apis/queries";
 import OvenTest from "../OvenTest";
 import "./index.css"
 import PrePostTest from "../PrePostTest";
-import PreResult from "../PrePostResults/PreResult";
-
-
 
 function ComponentsTable() {
   const [componentDetails, setComponentDetails] = useState([])
@@ -36,16 +33,16 @@ function ComponentsTable() {
       editable: "never",
       defaultSort: 'asc',
 
-      headerStyle:
+    headerStyle:
       {
         background: '#202940',
         color: "#FFF !important",
         borderRadius: "12px 0px 0px 12px",
-        
-
       },
     }];
-  const actionsCellStyle = {
+
+  const actionsCellStyle =
+   {
     backgroundColor: '#202940',
     borderRadius: "0px 12px 12px 0px",
     color: 'white',
@@ -77,9 +74,9 @@ function ComponentsTable() {
     <Grid >
       {detailsOpen ?
         <Grid item xs={12} md={12} lg={12} ml={3} mr={3} mb={3}>
-          <Card style={{ background: '#394259' }}>
-            <MDBox>
-              <Card style={{ backgroundColor: 'transparent', shadowOpacity: "10px", boxShadow: 'inherit', margin: "15px" }}>
+          <Card style={{ background: '#394259' }} >
+            <MDBox >
+              <Card style={{  backgroundColor: 'transparent', shadowOpacity: "10px", boxShadow: 'inherit', margin: "15px" }}>
                 <CardHeader
                   action={
                     <IconButton
@@ -95,7 +92,7 @@ function ComponentsTable() {
                 />
                 <Divider variant="middle" />
                 <PrePostTest details={componentDetails} id={partId}/>
-                <Dust componentName={formtitle} details={componentDetails}  />
+                <Dust  componentName={formtitle} details={componentDetails}  />
                 <OvenTest componentName={formtitle} details={componentDetails} id={partId} />
                 <RepeatedOperation componentName={formtitle} details={componentDetails} id={partId} />
                 <ShowerTesting componentName={formtitle} details={componentDetails} id={partId} />
@@ -133,7 +130,7 @@ function ComponentsTable() {
                 headerStyle: actionsCellStyle,
               }}
             />
-          </Grid>
+       </Grid>  
       }
     </Grid>
   )

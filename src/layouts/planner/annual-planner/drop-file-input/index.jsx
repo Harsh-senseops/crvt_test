@@ -225,7 +225,7 @@ const DropFileInput = (props) => {
     <>
       <Grid  mb={6} mt={2}>
         {fileList.length > 0 ? (
-          <Box className="drop-file-preview"   >
+          <Box className="drop-file-preview">
           <Card >
             <CardContent style={{textAlign:'center'}}>
             <MDTypography  variant="h5" fontWeight="medium" style={{}}>
@@ -289,10 +289,9 @@ const DropFileInput = (props) => {
             </div>
             <br />
             <MDTypography variant="h6" fontWeight="medium">
-              We Appreciate Your Petience. Kindly hold on as we create Yearly planner...
+              We Appreciate Your Patience. Kindly hold on as we create Yearly planner...
             </MDTypography>
           </div>
-
         </Backdrop>
       </Grid>
     </>

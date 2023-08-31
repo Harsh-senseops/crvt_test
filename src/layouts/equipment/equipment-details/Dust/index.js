@@ -141,7 +141,6 @@ export default function DustTest({ details, componentName, id }) {
       name: oldData.eName,
       dust_sec: parseInt(dust.newData),
       rest_mins: parseInt(rest.newData),
-      // total_time:parseInt(totalTime[0]),
       equipment_running: parseInt(equipmentRunning.newData),
       simultaneously: parseInt(simultaneously.newData),
       test_duration_hr: { min: parseInt(testDurationMin.newData), max: parseInt(testDurationMax.newData) },
@@ -201,8 +200,19 @@ export default function DustTest({ details, componentName, id }) {
 
   return (
     <>
-      <Card style={{ marginTop: '2%' }}>
+      <Card style={{ marginTop: '2%', }}>
         <CardHeader
+        onClick={() => setExpanded(!expanded)}
+        sx={{
+          transition: "all 250ms",
+          ":hover": {
+              boxShadow: 20,
+              cursor: 'pointer',
+              backgroundColor: "#384158 !important",
+              borderRadius: "10px",
+              transform: "scale(1.02)",
+          },
+      }}
           action={
             <div>
               {role.roles === 3 && <MuiToggleButton style={{ height: '30px', border: 'none' ,background:toggleEnable?"green":"red"}}
@@ -222,7 +232,6 @@ export default function DustTest({ details, componentName, id }) {
                     WebkitTextFillColor: "gray",
                   },
                 }}
-                onClick={() => setExpanded(!expanded)}
                 aria-expanded={expanded}
                 aria-label="show more"
                 color='info'
@@ -233,7 +242,6 @@ export default function DustTest({ details, componentName, id }) {
           }
           title={<MDTypography variant="h6" fontWeight="medium">Dust</MDTypography>}
           subheader={toggleEnable ? <MDTypography style={{ color: 'lime', fontSize: '14px', paddingTop: '1%' }}>Dust Test is Enabled</MDTypography> : <MDTypography style={{ color: 'red', fontSize: '14px', paddingTop: '1%' }}>No Dust Test</MDTypography>}
-        // subheader={subheaderdata}
         />
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <form onSubmit={(e) => handleFormSubmit(e)}>

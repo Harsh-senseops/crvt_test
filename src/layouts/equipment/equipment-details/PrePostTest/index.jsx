@@ -66,13 +66,25 @@ export default function PrePostTest({ id }) {
         <>
             <Card style={{ marginTop: '2%' }}>
                 <CardHeader
+                        onClick={() => setExpanded(!expanded)}
+                        sx={{
+                            transition: "all 250ms",
+                            ":hover": {
+                                boxShadow: 20,
+                                cursor: 'pointer',
+                                backgroundColor: "#384158 !important",
+                                borderRadius: "10px",
+                                transform: "scale(1.02)",
+                            },
+                        }}
+
                     action={
                         <div>
                             <IconButton
                                 className={clsx(classes.expand, {
                                     [classes.expandOpen]: expanded,
                                 })}
-                                onClick={() => setExpanded(!expanded)}
+                                // onClick={() => setExpanded(!expanded)}
                                 aria-expanded={expanded}
                                 aria-label="show more"
                                 color='info'
