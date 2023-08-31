@@ -61,10 +61,6 @@ export default function PreTest({ id }) {
   const [frequency, setFrequency] = useState({ min: "", max: "" });
   const [sound, setSound] = useState({ min: "", max: "" });
   const [insulation, setInsulation] = useState({ min: "", max: "" });
-  // const [differance, setDifferance] = useState({
-  //   sound: { min: "", max: "" },
-  //   frequency: { min: "", max: "" },
-  // });
   const [flag, setFlag] = useState(false);
   const [createPreDataRes, createPreData] = useMutation(CREATE_PRE_TEST);
   const [updatePreData, updatePreDataResults] = useMutation(UPDATE_PRE_TEST);
@@ -81,35 +77,63 @@ export default function PreTest({ id }) {
 
   const currentminStart = 2;
   const currentminEnd = 5;
-  const currentminRange = Array.from({ length: Math.ceil((currentminEnd - currentminStart) / 0.5) + 1 },(_, index) => currentminStart + 0.5 * index);
+  const currentminRange = Array.from(
+    { length: Math.ceil((currentminEnd - currentminStart) / 0.5) + 1 },
+    (_, index) => currentminStart + 0.5 * index
+  );
 
   const currentmaxStart = 2;
   const currentmaxEnd = 5;
-  const currentmaxRange = Array.from({ length: Math.ceil((currentmaxEnd - currentmaxStart) / 0.5) + 1 },(_, index) => currentmaxStart + 0.5 * index);
+  const currentmaxRange = Array.from(
+    { length: Math.ceil((currentmaxEnd - currentmaxStart) / 0.5) + 1 },
+    (_, index) => currentmaxStart + 0.5 * index
+  );
 
   const frqminStart = 340;
   const frqminEnd = 460;
-  const frqminRange = Array.from({length: Math.min(frqminEnd - frqminStart + 1, Math.ceil((frqminEnd - frqminStart + 1) / 40)),},(_, index) => frqminStart + 40 * index);
+  const frqminRange = Array.from(
+    {
+      length: Math.min(frqminEnd - frqminStart + 1, Math.ceil((frqminEnd - frqminStart + 1) / 40)),
+    },
+    (_, index) => frqminStart + 40 * index
+  );
 
   const frqmaxStart = 400;
   const frqmaxEnd = 560;
-  const frqmaxRange = Array.from({length: Math.min(frqmaxEnd - frqmaxStart + 1, Math.ceil((frqmaxEnd - frqmaxStart + 1) / 40)),},(_, index) => frqmaxStart + 40 * index);
+  const frqmaxRange = Array.from(
+    {
+      length: Math.min(frqmaxEnd - frqmaxStart + 1, Math.ceil((frqmaxEnd - frqmaxStart + 1) / 40)),
+    },
+    (_, index) => frqmaxStart + 40 * index
+  );
 
   const soundminStart = 85;
   const soundminEnd = 105;
-  const soundminRange = Array.from({ length: Math.ceil((soundminEnd - soundminStart + 1) / 10) },(_, index) => soundminStart + 10 * index);
+  const soundminRange = Array.from(
+    { length: Math.ceil((soundminEnd - soundminStart + 1) / 10) },
+    (_, index) => soundminStart + 10 * index
+  );
 
   const soundmaxStart = 100;
   const soundmaxEnd = 130;
-  const soundmaxRange = Array.from({ length: Math.ceil((soundmaxEnd - soundmaxStart + 1) / 10) },(_, index) => soundmaxStart + 10 * index);
+  const soundmaxRange = Array.from(
+    { length: Math.ceil((soundmaxEnd - soundmaxStart + 1) / 10) },
+    (_, index) => soundmaxStart + 10 * index
+  );
 
   const insulationminStart = 1;
   const insulationminEnd = 10;
-  const insulationminRange = Array.from({ length: Math.ceil((insulationminEnd - insulationminStart + 1) / 2) },(_, index) => insulationminStart + 2 * index);
+  const insulationminRange = Array.from(
+    { length: Math.ceil((insulationminEnd - insulationminStart + 1) / 2) },
+    (_, index) => insulationminStart + 2 * index
+  );
 
   const insulationmaxStart = 1;
   const insulationmaxEnd = 10;
-  const insulationmaxRange = Array.from({ length: Math.ceil((insulationmaxEnd - insulationmaxStart + 1) / 2) },(_, index) => insulationmaxStart + 2 * index);
+  const insulationmaxRange = Array.from(
+    { length: Math.ceil((insulationmaxEnd - insulationmaxStart + 1) / 2) },
+    (_, index) => insulationmaxStart + 2 * index
+  );
 
   useEffect(() => {
     if (preTestById.data) {
@@ -132,16 +156,6 @@ export default function PreTest({ id }) {
           min: parseInt(JSON.parse(data.prInsulationRs).min),
           max: JSON.parse(data.prInsulationRs).max,
         });
-        // setDifferance({
-        //   sound: {
-        //     min: JSON.parse(data.prDifferance).sound.min,
-        //     max: JSON.parse(data.prDifferance).sound.max,
-        //   },
-        //   frequency: {
-        //     min: JSON.parse(data.prDifferance).frequency.min,
-        //     max: JSON.parse(data.prDifferance).frequency.max,
-        //   },
-        // });
       } else {
         setFlag(false);
       }
@@ -157,8 +171,14 @@ export default function PreTest({ id }) {
     let InsulationVal = JSON.stringify(insulation);
 
     if (
-      current.min === "" ||current.max === "" ||frequency.min === "" ||frequency.max === "" ||insulation.min === "" ||insulation.max === "" ||
-      sound.min === "" ||sound.max === "" 
+      current.min === "" ||
+      current.max === "" ||
+      frequency.min === "" ||
+      frequency.max === "" ||
+      insulation.min === "" ||
+      insulation.max === "" ||
+      sound.min === "" ||
+      sound.max === ""
     ) {
       alertAndLoaders("UNSHOW_ALERT", dispatch, "Please Fill All The Fields... ", "warning");
       return;
@@ -211,258 +231,240 @@ export default function PreTest({ id }) {
         </MDTypography>
         <MDBox m={2}>
           <Grid container>
-            <Grid
-              item
-              lg={6}
-              xl={6}
-              mb={3}
-              style={{ display: "flex", alignItems: "baseline" }}
-            > <Grid mr={3} ml={3}>
+            <Grid item lg={6} xl={6} mb={3} style={{ display: "flex", alignItems: "baseline" }}>
+              {" "}
+              <Grid mr={3} ml={3}>
                 <MDTypography variant="button" fontWeight="medium">
-                Current :
-              </MDTypography>
-            </Grid>
+                  Current :
+                </MDTypography>
+              </Grid>
               <Grid mr={5} ml={5}>
-              <FormControl variant="standard" sx={{ minWidth: 50 }}>
-                <InputLabel id="demo-simple-select-standard-label">min</InputLabel>
-                <Select
-                  labelId="demo-simple-select-standard-label"
-                  id="demo-simple-select-standard"
-                  value={current.min}
-                  onChange={(e) =>
-                    setCurrent((prev) => ({
-                      ...prev,
-                      min: e.target.value,
-                    }))
-                  }
-                  label="Current"
-                  name="min"
-                  className={classes.customSelect}
-                >
-                  {currentminRange.map((value) => (
-                    <MenuItem key={value} value={value}>
-                      {value}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+                <FormControl variant="standard" sx={{ minWidth: 50 }}>
+                  <InputLabel id="demo-simple-select-standard-label">min</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-standard-label"
+                    id="demo-simple-select-standard"
+                    value={current.min}
+                    onChange={(e) =>
+                      setCurrent((prev) => ({
+                        ...prev,
+                        min: e.target.value,
+                      }))
+                    }
+                    label="Current"
+                    name="min"
+                    className={classes.customSelect}
+                  >
+                    {currentminRange.map((value) => (
+                      <MenuItem key={value} value={value}>
+                        {value}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </Grid>
               <Grid>
-              <FormControl variant="standard" sx={{ minWidth: 50 }}>
-                <InputLabel id="demo-simple-select-standard-label">max</InputLabel>
-                <Select
-                  labelId="demo-simple-select-standard-label"
-                  id="demo-simple-select-standard"
-                  value={current.max}
-                  onChange={(e) =>
-                    setCurrent((prev) => ({
-                      ...prev,
-                      max: e.target.value,
-                    }))
-                  }
-                  label="Current"
-                  name="max"
-                  className={classes.customSelect}
-                >
-                  {currentmaxRange.map((value) => (
-                    <MenuItem key={value} value={value}>
-                      {value}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+                <FormControl variant="standard" sx={{ minWidth: 50 }}>
+                  <InputLabel id="demo-simple-select-standard-label">max</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-standard-label"
+                    id="demo-simple-select-standard"
+                    value={current.max}
+                    onChange={(e) =>
+                      setCurrent((prev) => ({
+                        ...prev,
+                        max: e.target.value,
+                      }))
+                    }
+                    label="Current"
+                    name="max"
+                    className={classes.customSelect}
+                  >
+                    {currentmaxRange.map((value) => (
+                      <MenuItem key={value} value={value}>
+                        {value}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </Grid>
             </Grid>
-            <Grid
-              item lg={6} xl={6} 
-              style={{ display: "flex", alignItems: "baseline"}}
-            >
-                <Grid mr={3} ml={3}>
+            <Grid item lg={6} xl={6} style={{ display: "flex", alignItems: "baseline" }}>
+              <Grid mr={3} ml={3}>
                 <MDTypography variant="button" fontWeight="medium">
-                Frequency :
-              </MDTypography>
-                </Grid>
+                  Frequency :
+                </MDTypography>
+              </Grid>
               <Grid mr={5} ml={2}>
-              <FormControl variant="standard" sx={{ minWidth: 50 }}>
-                <InputLabel id="demo-simple-select-standard-label">min</InputLabel>
-                <Select
-                  labelId="demo-simple-select-standard-label"
-                  id="demo-simple-select-standard"
-                  value={frequency.min}
-                  onChange={(e) =>
-                    setFrequency((prev) => ({
-                      ...prev,
-                      min: e.target.value,
-                    }))
-                  }
-                  label="Frequency(min)"
-                  name="min"
-                  className={classes.customSelect}
-                >
-                  {frqminRange.map((value) => (
-                    <MenuItem key={value} value={value}>
-                      {value}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+                <FormControl variant="standard" sx={{ minWidth: 50 }}>
+                  <InputLabel id="demo-simple-select-standard-label">min</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-standard-label"
+                    id="demo-simple-select-standard"
+                    value={frequency.min}
+                    onChange={(e) =>
+                      setFrequency((prev) => ({
+                        ...prev,
+                        min: e.target.value,
+                      }))
+                    }
+                    label="Frequency(min)"
+                    name="min"
+                    className={classes.customSelect}
+                  >
+                    {frqminRange.map((value) => (
+                      <MenuItem key={value} value={value}>
+                        {value}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </Grid>
               <Grid>
-              <FormControl variant="standard" sx={{ minWidth: 50 }}>
-                <InputLabel id="demo-simple-select-standard-label">max</InputLabel>
-                <Select
-                  labelId="demo-simple-select-standard-label"
-                  id="demo-simple-select-standard"
-                  value={frequency.max}
-                  onChange={(e) =>
-                    setFrequency((prev) => ({
-                      ...prev,
-                      max: e.target.value,
-                    }))
-                  }
-                  label="Frequency(max)"
-                  name="max"
-                  className={classes.customSelect}
-                >
-                  {frqmaxRange.map((value) => (
-                    <MenuItem key={value} value={value}>
-                      {value}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+                <FormControl variant="standard" sx={{ minWidth: 50 }}>
+                  <InputLabel id="demo-simple-select-standard-label">max</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-standard-label"
+                    id="demo-simple-select-standard"
+                    value={frequency.max}
+                    onChange={(e) =>
+                      setFrequency((prev) => ({
+                        ...prev,
+                        max: e.target.value,
+                      }))
+                    }
+                    label="Frequency(max)"
+                    name="max"
+                    className={classes.customSelect}
+                  >
+                    {frqmaxRange.map((value) => (
+                      <MenuItem key={value} value={value}>
+                        {value}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </Grid>
             </Grid>
           </Grid>
           <Grid container mt={1}>
-            <Grid
-              item
-              lg={6}
-              xl={6}
-              style={{ display: "flex", alignItems: "baseline"}}
-            >
-                <Grid xl={3} xs={3} mr={3} ml={3}>
+            <Grid item lg={6} xl={6} style={{ display: "flex", alignItems: "baseline" }}>
+              <Grid xl={3} xs={3} mr={3} ml={3}>
                 <MDTypography variant="button" fontWeight="medium">
-                Sound Level :
-              </MDTypography>
-                </Grid>
-                <Grid mr={5}>
+                  Sound Level :
+                </MDTypography>
+              </Grid>
+              <Grid mr={5}>
                 <FormControl variant="standard" sx={{ minWidth: 50 }}>
-                <InputLabel id="demo-simple-select-standard-label">min</InputLabel>
-                <Select
-                  labelId="demo-simple-select-standard-label"
-                  id="demo-simple-select-standard"
-                  value={sound.min}
-                  onChange={(e) =>
-                    setSound((prev) => ({
-                      ...prev,
-                      min: e.target.value,
-                    }))
-                  }
-                  label="Sound(min)"
-                  name="min"
-                  className={classes.customSelect}
-                >
-                  {soundminRange.map((value) => (
-                    <MenuItem key={value} value={value}>
-                      {value}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-                </Grid>
+                  <InputLabel id="demo-simple-select-standard-label">min</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-standard-label"
+                    id="demo-simple-select-standard"
+                    value={sound.min}
+                    onChange={(e) =>
+                      setSound((prev) => ({
+                        ...prev,
+                        min: e.target.value,
+                      }))
+                    }
+                    label="Sound(min)"
+                    name="min"
+                    className={classes.customSelect}
+                  >
+                    {soundminRange.map((value) => (
+                      <MenuItem key={value} value={value}>
+                        {value}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
               <Grid>
-              <FormControl variant="standard" sx={{ minWidth: 50 }}>
-                <InputLabel id="demo-simple-select-standard-label">max</InputLabel>
-                <Select
-                  labelId="demo-simple-select-standard-label"
-                  id="demo-simple-select-standard"
-                  value={sound.max}
-                  onChange={(e) =>
-                    setSound((prev) => ({
-                      ...prev,
-                      max: e.target.value,
-                    }))
-                  }
-                  label="Sound(max)"
-                  name="max"
-                  className={classes.customSelect}
-                >
-                  {soundmaxRange.map((value) => (
-                    <MenuItem key={value} value={value}>
-                      {value}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+                <FormControl variant="standard" sx={{ minWidth: 50 }}>
+                  <InputLabel id="demo-simple-select-standard-label">max</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-standard-label"
+                    id="demo-simple-select-standard"
+                    value={sound.max}
+                    onChange={(e) =>
+                      setSound((prev) => ({
+                        ...prev,
+                        max: e.target.value,
+                      }))
+                    }
+                    label="Sound(max)"
+                    name="max"
+                    className={classes.customSelect}
+                  >
+                    {soundmaxRange.map((value) => (
+                      <MenuItem key={value} value={value}>
+                        {value}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </Grid>
             </Grid>
-            <Grid
-              item
-              lg={6}
-              xl={6}
-              style={{ display: "flex", alignItems: "baseline" }}
-            >
+            <Grid item lg={6} xl={6} style={{ display: "flex", alignItems: "baseline" }}>
               <Grid item lg={3} xs={3} mr={3} ml={3}>
-                
                 <MDTypography variant="button" fontWeight="medium">
                   Insulation Resistance :
                 </MDTypography>
               </Grid>
               <Grid mr={5}>
-              <FormControl variant="standard" sx={{ minWidth: 50 }}>
-                <InputLabel id="demo-simple-select-standard-label">min</InputLabel>
-                <Select
-                  labelId="demo-simple-select-standard-label"
-                  id="demo-simple-select-standard"
-                  value={insulation.min}
-                  onChange={(e) =>
-                    setInsulation((prev) => ({
-                      ...prev,
-                      min: e.target.value,
-                    }))
-                  }
-                  label="Insulation(min)"
-                  name="min"
-                  className={classes.customSelect}
-                >
-                  {insulationminRange.map((value) => (
-                    <MenuItem key={value} value={value}>
-                      {value}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+                <FormControl variant="standard" sx={{ minWidth: 50 }}>
+                  <InputLabel id="demo-simple-select-standard-label">min</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-standard-label"
+                    id="demo-simple-select-standard"
+                    value={insulation.min}
+                    onChange={(e) =>
+                      setInsulation((prev) => ({
+                        ...prev,
+                        min:e.target.value,
+                      }))
+                    }
+                    label="Insulation(min)"
+                    name="min"
+                    className={classes.customSelect}
+                  >
+                    {insulationminRange.map((value) => (
+                      <MenuItem key={value} value={value}>
+                        {value}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </Grid>
               <Grid>
-              <FormControl variant="standard" sx={{ minWidth: 50 }}>
-                <InputLabel
-                  style={{ justifyItems: "center" }}
-                  id="demo-simple-select-standard-label"
-                >
-                  max
-                </InputLabel>
-                <Select
-                  labelId="demo-simple-select-standard-label"
-                  id="demo-simple-select-standard"
-                  value={insulation.max}
-                  onChange={(e) =>
-                    setInsulation((prev) => ({
-                      ...prev,
-                      max: e.target.value,
-                    }))
-                  }
-                  label="Insulation(max)"
-                  name="max"
-                  className={classes.customSelect}
-                >
-                  {insulationmaxRange.map((value) => (
-                    <MenuItem key={value} value={value}>
-                      {value}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+                <FormControl variant="standard" sx={{ minWidth: 50 }}>
+                  <InputLabel
+                    style={{ justifyItems: "center" }}
+                    id="demo-simple-select-standard-label"
+                  >
+                    max
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-standard-label"
+                    id="demo-simple-select-standard"
+                    value={insulation.max}
+                    onChange={(e) =>
+                      setInsulation((prev) => ({
+                        ...prev,
+                        max: e.target.value,
+                      }))
+                    }
+                    label="Insulation(max)"
+                    name="max"
+                    className={classes.customSelect}
+                  >
+                    {insulationmaxRange.map((value) => (
+                      <MenuItem key={value} value={value}>
+                        {value}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </Grid>
             </Grid>
           </Grid>

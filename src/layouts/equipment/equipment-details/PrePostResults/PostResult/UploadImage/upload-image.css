@@ -8,7 +8,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-
     background-color: var(--input-bg);
 }
 
@@ -22,10 +21,10 @@
     cursor: pointer;
 }
 
-.drop-file-input:hover,
+/* .drop-file-input:hover,
 .drop-file-input.dragover {
     opacity: 0.6;
-}
+} */
 
 .drop-file-input__label {
     text-align: center;
@@ -88,9 +87,9 @@
     transition: opacity 0.3s ease;
 }
 
-.drop-file-preview__item:hover .drop-file-preview__item__del {
+/* .drop-file-preview__item:hover .drop-file-preview__item__del {
     opacity: 1;
-}
+} */
 
 
 .container {
@@ -117,4 +116,13 @@
     float:right;
     font-weight:bolder;
     text-align:center;
+}
+.cancel {
+    position: relative;
+    /* position: relative; */
+    top: -50px;
+    right: 25px;
+    float: right;
+    /* color: red;
+    stroke: red; */
 }

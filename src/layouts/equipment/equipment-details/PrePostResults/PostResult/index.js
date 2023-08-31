@@ -1,21 +1,12 @@
 import * as React from "react";
 import { useState, useEffect, useCallback } from "react";
 import Card from "@mui/material/Card";
-import IconButton from "@mui/material/IconButton";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
 import { makeStyles } from "@mui/styles";
-import clsx from "clsx";
 import { useSelector, useDispatch } from "react-redux";
-import MDBox from "components/MDBox";
 import { CardHeader, TextField } from "@mui/material";
 import { useMutation, useQuery, useSubscription } from "urql";
-import Collapse from "@mui/material/Collapse";
 import Grid from "@mui/material/Grid";
 import alertAndLoaders from "utils/alertAndLoaders";
 import { ALL_COMPONENT } from "apis/queries";
@@ -98,7 +89,7 @@ export default function PostResult({ partCode }) {
         if (fatchPostData.data) {
             if (fatchPostData.data.postResultTableByPartCode) {
                 let data = fatchPostData.data.postResultTableByPartCode
-                console.log(data,"DDD")
+                // console.log(data,"DDD")
                 let flag = true;
                 if (JSON.parse(data?.ptCurrent) && flag) {
                     let len = Object.keys(JSON.parse(data?.ptCurrent)).length;
@@ -125,14 +116,7 @@ export default function PostResult({ partCode }) {
 
             }
         }
-        // if (plannerByName.data) {
-        //     if (plannerByName.data.allPreResultTables) {
-        //         let data = plannerByName.data.allPreResultTables;
-        //         setPledge(true);
-        //     } else {
-        //         setPledge(false);
-        //     }
-        // }
+        
     }, [plannerByName.data, fatchPostData.data]);
 
     const saveValues = () => {

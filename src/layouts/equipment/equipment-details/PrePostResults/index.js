@@ -90,6 +90,8 @@ export default function PrePostResult({ }) {
     const prePostStore = useSelector((store) => {
         return store.prePost;
     })
+    const [selectedImage, setSelectedImage] = useState(null);
+
     const [isExpandedIndex, setIsExpandedIndex] = useState(0)
     const [partCode, setPartCode] = useState(null);
     const [plannerByName, rexPlannerByName] = useQuery({
@@ -109,7 +111,7 @@ export default function PrePostResult({ }) {
         query: FATCH_DIFFERENCE
     })
 
-    const [updateDiff, updateDiffResults] = useMutation(UPDATE_DIFF_DATA)
+    const [updateDiff, updateDiffResults] = useMutation(UPDATE_DIFF_DATA);
 
     useEffect(() => {
         if (fatchDifference.data) {
@@ -165,7 +167,6 @@ export default function PrePostResult({ }) {
     const handleExpanded = (index, partCode) => {
         diffData.map((val) => {
             if (val.partCode === partCode) {
-
                 setSound(val.diffSound ? JSON.parse(val.diffSound) : null)
                 setFrequency(val.diffFrequency ? JSON.parse(val.diffFrequency) : null)
             }
@@ -187,7 +188,6 @@ export default function PrePostResult({ }) {
         }))
         );
     }
-
     const handleClose = () => {
         setOpen(false)
     }
@@ -266,7 +266,7 @@ export default function PrePostResult({ }) {
                                         onClose={handleClose}
                                     >
                                         <DialogTitle id="alert-dialog-title">
-                                            Select Samples
+                                        Select Samples
                                         </DialogTitle>
                                         <div style={{ display: "flex", justifyContent: "space-around", width: "280px" }}>
                                             {change.map((val, i) => {
@@ -279,9 +279,7 @@ export default function PrePostResult({ }) {
                                         </div>
                                         <DialogActions style={{ marginTop: "20px" }}>
                                             <MDButton color='error' onClick={handleClose}>Cancal</MDButton>
-                                            <MDButton color='success' onClick={saveSamples} autoFocus>
-                                                Save
-                                            </MDButton>
+                                            <MDButton color='success' onClick={saveSamples} autoFocus>Save</MDButton>
                                         </DialogActions>
                                     </MDDialog>
                                     <Collapse in={val.isExpanded} timeout="auto" unmountOnExit>
@@ -317,11 +315,11 @@ export default function PrePostResult({ }) {
                                                                     }));
                                                                 };
                                                                 return (
-                                                                    <Grid key={i} sm={2} m={1}>
-                                                                        {show ? <TextField name={`n${val}`}
-                                                                            value={sound ? sound[`n${val}`] : ''}
-                                                                            onChange={handleChange} /> : <MDTypography variant="h6" fontWeight="small" style={{ textAlign: "center", background: "#394259", padding: "5px 0px", borderRadius: "8px" }}>{sound ? sound[`n${val}`] : "N/A"} </MDTypography>}
-                                                                    </Grid>
+                                                                <Grid key={i} sm={2} m={1}>
+                                                                     {show ? <TextField name={`n${val}`}
+                                                                     value={sound ? sound[`n${val}`] : ''}
+                                                                     onChange={handleChange} /> : <MDTypography variant="h6" fontWeight="small" style={{ textAlign: "center", background: "#394259", padding: "5px 0px", borderRadius: "8px" }}>{sound ? sound[`n${val}`] : "N/A"} </MDTypography>}
+                                                                </Grid>
                                                                 )
                                                             })}
                                                         </Grid>
@@ -343,11 +341,11 @@ export default function PrePostResult({ }) {
                                                                     }));
                                                                 };
                                                                 return (
-                                                                    <Grid key={i} sm={2} m={1}>
-                                                                        {show ? <TextField name={`n${val}`}
-                                                                            value={frequency ? frequency[`n${val}`] : ''}
-                                                                            onChange={handleChange} /> : <MDTypography variant="h6" fontWeight="small" style={{ textAlign: "center", background: "#394259", padding: "5px 0px", borderRadius: "8px" }}>{frequency ? frequency[`n${val}`] : "N/A"}</MDTypography>}
-                                                                 </Grid>
+                                                                <Grid key={i} sm={2} m={1}>
+                                                                    {show ? <TextField name={`n${val}`}
+                                                                    value={frequency ? frequency[`n${val}`] : ''}
+                                                                    onChange={handleChange} /> : <MDTypography variant="h6" fontWeight="small" style={{ textAlign: "center", background: "#394259", padding: "5px 0px", borderRadius: "8px" }}>{frequency ? frequency[`n${val}`] : "N/A"}</MDTypography>}
+                                                                </Grid>
                                                                 )
                                                             })}
                                                         </Grid>
@@ -360,19 +358,19 @@ export default function PrePostResult({ }) {
                                                         {show ? "Cancel" : "Edit"}
                                                     </MDButton>
                                                     {show ?
-                                                        <MDButton color="info" style={{ marginLeft: "5px" }}
-                                                            onClick={saveDiffResults}>
-                                                            Save
-                                                        </MDButton> : null}
+                                                    <MDButton color="info" style={{ marginLeft: "5px" }}
+                                                        onClick={saveDiffResults}>
+                                                        Save
+                                                    </MDButton> : null}
                                                 </Grid>
                                             </Card>
                                             <Grid sm={6} xs={6} style={{ margin: "12px" }}>
-                                                <UploadImage />
+                                                <UploadImage partCode={val.partCode} />
                                             </Grid>
                                         </Card>
                                     </Collapse>
                                 </Card>
-                            </MDBox>
+                        </MDBox>
                         )
                     })}
                 </Card>

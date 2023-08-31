@@ -6,17 +6,19 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import Grid from "@mui/material/Grid";
-import { useMutation, useQuery, useSubscription } from "urql";
-import MDDialog from "components/MDDilouge";
-import { ALL_ALERTS, START_TIMER, STOP_TIMER, GET_ALL_TIMERS,UPDATE_ALERT_BY_ID,UPDATE_ALERT_STATUS_BY_ID } from "apis/queries";
+import { useQuery } from "urql";
+import { ALL_ALERTS,GET_ALL_TIMERS,START_TIMER,UPDATE_ALERT_BY_ID,UPDATE_ALERT_STATUS_BY_ID,STOP_TIMER} from "apis/queries";
 import MDTable from "components/MDTable";
 import MDHoverSearch from "components/MDHoverSearch";
 import { FormControl, FormControlLabel, Radio, DialogActions } from "@mui/material";
 import { RadioGroup } from "@mui/material";
 import MDButton from "components/MDButton";
 import {useSelector,useDispatch} from "react-redux"
+import { useSubscription } from "urql";
 import * as alerts from "../../../reduxSlices/machineAlerts"
 import alertAndLoaders from "utils/alertAndLoaders";
+import { useMutation } from "urql";
+import MDDialog from "components/MDDilouge";
 //Constant popuo radio button values
 
 const ERROR_RESOLVED = "Error Resolved";

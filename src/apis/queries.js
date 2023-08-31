@@ -1121,7 +1121,19 @@ const UPDATE_ALERT_STATUS_BY_ID = `mutation updateAlertById($alertStatus: Int!, 
     clientMutationId
   }
 }`
+const UPLOAD_POST_IMAGES = `mutation updatePostResultTableByPartCode($postImages: JSON!, $partCode: String!) {
+  updatePostResultTableByPartCode(
+    input: {postResultTablePatch: {postImages: $postImages}, partCode: $partCode}
+  ) {
+    clientMutationId
+  }
+}`
 
+const IMAGE_FETCH = `subscription ImageFetch($partCode:String!) {
+  postResultTableByPartCode(partCode: $partCode) {
+    postImages
+  }
+}`
 export {
   AUTH,
   ADD_USER,
@@ -1235,5 +1247,7 @@ export {
   POST_FREQUENCY,
   POST_INSULATION,
   POST_CURRENT,
-  UPDATE_ALERT_STATUS_BY_ID
+  UPDATE_ALERT_STATUS_BY_ID,
+  UPLOAD_POST_IMAGES,
+  IMAGE_FETCH,
 };

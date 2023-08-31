@@ -1,14 +1,8 @@
 import * as React from "react";
 import { useState, useEffect, useCallback } from "react";
 import Card from "@mui/material/Card";
-import IconButton from '@mui/material/IconButton';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MDTypography from "components/MDTypography";
 import MDButton from "components/MDButton";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
 import { makeStyles } from "@mui/styles";
 import { useSelector, useDispatch } from "react-redux";
 import { CardHeader, TextField } from "@mui/material";
@@ -64,7 +58,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function PreResult({ partCode }) {
-    const [expanded, setExpanded] = React.useState(false);
     const [show, setShow] = React.useState(false)
     const [pledge, setPledge] = useState(true)
     const [current, setCurrent] = useState({})
@@ -94,7 +87,6 @@ export default function PreResult({ partCode }) {
         if (fatchPreData.data) {
                 if (fatchPreData.data.preResultTableByPartCode) {
                     let data = fatchPreData.data.preResultTableByPartCode
-                    // console.log(JSON.parse(data?.frequency,"fdsafasfa"))
                     let flag = true;
                     if (JSON.parse(data?.current) && flag) {
                         let len = Object.keys(JSON.parse(data?.current)).length;
@@ -118,7 +110,6 @@ export default function PreResult({ partCode }) {
                     setFrequency(JSON.parse(data?.frequency) || "")
                     setSound(JSON.parse(data?.soundLvl) || "")
                     setInsulation(JSON.parse(data?.insulationRs) || "")
-
                 }
         }
         if (plannerByName.data) {
@@ -233,23 +224,6 @@ export default function PreResult({ partCode }) {
                 }
             });
         }
-
-        // if (pledge === true) {
-        //     updatePreDataResults({
-        //         partCode: partCode,
-        //         current: currentVal,
-        //         frequency: frequencyVal,
-        //         insulationRs: insulationVal,
-        //         soundLvl: soundVal
-        //     }).then((res) => {
-        //         console.log(res);
-        //         if (res.data) {
-        //             alertAndLoaders("UNSHOW_ALERT", dispatch, "Pre Test Results Are Saved... ", "success");
-        //         } else if (res.error) {
-        //             alertAndLoaders("UNSHOW_ALERT", dispatch, "Something Went Wrong... ", "error");
-        //         }
-        //     });
-        // }
     };
 
     const handleSamples = (event) => {
@@ -295,7 +269,6 @@ export default function PreResult({ partCode }) {
                                             value={current ? current[`n${val}`] : ''}
                                             onChange={handleChange} /> : <MDTypography variant="h6" fontWeight="small" style={{ textAlign: "center", background: "#394259", padding: "5px 0px", borderRadius: "8px" }}>{current ? current[`n${val}`] : "N/A"}</MDTypography>}
                                     </Grid>
-
                                 )
                             })}
                         </Grid>
@@ -379,7 +352,8 @@ export default function PreResult({ partCode }) {
                             >
                                 Save
                             </MDButton> : null}
-                        </Grid></>}
+                        </Grid>
+                    </>}
             </Card>
         </>
     )
