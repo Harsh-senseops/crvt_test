@@ -111,7 +111,7 @@ export default function VibrationTest({ details, componentName, id }) {
   useEffect(() => {
 
     if (vibrationdeailsByID.data) {
-      let constValues = JSON.parse(vibrationdeailsByID.data.vibrationTestDetailByPartNameTestDetailByPartName.testDetails, "datadetails")
+      let constValues = JSON.parse(vibrationdeailsByID.data.crvtVibrationTestDetailByPartName.testDetails, "datadetails")
       setOldData({ eName: constValues.name, running: constValues["7daysrunning"] })
       setFrequencyMax({ newData: constValues.frequency.max, oldData: constValues.frequency.max })
       setFrequencyMin({ newData: constValues.frequency.min, oldData: constValues.frequency.min })
@@ -129,8 +129,8 @@ export default function VibrationTest({ details, componentName, id }) {
       if (val.partName == componentName) {
 
         setToggleEnable(true)
-        if (val.vibrationTestDetailsByPartName.nodes.length !== 0) {
-          data = JSON.parse(val.vibrationTestDetailsByPartName.nodes[0].testDetails)
+        if (val.crvtvibrationTestDetailsByPartName?.nodes?.length !== 0) {
+          data = JSON.parse(val.crvtVibrationTestDetailsByPartName.nodes[0].testDetails)
         }
 
         setSampleQty({ newData: data.sample_qty, oldData: data.sample_qty })
@@ -143,7 +143,7 @@ export default function VibrationTest({ details, componentName, id }) {
         setEquipmentRunning({ newData: data.equipment_running, oldData: data.equipment_running })
         setSimultaneously({ newData: data.simultaneously, oldData: data.simultaneously })
 
-        if (JSON.parse(val.vibrationTestDetailsByPartName.nodes[0].status) === 1) {
+        if (JSON.parse(val.crvtVibrationTestDetailsByPartName?.nodes[0]?.status) === 1) {
           setToggleEnable(true)
           setEnabled(true)
         } else {

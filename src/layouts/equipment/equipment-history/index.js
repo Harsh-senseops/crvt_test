@@ -35,14 +35,10 @@ const [data,setData] = useState({columns,rows:[]})
   useEffect(()=>{
     let tempArry = []
     if(equipmentHistory.data){
-     equipmentHistory.data?.allEquipmentUpdateHistories?.nodes.map((val)=>{
-      // let values = "";
-      // // for(let key in val.updateValues){
-      // //   val.updateValues[key].str.
-      // // }
+     equipmentHistory.data?.allCrvtEquipmentUpdateHistories?.nodes.map((val)=>{
       tempArry.push({
         date:val.date,
-        componentName:val.componentDetailByComponentId.partName,
+        componentName:val.crvtComponentDetailByComponentId.partName,
         testType:val.testType,
         updatedValues:val.updateValues.replace(/[{}"]/g, ''),
         employeeCode:val.employeeCode
@@ -61,9 +57,6 @@ const [data,setData] = useState({columns,rows:[]})
       <MDBox pt={10} pb={3}>
         <Card>
           <MDBox p={3} lineHeight={1}>
-            {/* <MDTypography variant="h5" fontWeight="medium">
-              Equipment History
-            </MDTypography> */}
         <DataTable canSearch={true} table={data}/>
           </MDBox>
         </Card>

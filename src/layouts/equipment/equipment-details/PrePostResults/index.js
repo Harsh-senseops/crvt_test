@@ -115,15 +115,15 @@ export default function PrePostResult({ }) {
 
     useEffect(() => {
         if (fatchDifference.data) {
-            let data = fatchDifference.data.allPostResultTables.nodes
+            let data = fatchDifference.data.allCrvtPostResultTables.nodes
             setDiffData(data)
         }
     }, [fatchDifference.data])
 
     useEffect(() => {
         if (fatchDiffData.data) {
-            if (fatchDiffData.datapostResultTableByPartCode) {
-                let data = fatchDiffData.datapostResultTableByPartCode
+            if (fatchDiffData.data.crvtPostResultTableByPartCode) {
+                let data = fatchDiffData.data.crvtPostResultTableByPartCode
                 setSound(JSON.parse(data.diffSound) || null)
                 setFrequency(JSON.parse(data.diffFrequency) || null)
             }
@@ -132,11 +132,11 @@ export default function PrePostResult({ }) {
             setShouldPause(false)
         }
         if (preTableData.data) {
-            setPreData(preTableData.data.allPreResultTables.nodes)
+            setPreData(preTableData.data.allCrvtPreResultTables.nodes)
         }
         if (plannerByName.data) {
             let tempArray = [];
-            plannerByName.data.allPreResultTables.nodes.map((val) => {
+            plannerByName.data.allCrvtPreResultTables.nodes.map((val) => {
                 tempArray.push({
                     partName: val.partName,
                     partCode: val.partCode,

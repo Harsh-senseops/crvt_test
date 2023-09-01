@@ -49,8 +49,8 @@ import {useSelector} from "react-redux";
 // graphql url
 const senseopsHTTPServerURL = "http://127.0.0.1:5052/graphql";
 const senseopsWSServerURL = "ws://127.0.0.1:5052/graphql";
-// const hmclHTTPServerURL = "http://192.168.84.45:5000/graphql";
-// const hmclWSServerURL = "ws://192.168.84.45:5000/graphql";
+// const hm2gHTTPURL = "http://10.30.3.67:5052/graphql";
+// const hm2gWSURL = "ws://10.30.3.67:5052/graphql";
 
 
 export default function App() {

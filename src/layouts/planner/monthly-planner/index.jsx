@@ -45,52 +45,52 @@ let testDataObj =     [
   {
     yearlyPlannerQuery: DUST_YEARLY_PLANNER,
     testName: "DUST",
-    allTestNameYearlyPlanner: "allDustYearlyPlanners",
+    allTestNameYearlyPlanner: "allCrvtDustYearlyPlanners",
     mutation:ADD_DUST_MONTHLY_PLANNER,
     monthlyPlannerByDate:DUST_MONTHLY_PLANNER_BY_DATE,
-    allTestNameMonthlyPlanner:"allDustMonthlyPlanners",
+    allTestNameMonthlyPlanner:"allCrvtDustMonthlyPlanners",
     expanded: false,
   },
   {
     yearlyPlannerQuery: OVEN_YEARLY_PLANNER,
     testName: "OVEN",
-    allTestNameYearlyPlanner: "allOvenYearlyPlanners",
+    allTestNameYearlyPlanner: "allCrvtOvenYearlyPlanners",
     mutation:ADD_OVEN_MONTHLY_PLANNER,
     monthlyPlannerByDate:OVEN_MONTHLY_PLANNER_BY_DATE,
-    allTestNameMonthlyPlanner:"allOvenMonthlyPlanners",
+    allTestNameMonthlyPlanner:"allCrvtOvenMonthlyPlanners",
     expanded: false,
   },
   {
     yearlyPlannerQuery: RO_YEARLY_PLANNER,
     testName: "RO",
-    allTestNameYearlyPlanner: "allRoYearlyPlanners",
+    allTestNameYearlyPlanner: "allCrvtRoYearlyPlanners",
     mutation:ADD_RO_MONTHLY_PLANNER,
     monthlyPlannerByDate:RO_MONTHLY_PLANNER_BY_DATE,
-    allTestNameMonthlyPlanner:"allRoMonthlyPlanners",
+    allTestNameMonthlyPlanner:"allCrvtRoMonthlyPlanners",
     expanded: false,
   },
   {
     yearlyPlannerQuery: SHOWER_YEARLY_PLANNER,
     testName: "SHOWER",
-    allTestNameYearlyPlanner: "allShowerYearlyPlanners",
+    allTestNameYearlyPlanner: "allCrvtShowerYearlyPlanners",
     mutation:ADD_SHOWER_MONTHLY_PLANNER,
     monthlyPlannerByDate:SHOWER_MONTHLY_PLANNER_BY_DATE,
-    allTestNameMonthlyPlanner:"allShowerMonthlyPlanners",
+    allTestNameMonthlyPlanner:"allCrvtShowerMonthlyPlanners",
     expanded: false,
   },
   {
     yearlyPlannerQuery: THERMAL_CYCLE_YEARLY_PLANNER,
     testName: "THERMAL CYCLE",
-    allTestNameYearlyPlanner: "allThermalCycleYearlyPlanners",
+    allTestNameYearlyPlanner: "allCrvtThermalCycleYearlyPlanners",
     mutation:ADD_THERMAL_CYCLE_MONTHLY_PLANNER,
     monthlyPlannerByDate:THERMAL_CYCLE_MONTHLY_PLANNER_BY_DATE,
-    allTestNameMonthlyPlanner:"allThermalCycleMonthlyPlanners",
+    allTestNameMonthlyPlanner:"allCrvtThermalCycleMonthlyPlanners",
     expanded: false,
   },
   {
     yearlyPlannerQuery: THERMAL_SHOCK_YEARLY_PLANNER,
     testName: "THERMAL SHOCK",
-    allTestNameYearlyPlanner: "allThermalShockYearlyPalnners",
+    allTestNameYearlyPlanner: "allCrvtThermalShockYearlyPalnners",
     mutation:ADD_THERMAL_SHOCK_MONTHLY_PLANNER,
     monthlyPlannerByDate:THERMAL_SHOCK_MONTHLY_PLANNER_BY_DATE,
     allTestNameMonthlyPlanner:"allThermalShockMonthlyPlanners",
@@ -99,10 +99,10 @@ let testDataObj =     [
   {
     yearlyPlannerQuery: VIBRATION_YEARLY_PLANNER,
     testName: "VIBRATION",
-    allTestNameYearlyPlanner: "allVibrationYearlyPlanners",
+    allTestNameYearlyPlanner: "allCrvtVibrationYearlyPlanners",
     mutation:ADD_VIBRATION_MONTHLY_PLANNER,
     monthlyPlannerByDate:VIBRATION_MONTHLY_PLANNER_BY_DATE,
-    allTestNameMonthlyPlanner:"allVibrationMonthlyPlanners",
+    allTestNameMonthlyPlanner:"allCrvtVibrationMonthlyPlanners",
     expanded: false,
   },
 ]
@@ -132,14 +132,11 @@ function MonthlyPlanner() {
       <MDBox pt={10} pb={3}>
         <Card>
           <MDBox p={3} lineHeight={1}>
-            {/* <MDTypography variant="h5" fontWeight="medium">
-              Monthly Planner
-            </MDTypography> */}
+       
             <UnplannedListUpload />
             <Grid style={{background:"#394259"}} mt={3} pt={2} pr={1} pl={1} pb={3} bgcolor="#F7F7F7" borderRadius={3}>
               {testData.map((props,i)=>{
                 return(
-                  // <Box mb={2} onClick={() => handleExpandClick(i)}>
                     <ReusabaleMonthlyPlannerTests
                     yearlyPlannerQuery={props.yearlyPlannerQuery}
                     testName={props.testName}

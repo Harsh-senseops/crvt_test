@@ -32,7 +32,6 @@ const useStyles = makeStyles((theme) => ({
         "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
             borderColor: "gray"
         },
-
     },
     expandOpen: {
         transform: 'rotate(180deg)',
@@ -77,7 +76,6 @@ export default function PrePostTest({ id }) {
                                 transform: "scale(1.02)",
                             },
                         }}
-
                     action={
                         <div>
                             <IconButton

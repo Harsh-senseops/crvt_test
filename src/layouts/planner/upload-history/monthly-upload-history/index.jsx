@@ -38,10 +38,9 @@ function MonthlyUploadHistory() {
       setShouldPause(false)
     }
     if(monthlyHistoryrRes.data){
-      console.log(monthlyHistoryrRes.data.allMonthlyUploadHistories.nodes)
       setShouldPause(true)
       let tempArry = []
-      monthlyHistoryrRes.data.allMonthlyUploadHistories.nodes.map((val)=>{
+      monthlyHistoryrRes.data.allCrvtMonthlyUploadHistories.nodes.map((val)=>{
         tempArry.push({
           partCode:val.partCode,
           status:val.status,

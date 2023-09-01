@@ -104,7 +104,7 @@ export default function ThermalShockChamber({ details, componentName, id }) {
 
   useEffect(() => {
     if (thermalShockdetailByID.data) {
-      let constValues = JSON.parse(thermalShockdetailByID.data.thermalShockChamberTestDetailByPartName.testDetails, "datadetails")
+      let constValues = JSON.parse(thermalShockdetailByID.data.crvtThermalShockChamberTestDetailByPartName.testDetails, "datadetails")
       setOldData({ eName: constValues.name, running: constValues["7daysrunning"] })
 
       setCold({ newData: constValues.cold, oldDat: constValues.cold })
@@ -122,8 +122,8 @@ export default function ThermalShockChamber({ details, componentName, id }) {
       let data = ""
       if (val.partName == componentName) {
         setToggleEnable(true)
-        if (val.thermalShockChamberTestDetailsByPartName.nodes.length !== 0) {
-          data = JSON.parse(val.thermalShockChamberTestDetailsByPartName.nodes[0].testDetails)
+        if (val.crvtThermalShockChamberTestDetailsByPartName.nodes.length !== 0) {
+          data = JSON.parse(val.crvtThermalShockChamberTestDetailsByPartName.nodes[0].testDetails)
         }
         setCold({ newData: data.cold, oldDat: data.cold })
         setHot({ newData: data.hot, oldDat: data.hot })
@@ -135,7 +135,7 @@ export default function ThermalShockChamber({ details, componentName, id }) {
         setSimultaneously({ newData: data.simultaneously, oldDat: data.simultaneously })
         setSampleQty({ newData: data.sample_qty, oldDat: data.sample_qty })
 
-        if (JSON.parse(val.thermalShockChamberTestDetailsByPartName.nodes[0].status) === 1) {
+        if (JSON.parse(val.crvtThermalShockChamberTestDetailsByPartName.nodes[0].status) === 1) {
           setToggleEnable(true)
           setEnabled(true)
         } else {

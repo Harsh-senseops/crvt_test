@@ -91,7 +91,6 @@ function Masterpartlistupload({ children }) {
     }
   };
 
-
   const handleFileSubmit = (e) => {
     e.preventDefault();
 
@@ -109,25 +108,9 @@ function Masterpartlistupload({ children }) {
       console.log("Please select appropriate excel file")
     } else {
       console.log("Confirm submit")
-      // setAlert(
-      //   <SweetAlert
-      //     info
-      //     showCancel
-      //     title="Are You Sure?"
-      //     onConfirm={confirmSubmit}
-      //     onCancel={() => setAlert(null)}
-      //     confirmBtnBsStyle="info"
-      //     cancelBtnBsStyle="danger"
-      //     confirmBtnText="Yes"
-      //     cancelBtnText="No"
-      //   />
-      // );
     }
     setOpen(false);
   };
-
-  
-  
 
   const handleClickOpen = (e) => {
     e.preventDefault()
@@ -139,7 +122,6 @@ function Masterpartlistupload({ children }) {
   };
 
   const title = "Are you sure?"
-
 
   return (
     <MDBox position="relative" mb={5} mr={20}>

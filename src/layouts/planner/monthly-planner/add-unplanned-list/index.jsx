@@ -175,7 +175,7 @@ function UnplannedListUpload() {
       setShouldPause(false);
     }
     if (allComponets.data) {
-      allComponets.data.allComponentDetails.nodes.map((val) => {
+      allComponets.data.allCrvtComponentDetails.nodes.map((val) => {
         setComponentList((prev) => [...prev, val]);
       });
       setShouldPause(true);
