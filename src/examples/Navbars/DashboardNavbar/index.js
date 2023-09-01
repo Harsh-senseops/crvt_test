@@ -167,16 +167,16 @@ function DashboardNavbar({ absolute, light, isMini }) {
     if (notificationMsgByDate.data) {
       dispatchR(setShouldPauseNotification(true));
       let tempArr = [];
-      if (notificationMsgByDate.data.allNotifications.nodes.length !== 0) {
-        for (let i = 0; i < notificationMsgByDate.data.allNotifications.nodes.length; i++) {
+      if (notificationMsgByDate.data.allCrvtNotifications.nodes.length !== 0) {
+        for (let i = 0; i < notificationMsgByDate.data.allCrvtNotifications.nodes.length; i++) {
           if (i < 5) {
-            tempArr.push(notificationMsgByDate.data.allNotifications.nodes[i].message);
+            tempArr.push(notificationMsgByDate.data.allCrvtNotifications.nodes[i].message);
           }
         }
         dispatchR(addNotifications(tempArr));
       }
-      dispatchR(setCounter(notificationMsgByDate.data.allNotifications.nodes.length));
-      setNoOfNotification(notificationMsgByDate.data.allNotifications.nodes.length);
+      dispatchR(setCounter(notificationMsgByDate.data.allCrvtNotifications.nodes.length));
+      setNoOfNotification(notificationMsgByDate.data.allCrvtNotifications.nodes.length);
     }
   }, [notificationMsgByDate.data, nStore.shouldPause]);
 

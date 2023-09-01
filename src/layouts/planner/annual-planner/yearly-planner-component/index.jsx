@@ -127,7 +127,7 @@ export default function YearlyPlannerComponent({
         let parsed = JSON.parse(val.testDetails);
         if (parsed.length >= 12) {
           tempArr.push({
-            name: val.componentDetailByComponentId.partName,
+            name: val.crvtComponentDetailByComponentId.partName,
             samples: Array(12).fill(val.samples),
           });
         } else {
@@ -147,7 +147,7 @@ export default function YearlyPlannerComponent({
             }
           });
           tempArr.push({
-            name: val.componentDetailByComponentId.partName,
+            name: val.crvtComponentDetailByComponentId.partName,
             samples: monthsArray,
           });
         }

@@ -21,9 +21,9 @@ import MDAlert from "components/MDAlert";
 
 const DUST_YEARLY_PLANNER = `
 subscription dustYearlyPlanner {
-  allDustYearlyPlanners {
+  allCrvtDustYearlyPlanners {
     nodes {
-      componentDetailByComponentId {
+      crvtComponentDetailByComponentId {
         partName
       }
       componentId
@@ -36,9 +36,9 @@ subscription dustYearlyPlanner {
 `;
 const OVEN_YEARLY_PLANNER = `
 subscription ovenYearlyPlanner {
-  allOvenYearlyPlanners {
+  allCrvtOvenYearlyPlanners {
     nodes {
-      componentDetailByComponentId {
+      crvtComponentDetailByComponentId {
         partName
       }
       componentId
@@ -50,9 +50,9 @@ subscription ovenYearlyPlanner {
 }
 `;
 const RO_YEARLY_PLANNER = `subscription roYearlyPlanner {
-  allRoYearlyPlanners {
+  allCrvtRoYearlyPlanners {
     nodes {
-      componentDetailByComponentId {
+      crvtComponentDetailByComponentId {
         partName
       }
       componentId
@@ -65,9 +65,9 @@ const RO_YEARLY_PLANNER = `subscription roYearlyPlanner {
 `;
 const SHOWER_YEARLY_PLANNER = `
 subscription showerYearlyPlanner {
-  allShowerYearlyPlanners {
+  allCrvtShowerYearlyPlanners {
     nodes {
-      componentDetailByComponentId {
+      crvtComponentDetailByComponentId {
         partName
       }
       componentId
@@ -80,9 +80,9 @@ subscription showerYearlyPlanner {
 `;
 const THERMAL_CYCLE_YEARLY_PLANNER = `
 subscription thermalCycleYearlyPlanner {
-  allThermalCycleYearlyPlanners {
+  allCrvtThermalCycleYearlyPlanners {
     nodes {
-      componentDetailByComponentId {
+      crvtComponentDetailByComponentId {
         partName
       }
       componentId
@@ -95,9 +95,9 @@ subscription thermalCycleYearlyPlanner {
 `;
 const THERMAL_SHOCK_YEARLY_PLANNER = `
 subscription thermalShockYearlyPlanner {
-  allThermalShockYearlyPalnners {
+  allCrvtThermalShockYearlyPalnners {
     nodes {
-      componentDetailByComponentId {
+      crvtComponentDetailByComponentId {
         partName
       }
       componentId
@@ -110,9 +110,9 @@ subscription thermalShockYearlyPlanner {
 `;
 const VIBRATION_YEARLY_PLANNER = `
 subscription vibrationYearlyPlanner {
-  allVibrationYearlyPlanners {
+  allCrvtVibrationYearlyPlanners {
     nodes {
-      componentDetailByComponentId {
+      crvtComponentDetailByComponentId {
         partName
       }
       componentId
@@ -127,43 +127,43 @@ let testDataObj = [
   {
     name: "Dust",
     query: DUST_YEARLY_PLANNER,
-    allPlanners: "allDustYearlyPlanners",
+    allPlanners: "allCrvtDustYearlyPlanners",
     expanded: false,
   },
   {
     name: "Oven",
     query: OVEN_YEARLY_PLANNER,
-    allPlanners: "allOvenYearlyPlanners",
+    allPlanners: "allCrvtOvenYearlyPlanners",
     expanded: false,
   },
   {
     name: "RO",
     query: RO_YEARLY_PLANNER,
-    allPlanners: "allRoYearlyPlanners",
+    allPlanners: "allCrvtRoYearlyPlanners",
     expanded: false,
   },
   {
     name: "Shower",
     query: SHOWER_YEARLY_PLANNER,
-    allPlanners: "allShowerYearlyPlanners",
+    allPlanners: "allCrvtShowerYearlyPlanners",
     expanded: false,
   },
   {
     name: "Thermal Cycle",
     query: THERMAL_CYCLE_YEARLY_PLANNER,
-    allPlanners: "allThermalCycleYearlyPlanners",
+    allPlanners: "allCrvtThermalCycleYearlyPlanners",
     expanded: false,
   },
   {
     name: "Thermal Shock",
     query: THERMAL_SHOCK_YEARLY_PLANNER,
-    allPlanners: "allThermalShockYearlyPalnners",
+    allPlanners: "allCrvtThermalShockYearlyPalnners",
     expanded: false,
   },
   {
     name: "Vibration",
     query: VIBRATION_YEARLY_PLANNER,
-    allPlanners: "allVibrationYearlyPlanners",
+    allPlanners: "allCrvtVibrationYearlyPlanners",
     expanded: false,
   },
 ]
