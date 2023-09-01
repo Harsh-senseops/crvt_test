@@ -56,13 +56,13 @@ function ComponentsTable() {
   const { data: equipmentData, fetching: equipmentFetching, error: equipmentError } = getEquipment
 
   useEffect(() => {
-    if (equipmentData) setComponentDetails(equipmentData.allComponentDetails.nodes)
+    if (equipmentData) setComponentDetails(equipmentData.allCrvtComponentDetails.nodes)
   }, [equipmentData])
 
   const handleEdit = (rowdata) => {
     setFormtitle(rowdata.partName)
     setDetailsOpen(true)
-    setPartID(rowdata.dustTestDetailsByPartName.nodes[0].partName)
+    setPartID(rowdata.crvtDustTestDetailsByPartName.nodes[0]?.partName)
   }
   const handleFormClose = () => {
     setDetailsOpen(false)

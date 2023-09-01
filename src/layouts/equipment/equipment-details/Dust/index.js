@@ -95,15 +95,15 @@ export default function DustTest({ details, componentName, id }) {
 
   useEffect(() => {
     if (dustdetailByID.data) {
-      let constValues = JSON.parse(dustdetailByID.data.dustTestDetailByPartName.testDetails)
-      setOldData({ eName: constValues.name, running: constValues["7daysrunning"] })
-      setDust({ newData: constValues.dust_sec, oldData: constValues.dust_sec })
-      setRest({ newData: constValues.rest_mins, oldData: constValues.rest_mins })
-      setTestDurationMax({ newData: constValues.test_duration_hr.max, oldData: constValues.test_duration_hr.max })
-      setTestDurationMin({ newData: constValues.test_duration_hr.min, oldData: constValues.test_duration_hr.min })
-      setEquipmentRunning({ newData: constValues.equipment_running, oldData: constValues.equipment_running })
-      setSimultaneously({ newData: constValues.simultaneously, oldData: constValues.simultaneously })
-      setSampleQty({ newData: constValues.sample_qty, oldData: constValues.sample_qty })
+      let constValues = JSON.parse(dustdetailByID.data.crvtDustTestDetailByPartName.testDetails)
+      setOldData({ eName: constValues?.name, running: constValues["7daysrunning"] })
+      setDust({ newData: constValues?.dust_sec, oldData: constValues?.dust_sec })
+      setRest({ newData: constValues?.rest_mins, oldData: constValues?.rest_mins })
+      setTestDurationMax({ newData: constValues?.test_duration_hr.max, oldData: constValues?.test_duration_hr.max })
+      setTestDurationMin({ newData: constValues?.test_duration_hr.min, oldData: constValues?.test_duration_hr.min })
+      setEquipmentRunning({ newData: constValues?.equipment_running, oldData: constValues?.equipment_running })
+      setSimultaneously({ newData: constValues?.simultaneously, oldData: constValues?.simultaneously })
+      setSampleQty({ newData: constValues?.sample_qty, oldData: constValues?.sample_qty })
     }
 
     details.map((val) => {
@@ -112,19 +112,19 @@ export default function DustTest({ details, componentName, id }) {
 
         setToggleEnable(true)
 
-        if (val.dustTestDetailsByPartName.nodes.length !== 0) {
-          data = JSON.parse(val.dustTestDetailsByPartName.nodes[0].testDetails)
+        if (val.crvtDustTestDetailsByPartName?.nodes?.length !== 0) {
+          data = JSON.parse(val.crvtDustTestDetailsByPartName?.nodes[0]?.testDetails)
         }
 
-        setDust({ newData: data.dust_sec, oldData: data.dust_sec })
-        setRest({ newData: data.rest_mins, oldData: data.rest_mins })
-        setTestDurationMin({ newData: data.test_duration_hr.min, oldData: data.test_duration_hr.min })
-        setTestDurationMax({ newData: data.test_duration_hr.max, oldData: data.test_duration_hr.max })
-        setEquipmentRunning({ newData: data.equipment_running, oldData: data.equipment_running })
-        setSimultaneously({ newData: data.simultaneously, oldData: data.simultaneously })
-        setSampleQty({ newData: data.sample_qty, oldData: data.sample_qty })
+        setDust({ newData: data?.dust_sec, oldData: data?.dust_sec })
+        setRest({ newData: data?.rest_mins, oldData: data?.rest_mins })
+        setTestDurationMin({ newData: data?.test_duration_hr?.min, oldData: data?.test_duration_hr?.min })
+        setTestDurationMax({ newData: data?.test_duration_hr?.max, oldData: data?.test_duration_hr?.max })
+        setEquipmentRunning({ newData: data?.equipment_running, oldData: data?.equipment_running })
+        setSimultaneously({ newData: data?.simultaneously, oldData: data?.simultaneously })
+        setSampleQty({ newData: data?.sample_qty, oldData: data?.sample_qty })
 
-        if (JSON.parse(val.dustTestDetailsByPartName.nodes[0].status) === 1) {
+        if (JSON.parse(val.crvtDustTestDetailsByPartName?.nodes[0]?.status) === 1) {
           setToggleEnable(true)
           setEnabled(true)
         } else {

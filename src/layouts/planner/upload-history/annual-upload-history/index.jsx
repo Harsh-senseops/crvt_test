@@ -36,7 +36,7 @@ function AnnualUploadHistory() {
     }
     if(result.data){
       let tempArray = []
-      result.data?.allYearlyPlannerHistories.nodes.map((val)=>{
+      result.data?.allCrvtYearlyPlannerHistories.nodes.map((val)=>{
         tempArray.push({date:val.date.split("T")[0],empCode:val.empcode,fileName:val.fileName})
       })
       setData({columns,rows:tempArray})

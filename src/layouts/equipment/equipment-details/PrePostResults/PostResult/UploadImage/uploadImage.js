@@ -36,10 +36,10 @@ export default function UploadImage({ partCode }) {
     const dispatch = useDispatch();
     useEffect(() => {
         if (fetchImage.data) {
-            if (fetchImage.data?.postResultTableByPartCode?.postImages) {
+            if (fetchImage.data?.crvtPostResultTableByPartCode?.postImages) {
                 setFetchedImage(true)
-                console.log(fetchImage.data?.postResultTableByPartCode?.postImages)
-                let data = JSON.parse(fetchImage.data?.postResultTableByPartCode.postImages);
+                console.log(fetchImage.data?.crvtPostResultTableByPartCode?.postImages)
+                let data = JSON.parse(fetchImage.data?.crvtPostResultTableByPartCode.postImages);
                 for (let key in data) {
                     setSelectedImage((prev) => [...prev, "data:image/png;base64," + data[key]])
                     console.log(data[key])

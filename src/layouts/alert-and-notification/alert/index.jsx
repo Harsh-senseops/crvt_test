@@ -73,16 +73,16 @@ function Alert() {
     if (allAlert.data) {
       setShouldPause(true);
       setTableData([]);
-      allAlert.data.allAlerts.nodes.map((val) => {
+      allAlert.data.allCrvtAlerts.nodes.map((val) => {
         if(val.alertStatus){
-          dispatch(alerts.setAlerts(val.testingEquipmentByEquipmentName.equipmentName + "Stopped Running"))
+          dispatch(alerts.setAlerts(val.crvtTestingEquipmentByEquipmentName.equipmentName + "Stopped Running"))
           dispatch(alerts.setCounter(+1))
         }
         setTableData((prev) => [
           ...prev,
           {
             dateTime: val.dateTime,
-            machineName: val.testingEquipmentByEquipmentName.equipmentName,
+            machineName: val.crvtTestingEquipmentByEquipmentName.equipmentName,
             machineStatus: val.machineStatus === 0 ? "Stopped" : "Running",
             actionTaken: val.actionTaken,
             empCode: val.userName,

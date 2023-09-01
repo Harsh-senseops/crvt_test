@@ -108,7 +108,7 @@ export default function OvenTest({ details, componentName, id }) {
 
   useEffect(() => {
     if (oventestdeailsByID.data) {
-      let constValues = JSON.parse(oventestdeailsByID.data.ovenTestDetailByPartName.testDetails, "datadetails")
+      let constValues = JSON.parse(oventestdeailsByID.data.crvtOvenTestDetailByPartName.testDetails, "datadetails")
       setOldData({ eName: constValues.name, running: constValues["7daysrunning"] })
       setHot({ newData: constValues.hot, oldData: constValues.hot })
       setCold({ newData: constValues.cold, oldData: constValues.cold })
@@ -123,8 +123,8 @@ export default function OvenTest({ details, componentName, id }) {
       let data = ""
       if (val.partName == componentName) {
         setToggleEnable(true)
-        if (val.ovenTestDetailsByPartName.nodes.length !== 0) {
-          data = JSON.parse(val.ovenTestDetailsByPartName.nodes[0].testDetails)
+        if (val.crvtOvenTestDetailsByPartName.nodes.length !== 0) {
+          data = JSON.parse(val.crvtOvenTestDetailsByPartName.nodes[0].testDetails)
         }
         setHot({ newData: data.hot, oldData: data.hot })
         setCold({ newData: data.cold, oldData: data.cold })
@@ -134,7 +134,7 @@ export default function OvenTest({ details, componentName, id }) {
         setSimultaneously({ newData: data.simultaneously, oldData: data.simultaneously })
         setSampleQty({ newData: data.sample_qty, oldData: data.sample_qty })
 
-        if (JSON.parse(val.ovenTestDetailsByPartName.nodes[0].status) === 1) {
+        if (JSON.parse(val.crvtOvenTestDetailsByPartName.nodes[0].status) === 1) {
           setToggleEnable(true)
           setEnabled(true)
         } else {

@@ -137,9 +137,9 @@ export default function PreTest({ id }) {
 
   useEffect(() => {
     if (preTestById.data) {
-      if (preTestById.data.preTestTableByComponentId) {
+      if (preTestById.data.crvtPreTestTableByComponentId) {
         setFlag(true);
-        let data = preTestById.data.preTestTableByComponentId;
+        let data = preTestById.data.crvtPreTestTableByComponentId;
         setCurrent({
           min: parseInt(JSON.parse(data.prCurrent).min),
           max: JSON.parse(data.prCurrent).max,
@@ -421,7 +421,7 @@ export default function PreTest({ id }) {
                     onChange={(e) =>
                       setInsulation((prev) => ({
                         ...prev,
-                        min:e.target.value,
+                        min: e.target.value,
                       }))
                     }
                     label="Insulation(min)"

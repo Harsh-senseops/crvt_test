@@ -85,8 +85,8 @@ export default function PreResult({ partCode }) {
 
     useEffect(() => {
         if (fatchPreData.data) {
-                if (fatchPreData.data.preResultTableByPartCode) {
-                    let data = fatchPreData.data.preResultTableByPartCode
+                if (fatchPreData.data.crvtPreResultTableByPartCode) {
+                    let data = fatchPreData.data.crvtPreResultTableByPartCode
                     let flag = true;
                     if (JSON.parse(data?.current) && flag) {
                         let len = Object.keys(JSON.parse(data?.current)).length;
@@ -113,8 +113,8 @@ export default function PreResult({ partCode }) {
                 }
         }
         if (plannerByName.data) {
-            if (plannerByName.data.allPreResultTables) {
-                let data = plannerByName.data.allPreResultTables
+            if (plannerByName.data.allCrvtPreResultTables) {
+                let data = plannerByName.data.allCrvtPreResultTables
                 setPledge(true)
             } else {
                 setPledge(false)
@@ -348,7 +348,7 @@ export default function PreResult({ partCode }) {
                                 {show ? "Cancel" : "Edit"}
                             </MDButton>
                             {show ? <MDButton color="info" style={{ marginLeft: "5px" }}
-                                onClick={saveValues}
+                            onClick={saveValues}
                             >
                                 Save
                             </MDButton> : null}

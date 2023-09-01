@@ -41,7 +41,7 @@ function Notification() {
       setShouldPause(false);
     }
     if (notificationsData.data) {
-      setData({columns,rows:notificationsData.data.allNotifications.nodes})
+      setData({columns,rows:notificationsData.data.allCrvtNotifications.nodes})
       setShouldPause(true);
     }
   }, [notificationsData.data]);

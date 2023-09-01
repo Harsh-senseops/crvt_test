@@ -104,7 +104,7 @@ export default function ShowerTesting({ details, componentName, id }) {
   useEffect(() => {
 
     if (showerdetailByID.data) {
-      let constValues = JSON.parse(showerdetailByID.data.showerTestDetailByPartName.testDetails)
+      let constValues = JSON.parse(showerdetailByID.data.crvtShowerTestDetailByPartName.testDetails)
       setOldData({ eName: constValues.name, running: constValues["7daysrunning"] })
 
       setFlow({ newData: constValues.flow, oldData: constValues.flow })
@@ -119,8 +119,8 @@ export default function ShowerTesting({ details, componentName, id }) {
       if (val.partName == componentName) {
 
         setToggleEnable(true)
-        if (val.showerTestDetailsByPartName.nodes.length !== 0) {
-          data = JSON.parse(val.showerTestDetailsByPartName.nodes[0].testDetails)
+        if (val.crvtShowerTestDetailsByPartName.nodes.length !== 0) {
+          data = JSON.parse(val.crvtShowerTestDetailsByPartName.nodes[0].testDetails)
         }
 
         setFlow({ newData: data.flow, oldData: data.flow })
@@ -130,7 +130,7 @@ export default function ShowerTesting({ details, componentName, id }) {
         setSimultaneously({ newData: data.simultaneously, oldData: data.simultaneously })
         setSampleQty({ newData: data.sample_qty, oldData: data.sample_qty })
 
-        if (JSON.parse(val.showerTestDetailsByPartName.nodes[0].status) === 1) {
+        if (JSON.parse(val.crvtShowerTestDetailsByPartName.nodes[0].status) === 1) {
           setToggleEnable(true)
           setEnabled(true)
         } else {

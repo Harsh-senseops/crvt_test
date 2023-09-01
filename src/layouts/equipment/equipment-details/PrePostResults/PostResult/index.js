@@ -87,8 +87,8 @@ export default function PostResult({ partCode }) {
 
     useEffect(() => {
         if (fatchPostData.data) {
-            if (fatchPostData.data.postResultTableByPartCode) {
-                let data = fatchPostData.data.postResultTableByPartCode
+            if (fatchPostData.data.crvtPostResultTableByPartCode) {
+                let data = fatchPostData.data.crvtPostResultTableByPartCode
                 // console.log(data,"DDD")
                 let flag = true;
                 if (JSON.parse(data?.ptCurrent) && flag) {

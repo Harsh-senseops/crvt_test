@@ -27,7 +27,6 @@ function checkElement(val, array) {
   if (pos === -1) {
     return false;
   }
-
   return true;
 }
 
@@ -151,8 +150,6 @@ const DropFileInput = (props) => {
   const fileRemove = () => {
     const updatedList = [];
     setFileList(updatedList);
-    // const {onFileChange} = props
-    // onFileChange(updatedList)
     props.onFileChange(updatedList);
   };
 

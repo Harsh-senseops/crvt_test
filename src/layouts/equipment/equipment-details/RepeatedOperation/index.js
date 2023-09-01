@@ -17,7 +17,7 @@ import { useSubscription, useMutation, useQuery } from 'urql'
 
 import Grid from "@mui/material/Grid";
 
-import { useSelector,useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { REPEATED_OPERATION_TEST_DETAILS } from 'apis/queries';
 import { SAVE_REPEATED_OPERATION_DETAILS } from 'apis/queries';
 import { ADD_REPEATED_OPERATION_STATUS } from 'apis/queries';
@@ -108,7 +108,7 @@ export default function RepeatedOperation({ details, componentName, id }) {
 
   useEffect(() => {
     if (repeatedOperationdeailsByID.data) {
-      let constValues = JSON.parse(repeatedOperationdeailsByID.data.repeatedOperationTestDetailByPartName.testDetails, "datadetails")
+      let constValues = JSON.parse(repeatedOperationdeailsByID.data.crvtRepeatedOperationTestDetailByPartName.testDetails, "datadetails")
       setOldData({ eName: constValues.name, running: constValues["7daysrunning"] })
 
       setTotalCycle({ newData: constValues.total_cycle, oldData: constValues.total_cycle })
@@ -126,8 +126,8 @@ export default function RepeatedOperation({ details, componentName, id }) {
       if (val.partName == componentName) {
 
         setToggleEnable(true)
-        if (val.repeatedOperationTestDetailsByPartName.nodes.length !== 0) {
-          data = JSON.parse(val.repeatedOperationTestDetailsByPartName.nodes[0].testDetails)
+        if (val.crvtRepeatedOperationTestDetailsByPartName.nodes.length !== 0) {
+          data = JSON.parse(val.crvtRepeatedOperationTestDetailsByPartName.nodes[0].testDetails)
         }
         setCycleTime({ newData: data.cycle_time, oldData: data.cycle_time })
         setTestDurationMax({ newData: data.test_duration_hr.max, oldData: data.test_duration_hr.max })
@@ -138,7 +138,7 @@ export default function RepeatedOperation({ details, componentName, id }) {
         setEquipmentRunning({ newData: data.equipment_running, oldData: data.equipment_running })
         setSampleQty({ newData: data.sample_qty, oldData: data.sample_qty })
 
-        if (JSON.parse(val.repeatedOperationTestDetailsByPartName.nodes[0].status) === 1) {
+        if (JSON.parse(val.crvtRepeatedOperationTestDetailsByPartName.nodes[0].status) === 1) {
           setToggleEnable(true)
           setEnabled(true)
 
@@ -185,7 +185,7 @@ export default function RepeatedOperation({ details, componentName, id }) {
             updateValues: handleCompare(obj)
           }
         ).then((res) => {
-          alertAndLoaders("UNSHOW_ALERT", dispatch, "Repeated Operation Test Details Are Saved... ", "success")       
+          alertAndLoaders("UNSHOW_ALERT", dispatch, "Repeated Operation Test Details Are Saved... ", "success")
         })
       }
     })
@@ -212,7 +212,7 @@ export default function RepeatedOperation({ details, componentName, id }) {
       partName: id,
       status: (!toggleEnable ? 1 : 0)
     }).then((res) => {
-      toggleEnable?alertAndLoaders("UNSHOW_ALERT", dispatch, "Repeated Operation Test Is Disabled...", "warning"):alertAndLoaders("UNSHOW_ALERT", dispatch, "Repeated Operation Test Is Enabled... ", "success")
+      toggleEnable ? alertAndLoaders("UNSHOW_ALERT", dispatch, "Repeated Operation Test Is Disabled...", "warning") : alertAndLoaders("UNSHOW_ALERT", dispatch, "Repeated Operation Test Is Enabled... ", "success")
     })
 
   }
@@ -221,20 +221,20 @@ export default function RepeatedOperation({ details, componentName, id }) {
     <>
       <Card style={{ marginTop: '2%' }}>
         <CardHeader
-        onClick={() => setExpanded(!expanded)}
-        sx={{
-          transition: "all 250ms",
-          ":hover": {
+          onClick={() => setExpanded(!expanded)}
+          sx={{
+            transition: "all 250ms",
+            ":hover": {
               boxShadow: 20,
               cursor: 'pointer',
               backgroundColor: "#384158 !important",
               borderRadius: "10px",
               transform: "scale(1.02)",
-          },
-      }}
+            },
+          }}
           action={
             <div>
-              {role.roles === 3 && <MuiToggleButton style={{ height: '30px', border: 'none' ,background:toggleEnable?"green":"red"}}
+              {role.roles === 3 && <MuiToggleButton style={{ height: '30px', border: 'none', background: toggleEnable ? "green" : "red" }}
                 value="check"
                 selected={!selected}
                 selectedcolor="#BCE2BE"
@@ -265,7 +265,6 @@ export default function RepeatedOperation({ details, componentName, id }) {
           <form onSubmit={(e) => handleFormSubmit(e)}>
             <CardContent>
               <MDBox pr={1}>
-
                 <Grid container spacing={3}>
                   <Grid item xs={12} sm={3}>
                     <TextField
@@ -280,7 +279,6 @@ export default function RepeatedOperation({ details, componentName, id }) {
                       }}
                       disabled={role.roles === 1 || role.roles === 2 || !enabled}
                       className={toggleEnable ? "" : classes.disabledTextField}
-
                       value={cycleTime.newData}
                       label="Cycle Time"
                     />

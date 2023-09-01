@@ -173,9 +173,9 @@ export default function PostTest({ id }) {
 
   useEffect(() => {
     if (postTestById.data) {
-      if (postTestById.data.postTestTableByComponentId) {
+      if (postTestById.data.crvtPostTestTableByComponentId) {
         setFlag(true);
-        let data = postTestById.data.postTestTableByComponentId;
+        let data = postTestById.data.crvtPostTestTableByComponentId;
         setPtCurrent({
           min: parseInt(JSON.parse(data.ptCurrent).min),
           max: JSON.parse(data.ptCurrent).max,

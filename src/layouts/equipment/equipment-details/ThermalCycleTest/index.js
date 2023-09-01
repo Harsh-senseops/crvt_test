@@ -95,7 +95,7 @@ export default function ThermalCycleTestDetail({ details, componentName, id }) {
   useEffect(() => {
 
     if (thermalCycledeailsByID.data) {
-      let constValues = JSON.parse(thermalCycledeailsByID.data.thermalCycleTestDetailByPartName.testDetails, "datadetails")
+      let constValues = JSON.parse(thermalCycledeailsByID.data.crvtThermalCycleTestDetailByPartName.testDetails, "datadetails")
       setOldData({ eName: constValues.name, running: constValues["7daysrunning"] })
       setTestDurationMin({ newData: constValues.test_duration_hr.min, oldData: constValues.test_duration_hr.min })
       setTestDurationMax({ newData: constValues.test_duration_hr.max, oldData: constValues.test_duration_hr.max })
@@ -109,8 +109,8 @@ export default function ThermalCycleTestDetail({ details, componentName, id }) {
       if (val.partName == componentName) {
 
         setToggleEnable(true)
-        if (val.thermalCycleTestDetailsByPartName.nodes.length !== 0) {
-          data = JSON.parse(val.thermalCycleTestDetailsByPartName.nodes[0].testDetails)
+        if (val.crvtThermalCycleTestDetailsByPartName.nodes.length !== 0) {
+          data = JSON.parse(val.crvtThermalCycleTestDetailsByPartName.nodes[0].testDetails)
         }
         setSampleQty({ newData: data.sample_qty, oldData: data.sample_qty })
         setTestDurationMax({ newData: data.test_duration_hr.max, oldData: data.test_duration_hr.max })
@@ -118,7 +118,7 @@ export default function ThermalCycleTestDetail({ details, componentName, id }) {
         setEquipmentRunning({ newData: data.equipment_running, oldData: data.equipment_running })
         setSimultaneously({ newData: data.simultaneously, oldData: data.simultaneously })
 
-        if (JSON.parse(val.thermalCycleTestDetailsByPartName.nodes[0].status) === 1) {
+        if (JSON.parse(val.crvtThermalCycleTestDetailsByPartName.nodes[0].status) === 1) {
           setToggleEnable(true)
           setEnabled(true)
         } else {
