@@ -124,17 +124,17 @@ const ReusabaleMonthlyPlannerTests = ({
   );
 
   useEffect(() => {
-    if (partDetails.data?.partCodeDetailByPartCode === null && partCode.length !== 0) {
+    if (partDetails.data?.crvtPartCodeDetailByPartCode === null && partCode.length !== 0) {
       alertAndLoaders("UNSHOW_ALERT", dispatch, `No Parts found in ${testName}.`, "warning");
       setPartCode("");
     }
-    if (partDetails.data?.partCodeDetailByPartCode) {
+    if (partDetails.data?.crvtPartCodeDetailByPartCode) {
       const parseVendorsDetails = JSON.parse(
-        partDetails.data.partCodeDetailByPartCode.vendorDetails
+        partDetails.data.crvtPartCodeDetailByPartCode.vendorDetails
       );
       setOption(parseVendorsDetails);
-      const partName = partDetails.data.partCodeDetailByPartCode.partName;
-      const partCode = partDetails.data.partCodeDetailByPartCode.partCode;
+      const partName = partDetails.data.crvtPartCodeDetailByPartCode.partName;
+      const partCode = partDetails.data.crvtPartCodeDetailByPartCode.partCode;
       const index = monthlyPlannerStore.monthlyDetails[testName].findIndex(
         (obj) => obj.partName === partName
       );
@@ -193,31 +193,31 @@ const ReusabaleMonthlyPlannerTests = ({
       testNameYp.data[allTestNameYearlyPlanner]?.nodes.forEach((val, i) => {
         if (testName === "DUST")
           isSevenDaysRunning = JSON.parse(
-            val.componentDetailByComponentId.equipmentRunningDetailByPartId.dustErt
+            val.crvtComponentDetailByComponentId.crvtEquipmentRunningDetailByPartId.dustErt
           )["7daysrunning"];
         if (testName === "OVEN")
           isSevenDaysRunning = JSON.parse(
-            val.componentDetailByComponentId.equipmentRunningDetailByPartId.ovenErt
+            val.crvtComponentDetailByComponentId.crvtEquipmentRunningDetailByPartId.ovenErt
           )["7daysrunning"];
         if (testName === "RO")
           isSevenDaysRunning = JSON.parse(
-            val.componentDetailByComponentId.equipmentRunningDetailByPartId.repeatedOperationErt
+            val.crvtComponentDetailByComponentId.crvtEquipmentRunningDetailByPartId.repeatedOperationErt
           )["7daysrunning"];
         if (testName === "SHOWER")
           isSevenDaysRunning = JSON.parse(
-            val.componentDetailByComponentId.equipmentRunningDetailByPartId.showerErt
+            val.crvtComponentDetailByComponentId.crvtEquipmentRunningDetailByPartId.showerErt
           )["7daysrunning"];
         if (testName === "THERMAL CYCLE")
           isSevenDaysRunning = JSON.parse(
-            val.componentDetailByComponentId.equipmentRunningDetailByPartId.thermalCycleErt
+            val.crvtComponentDetailByComponentId.crvtEquipmentRunningDetailByPartId.thermalCycleErt
           )["7daysrunning"];
         if (testName === "THERMAL SHOCK")
           isSevenDaysRunning = JSON.parse(
-            val.componentDetailByComponentId.equipmentRunningDetailByPartId.thermalShockErt
+            val.crvtComponentDetailByComponentId.crvtEquipmentRunningDetailByPartId.thermalShockErt
           )["7daysrunning"];
         if (testName === "VIBRATION")
           isSevenDaysRunning = JSON.parse(
-            val.componentDetailByComponentId.equipmentRunningDetailByPartId.vibrationErt
+            val.crvtComponentDetailByComponentId.crvtEquipmentRunningDetailByPartId.vibrationErt
           )["7daysrunning"];
         JSON.parse(val.testDetails).forEach((val2) => {
           const [month, year] = val2.startDate.split("-");
@@ -226,7 +226,7 @@ const ReusabaleMonthlyPlannerTests = ({
             for (let j = 0; j < val.samples; j++) {
               tempArray[i][j] = {
                 partCode: "",
-                partName: val.componentDetailByComponentId.partName,
+                partName: val.crvtComponentDetailByComponentId.partName,
                 vendorName: "",
                 status: "",
                 sevenDaysRunning: isSevenDaysRunning === 0 ? false : true,

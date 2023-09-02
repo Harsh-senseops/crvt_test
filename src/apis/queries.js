@@ -5,9 +5,9 @@ const AUTH = `query Authenticate($name:String!,$password:String!) {
 
 const ADD_USER = `mutation addUser($eCode:String!,$name:String!,$pass:String!,$role:Int!) {
 createCrvtEmployeeDetail(
-  input: {employeeDetail: {employeeCode: $eCode, name: $name, password: $pass, role: $role}}
+  input: {crvtEmployeeDetail: {employeeCode: $eCode, name: $name, password: $pass, role: $role}}
 ) {
-  employeeDetail {
+  crvtEmployeeDetail {
     employeeCode
   }
 }
@@ -38,7 +38,7 @@ updateCrvtEmployeeDetailByEmployeeCode(
 `;
 const DELETE_USER = `mutation deleteEmployeeDetailByEmployeeCode($empCode:String!) {
 deleteCrvtEmployeeDetailByEmployeeCode(input: {employeeCode: $empCode}) {
-  deletedEmployeeDetailId
+  deletedCrvtEmployeeDetailId
 }
 }
 `;
@@ -768,95 +768,95 @@ allCrvtComponentDetails {
 }`;
 
 const ALL_DUST_YEARLY_PLANNER_BY_ID = `
-allDustYearlyPlanners(filter: {componentId: {equalTo: $id}}) {
+allCrvtDustYearlyPlanners(filter: {componentId: {equalTo: $id}}) {
   nodes {
     id
     testDetails
     totalSamplesTested
     samples
     componentId
-    componentDetailByComponentId {
+    crvtComponentDetailByComponentId {
       partName
     }
   }
 }
 `;
 const ALL_OVEN_YEARLY_PLANNER_BY_ID = `
-allOvenYearlyPlanners(filter: {componentId: {equalTo: $id}}) {
+allCrvtOvenYearlyPlanners(filter: {componentId: {equalTo: $id}}) {
     nodes {
       id
       testDetails
       totalSamplesTested
       samples
       componentId
-      componentDetailByComponentId {
+      crvtComponentDetailByComponentId {
         partName
       } 
   }
 }
 `;
 const ALL_RO_YEARLY_PLANNER_BY_ID = `
-allRoYearlyPlanners(filter: {componentId: {equalTo: $id}}) {
+allCrvtRoYearlyPlanners(filter: {componentId: {equalTo: $id}}) {
     nodes {
       id
       testDetails
       totalSamplesTested
       samples
       componentId
-      componentDetailByComponentId {
+      crvtComponentDetailByComponentId {
         partName
       }
     }
 }
 `;
 const ALL_SHOWER_YEARLY_PLANNER_BY_ID = `
-allShowerYearlyPlanners(filter: {componentId: {equalTo: $id}}) {
+allCrvtShowerYearlyPlanners(filter: {componentId: {equalTo: $id}}) {
     nodes {
       id
       testDetails
       totalSamplesTested
       samples
       componentId
-      componentDetailByComponentId {
+      crvtComponentDetailByComponentId {
         partName
       }
   }
 }`;
 const ALL_THERMAL_CYCLE_YEARLY_PLANNER_BY_ID = `
-allThermalCycleYearlyPlanners(filter: {componentId: {equalTo: $id}}) {
+allCrvtThermalCycleYearlyPlanners(filter: {componentId: {equalTo: $id}}) {
     nodes {
       id
       testDetails
       totalSamplesTested
       samples
       componentId
-      componentDetailByComponentId {
+      crvtComponentDetailByComponentId {
         partName
       }
     }
 }`;
 const ALL_THERMAL_SHOCK_YEARLY_PLANNER_BY_ID = `
-allThermalShockYearlyPalnners(filter: {componentId: {equalTo: $id}}) {
+allCrvtThermalShockYearlyPalnners(filter: {componentId: {equalTo: $id}}) {
     nodes {
       id
       testDetails
       totalSamplesTested
       samples
       componentId
-      componentDetailByComponentId {
+      crvtComponentDetailByComponentId {
         partName
       }
     }
 }`;
 const ALL_VIBRATION_YEARLY_PLANNER_BY_ID = `
-allVibrationYearlyPlanners(filter: {componentId: {equalTo: $id}}) {
+allCrvtVibrationYearlyPlanners(filter: {componentId: {equalTo: $id}}) {
     nodes {
       id
       testDetails
       totalSamplesTested
       samples
       componentId
-      componentDetailByComponentId {
+      crvtComponentDetailByComponentId {
         partName
       }
     }

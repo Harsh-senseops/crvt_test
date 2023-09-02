@@ -154,7 +154,7 @@ const AdminTable = () => {
 
     if (res.data) {
       const sortedData = sortData(
-        res.data.allEmployeeDetails.nodes,
+        res.data.allCrvtEmployeeDetails.nodes,
         state.sortDirection,
         state.sortBy,
         searchTerm
