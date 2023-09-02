@@ -92,7 +92,7 @@ function ComponentsTable() {
                 />
                 <Divider variant="middle" />
                 <PrePostTest details={componentDetails} id={partId}/>
-                <Dust  componentName={formtitle} details={componentDetails}  />
+                <Dust componentName={formtitle} details={componentDetails}  id={partId}  />
                 <OvenTest componentName={formtitle} details={componentDetails} id={partId} />
                 <RepeatedOperation componentName={formtitle} details={componentDetails} id={partId} />
                 <ShowerTesting componentName={formtitle} details={componentDetails} id={partId} />

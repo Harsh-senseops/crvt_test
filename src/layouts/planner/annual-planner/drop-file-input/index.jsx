@@ -46,17 +46,18 @@ const DropFileInput = (props) => {
   const store = useSelector((store) => {
     return store.userRoles
   })
-  const [createYearlyPlanner, rexYearlyPlanner] = useQuery({
-    query: MAKE_YEARLY_PLANNER,
-    variables: { makePlanner },
-    // pause:shouldPause
-  });
+  // const [createYearlyPlanner, rexYearlyPlanner] = useQuery({
+  //   query: MAKE_YEARLY_PLANNER,
+  //   variables: { makePlanner },
+  //   // pause:shouldPause
+  // });
   const dispatch = useDispatch();
   // console.log(createYearlyPlanner);
   const [showDragAndDrop, setDragAndDrop] = useState(true);
 
   const [createVendorRes, createVendor] = useMutation(CREATE_VENDORS);
   const [createYearlyHistoryRes, createHistory] = useMutation(ADD_YEARLY_HISTORY);
+  const [createYearlyPlannerRed, createYearlyPlanner] = useMutation(MAKE_YEARLY_PLANNER);
 
   const [partCodeDetails, createPartCodeDetails] = useMutation(PART_CODE_DETAILS);
 
@@ -188,7 +189,28 @@ const DropFileInput = (props) => {
       )
     }, 40);
 
-    rexYearlyPlanner()
+    createYearlyPlanner().then((res)=>{
+      masterPartDetails.map((val) => {
+        val.partCode.map((val1) => {
+          createPartCodeDetails({
+            he6t: val1.details.HE6T,
+            hhhd: val1.details.HHHD,
+            hhhg: val1.details.HHHG,
+            hhhu: val1.details.HHHU,
+            hm4n: val1.details.HM4N,
+            hm5v: val1.details.HM5V,
+            hm6c: val1.details.HM6C,
+            partCode: val1.partCode,
+            partName: val.partName,
+            count: val.partCount,
+            vendorDetails: JSON.stringify(val1.details.vendorsInfo),
+          }).then((res) => {
+            dispatch(yearlyPlanner.setShouldPause(false))
+            console.log(res)
+          });
+        });
+      });
+    })
 
     createHistory({
       fileName,
@@ -197,25 +219,27 @@ const DropFileInput = (props) => {
       console.log(result, "result1234")
     })
 
-    masterPartDetails.map((val) => {
-      val.partCode.map((val1) => {
-        createPartCodeDetails({
-          he6t: val1.details.HE6T,
-          hhhd: val1.details.HHHD,
-          hhhg: val1.details.HHHG,
-          hhhu: val1.details.HHHU,
-          hm4n: val1.details.HM4N,
-          hm5v: val1.details.HM5V,
-          hm6c: val1.details.HM6C,
-          partCode: val1.partCode,
-          partName: val.partName,
-          count: val.partCount,
-          vendorDetails: JSON.stringify(val1.details.vendorsInfo),
-        }).then((res) => {
-          dispatch(yearlyPlanner.setShouldPause(false))
-        });
-      });
-    });
+    console.log(masterPartDetails)
+    // masterPartDetails.map((val) => {
+    //   val.partCode.map((val1) => {
+    //     createPartCodeDetails({
+    //       he6t: val1.details.HE6T,
+    //       hhhd: val1.details.HHHD,
+    //       hhhg: val1.details.HHHG,
+    //       hhhu: val1.details.HHHU,
+    //       hm4n: val1.details.HM4N,
+    //       hm5v: val1.details.HM5V,
+    //       hm6c: val1.details.HM6C,
+    //       partCode: val1.partCode,
+    //       partName: val.partName,
+    //       count: val.partCount,
+    //       vendorDetails: JSON.stringify(val1.details.vendorsInfo),
+    //     }).then((res) => {
+    //       dispatch(yearlyPlanner.setShouldPause(false))
+    //       console.log(res)
+    //     });
+    //   });
+    // });
   };
 
   return (
