@@ -1078,7 +1078,7 @@ crvtPostResultTableByPartCode(partCode: $partCode) {
   ptSoundLvl
 }
 }`;
-const PRE_TABLE_DATA = `query allPreResultTables {
+const PRE_TABLE_DATA = `subscription allPreResultTables {
 allCrvtPreResultTables {
   nodes {
     current
@@ -1105,7 +1105,7 @@ crvtPostResultTableByPartCode(partCode: $partCode) {
   diffSound
 }
 }`;
-const FATCH_DIFFERENCE = `query MyQuery {
+const FATCH_DIFFERENCE = `subscription MyQuery {
 allCrvtPostResultTables {
   nodes {
     diffFrequency

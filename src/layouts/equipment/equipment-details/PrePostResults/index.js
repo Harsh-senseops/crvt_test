@@ -98,7 +98,7 @@ export default function PrePostResult({ }) {
         query: ALL_COMPONENT,
         pause: shouldPause
     })
-    const [preTableData, rexPreTableData] = useQuery({
+    const [preTableData, rexPreTableData] = useSubscription({
         query: PRE_TABLE_DATA
     })
     const dispatch = useDispatch();
@@ -107,7 +107,7 @@ export default function PrePostResult({ }) {
         query: FATCH_DIFF_RESULTS,
         variables: { partCode: partCode }
     })
-    const [fatchDifference, rexFatchDifference] = useQuery({
+    const [fatchDifference, rexFatchDifference] = useSubscription({
         query: FATCH_DIFFERENCE
     })
 
