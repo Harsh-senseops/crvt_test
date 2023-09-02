@@ -89,7 +89,7 @@ export default function PostResult({ partCode }) {
         if (fatchPostData.data) {
             if (fatchPostData.data.crvtPostResultTableByPartCode) {
                 let data = fatchPostData.data.crvtPostResultTableByPartCode
-                // console.log(data,"DDD")
+                console.log(data,"DDD")
                 let flag = true;
                 if (JSON.parse(data?.ptCurrent) && flag) {
                     let len = Object.keys(JSON.parse(data?.ptCurrent)).length;
