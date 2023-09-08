@@ -218,7 +218,7 @@ export default function ThermalShockChamber({ details, componentName, id }) {
 
   return (
     <>
-      <Card style={{ marginTop: '2%', marginBottom: '2%' }}>
+      <Card style={{ marginTop: '2%' }}>
         <CardHeader
         onClick={() => setExpanded(!expanded)}
         sx={{

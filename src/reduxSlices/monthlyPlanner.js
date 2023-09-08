@@ -39,6 +39,13 @@ const initialState = {
     VIBRATION: [],
   },
   isExpanded: {
+    "DUST":false,
+    "OVEN":false,
+    "RO":false,
+    "SHOWER":false,
+    "THERMAL CYCLE":false,
+    "THERMAL SHOCK":false,
+    "VIBRATION":false
   },
 };
 
@@ -67,6 +74,7 @@ export const monthlyPlanner = createSlice({
     },
     setIsExpanded: (state, action) => {
       let keys = Object.keys(state.isExpanded);
+      // console.log(keys)
       let payload = action.payload;
       let keysIndex = keys.indexOf(payload);
       if (keysIndex === -1) {

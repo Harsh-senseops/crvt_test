@@ -273,13 +273,13 @@ const routes = [
         component: <ProtectedRoute Component={AdminRoles}/>,
 
       },
-      {
-        name: "History",
-        key: "admin-history",
-        route: "/admin/admin-history",
-        component: <ProtectedRoute Component={AdminHistory}/>,
+      // {
+      //   name: "History",
+      //   key: "admin-history",
+      //   route: "/admin/admin-history",
+      //   component: <ProtectedRoute Component={AdminHistory}/>,
 
-      },
+      // },
     ],
   },
   // { type: "title", title: "Pages", key: "title-pages" },

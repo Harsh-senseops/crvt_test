@@ -5,3 +5,7 @@
     /* Remove bottom border from the last row in the table */
     border-bottom: none !important;
 }
+
+.MuiTablePagination-toolbar{
+    color: white;
+}
