@@ -52,13 +52,14 @@ import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import { useSelector, useDispatch } from "react-redux";
-import { NOTIFICATION_MESSAGE_BY_DATE } from "apis/queries";
-import { useQuery } from "urql";
+import { NOTIFICATION_MESSAGE_BY_DATE,ALL_ACTIVE_ALERTS } from "apis/queries";
+import { useQuery,useSubscription } from "urql";
 import {
   setShouldPauseNotification,
   setCounter,
   addNotifications,
 } from "reduxSlices/notifications";
+import { setAlerts,setAlertCounter } from "reduxSlices/machineAlerts";
 // import machineAlerts from "reduxSlices/machineAlerts";
 import OnHoverMenu from "components/PopOver";
 // import { Link } from "react-router-dom";
@@ -92,7 +93,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
   const popoverAnchor = useRef(null);
   const [noOfNotification, setNoOfNotification] = useState(0);
   const [notificationsState, setNotification] = useState([]);
-  // const [getAllNotifica]
+  const [allActiveAlerts,rexAllActiveAlerts] = useSubscription({query:ALL_ACTIVE_ALERTS});
   const nStore = useSelector((store) => {
     return store.notifications;
   });
@@ -106,31 +107,12 @@ function DashboardNavbar({ absolute, light, isMini }) {
   const day = String(date.getDate()).padStart(2, "0");
 
   const formattedDate = `${year}-${month}-${day} 0:0:0.0000`;
-  const [notificationMsgByDate, rexNMBD] = useQuery({
+  const [notificationMsgByDate, rexNMBD] = useSubscription({
     query: NOTIFICATION_MESSAGE_BY_DATE,
     variables: { dateTime: new Date(formattedDate) },
-    pause: nStore.shouldPause,
   });
-
-  const popoverEnter = ({ currentTarget }) => {
-    setOpenedPopover(true);
-  };
-
-  const popoverLeave = ({ currentTarget }) => {
-    setOpenedPopover(false);
-  };
-
-  const popoverEnterAlert = ({ currentTarget }) => {
-    // alert("amig")
-    setOpenAlertPopover(true);
-  };
-
-  const popoverLeaveAlert = ({ currentTarget }) => {
-    setOpenAlertPopover(false);
-  };
-
   const classes = useStyles();
-
+  
   useEffect(() => {
     // Setting the navbar type
     if (fixedNavbar) {
@@ -139,23 +121,27 @@ function DashboardNavbar({ absolute, light, isMini }) {
       setNavbarType("static");
     }
 
-    // A function that sets the transparent state of the navbar.
     function handleTransparentNavbar() {
       setTransparentNavbar(dispatch, (fixedNavbar && window.scrollY === 0) || !fixedNavbar);
     }
+    window.addEventListener("scroll", handleTransparentNavbar);
 
-    /** 
-     The event listener that's calling the handleTransparentNavbar function when 
-     scrolling the window.
-    */
-    // window.addEventListener("scroll", handleTransparentNavbar);
-
-    // Call the handleTransparentNavbar function to set the state with the initial value.
     handleTransparentNavbar();
 
-    // Remove event listener on cleanup
     return () => window.removeEventListener("scroll", handleTransparentNavbar);
   }, [dispatch, fixedNavbar]);
+
+  useEffect(()=>{
+    if(allActiveAlerts.data){
+      let tempArr = []
+       allActiveAlerts.data.allCrvtAlerts.nodes.map((val)=>{
+        tempArr.push(val.crvtTestingEquipmentByEquipmentName.equipmentName+" Stopped")
+        // dispatchR(setAlerts(val.crvtTestingEquipmentByEquipmentName.equipmentName+" Stopped"))
+      })
+      dispatchR(setAlerts(tempArr))
+      dispatchR(setAlertCounter(allActiveAlerts.data.allCrvtAlerts.nodes.length))
+    }
+  },[allActiveAlerts.data])
 
   useEffect(() => {
     if (notificationsState.length === 0) {
@@ -259,6 +245,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
                 iconsStyle={iconsStyle}
                 icon="priority_high"
                 link="/alertandnotification/alert"
+                title = "Alerts"
               />
               <OnHoverMenu
                 messages={nStore.notifications}
@@ -267,6 +254,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
                 iconsStyle={iconsStyle}
                 icon="notifications"
                 link="/alertandnotification/notification"
+                title = "Notifications"
               />
             </MDBox>
           </MDBox>

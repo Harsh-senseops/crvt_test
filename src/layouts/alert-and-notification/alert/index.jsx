@@ -7,7 +7,7 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import Grid from "@mui/material/Grid";
 import { useQuery } from "urql";
-import { ALL_ALERTS,GET_ALL_TIMERS,START_TIMER,UPDATE_ALERT_BY_ID,UPDATE_ALERT_STATUS_BY_ID,STOP_TIMER} from "apis/queries";
+import { ALL_ALERTS,GET_ALL_TIMERS,START_TIMER,UPDATE_ALERT_BY_ID,UPDATE_ALERT_STATUS_BY_ID,STOP_TIMER,UPDATE_DASHBOARD_DETAILS} from "apis/queries";
 import MDTable from "components/MDTable";
 import MDHoverSearch from "components/MDHoverSearch";
 import { FormControl, FormControlLabel, Radio, DialogActions } from "@mui/material";
@@ -61,6 +61,7 @@ function Alert() {
   const [resStartTimer, startTimer] = useMutation(START_TIMER);
   const [resUpdateResultsById,updateResultsById] = useMutation(UPDATE_ALERT_BY_ID);
   const [resUpdateAlertStatusById,updateAlertStatusById] = useMutation(UPDATE_ALERT_STATUS_BY_ID );
+  const [updateDashBoardDetailsRes,updateDashBoardDetails] = useMutation(UPDATE_DASHBOARD_DETAILS );
   const [resStopTimer,stopTimer] = useMutation(STOP_TIMER) 
   const [actionTakenValue, setActionTakenValue] = useState("");
   const [timer, setTimer] = useState(0);
@@ -75,8 +76,8 @@ function Alert() {
       setTableData([]);
       allAlert.data.allCrvtAlerts.nodes.map((val) => {
         if(val.alertStatus){
-          dispatch(alerts.setAlerts(val.crvtTestingEquipmentByEquipmentName.equipmentName + "Stopped Running"))
-          dispatch(alerts.setCounter(+1))
+          // dispatch(alerts.setAlerts(val.crvtTestingEquipmentByEquipmentName.equipmentName + "Stopped Running"))
+          // dispatch(alerts.setAlertCounter(+1))
         }
         setTableData((prev) => [
           ...prev,
@@ -178,6 +179,17 @@ function Alert() {
         console.log(res)
         if(res.data){
           alertAndLoaders("UNSHOW_ALERT", dispatch, `Successfully updated`, "success");
+          updateDashBoardDetails({
+            rowName:"test_completed",
+            canIncrement:true,
+          }).then((res)=>{
+            if(res.data){
+              updateDashBoardDetails({
+                rowName:"test_in_progress",
+                canIncrement:false,
+              })
+            }
+          })
         }
       })
       setRemark(null);

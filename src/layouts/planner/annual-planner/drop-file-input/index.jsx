@@ -11,7 +11,7 @@ import masterPartDetailsMaker from "utils/masterPartListCalculation";
 import ImageConfig from "../config";
 import uploadImg from "../../../../assets/cloud-upload-regular-240.png";
 import { useQuery } from "urql";
-import { MAKE_YEARLY_PLANNER, PART_CODE_DETAILS, ADD_YEARLY_HISTORY } from "apis/queries";
+import { MAKE_YEARLY_PLANNER, PART_CODE_DETAILS, ADD_YEARLY_HISTORY,ADD_NOTIFICATION } from "apis/queries";
 import * as yearlyPlanner from "../../../../reduxSlices/yearlyPlanner";
 import { useDispatch, useSelector } from "react-redux";
 import alertAndLoaders from "utils/alertAndLoaders";
@@ -46,16 +46,11 @@ const DropFileInput = (props) => {
   const store = useSelector((store) => {
     return store.userRoles
   })
-  // const [createYearlyPlanner, rexYearlyPlanner] = useQuery({
-  //   query: MAKE_YEARLY_PLANNER,
-  //   variables: { makePlanner },
-  //   // pause:shouldPause
-  // });
   const dispatch = useDispatch();
-  // console.log(createYearlyPlanner);
   const [showDragAndDrop, setDragAndDrop] = useState(true);
 
   const [createVendorRes, createVendor] = useMutation(CREATE_VENDORS);
+  const [addNotificationRes, createNotification] = useMutation(ADD_NOTIFICATION);
   const [createYearlyHistoryRes, createHistory] = useMutation(ADD_YEARLY_HISTORY);
   const [createYearlyPlannerRed, createYearlyPlanner] = useMutation(MAKE_YEARLY_PLANNER);
 
@@ -210,6 +205,12 @@ const DropFileInput = (props) => {
           });
         });
       });
+      createNotification({
+        empCode:store.empCode,
+        message:"New Planner Created",
+        notificationFrom:"Planner",
+        description:`New Planner was created by the user ${store.empCode}`
+      })
     })
 
     createHistory({
@@ -217,29 +218,7 @@ const DropFileInput = (props) => {
       empCode: store.empCode
     }).then((result) => {
       console.log(result, "result1234")
-    })
-
-    console.log(masterPartDetails)
-    // masterPartDetails.map((val) => {
-    //   val.partCode.map((val1) => {
-    //     createPartCodeDetails({
-    //       he6t: val1.details.HE6T,
-    //       hhhd: val1.details.HHHD,
-    //       hhhg: val1.details.HHHG,
-    //       hhhu: val1.details.HHHU,
-    //       hm4n: val1.details.HM4N,
-    //       hm5v: val1.details.HM5V,
-    //       hm6c: val1.details.HM6C,
-    //       partCode: val1.partCode,
-    //       partName: val.partName,
-    //       count: val.partCount,
-    //       vendorDetails: JSON.stringify(val1.details.vendorsInfo),
-    //     }).then((res) => {
-    //       dispatch(yearlyPlanner.setShouldPause(false))
-    //       console.log(res)
-    //     });
-    //   });
-    // });
+    });
   };
 
   return (

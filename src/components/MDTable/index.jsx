@@ -188,7 +188,7 @@ function MDTable({ data, searchTerm, onTouch }) {
                 >
                   {row &&
                     Object.entries(row).map(([key, value]) => {
-                      if (key === "ignore") return;
+                      if (key === "ignore" || key === "__typename") return;
                       return (
                         <TableCell align={row.aign ? row.align : "left"} component="th" scope="row">
                           <MDTypography variant="p" fontWeight="light" style={{ color: "#fff" }}>

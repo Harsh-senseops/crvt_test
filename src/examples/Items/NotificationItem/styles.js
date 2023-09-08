@@ -25,9 +25,10 @@ function menuItem(theme) {
 
     "&:hover": {
       backgroundColor: light.main,
+      color:"white",
 
       "& *": {
-        color: dark.main,
+        color: "white",
       },
     },
   };

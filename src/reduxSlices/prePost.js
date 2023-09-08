@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
-    noOFSamples: []
+    noOFSamples: [],
+    index:null,
 }
 
 export const prePost = createSlice({
@@ -15,9 +16,12 @@ export const prePost = createSlice({
               }
             state.noOFSamples = tempArray
         },
+        setPrePostIndex:(state,actions)=>{
+            state.index = actions.payload;
+        }
     }
 });
 
-export const { setNoOfSamples } = prePost.actions;
+export const { setNoOfSamples,setPrePostIndex } = prePost.actions;
 
 export default prePost.reducer;

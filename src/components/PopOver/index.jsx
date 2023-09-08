@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function OnHoverMenu({ messages, iconRef, iconsStyle, badgeValue, icon, link }) {
+export default function OnHoverMenu({ messages, iconRef, iconsStyle, badgeValue, icon, link, title }) {
   const [openedPopover, setOpenedPopover] = useState(false);
   const popoverEnter = ({ currentTarget }) => {
     setOpenedPopover(true);
@@ -58,7 +58,7 @@ export default function OnHoverMenu({ messages, iconRef, iconsStyle, badgeValue,
         onMouseLeave={popoverLeave}
       >
         <MDBadge badgeContent={badgeValue} color="error" size="xs" circular>
-          <Icon sx={iconsStyle}>{icon}</Icon>
+          <Icon sx={iconsStyle} color="error">{icon}</Icon>
         </MDBadge>
       </IconButton>
       <Popover
@@ -91,7 +91,7 @@ export default function OnHoverMenu({ messages, iconRef, iconsStyle, badgeValue,
               if (val) {
                 return (
                   <Link to={link}>
-                    <NotificationItem icon={<Icon>campaign</Icon>} title={val} />
+                    <NotificationItem icon={<Icon color="error">campaign</Icon>} title={val} />
                   </Link>
                 );
               }
@@ -127,8 +127,8 @@ export default function OnHoverMenu({ messages, iconRef, iconsStyle, badgeValue,
               ></div>
             </div>
           )}
-          <Link to="/alertandnotification/notification">
-            <NotificationItem icon={<Icon>campaign</Icon>} title="Go to all Notifications" />
+          <Link to={link}>
+            <NotificationItem icon={<Icon color="error">campaign</Icon>} title={`Go to all ${title}`} />
           </Link>
         </Box>
       </Popover>
