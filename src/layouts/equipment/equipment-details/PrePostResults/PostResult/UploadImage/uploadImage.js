@@ -96,10 +96,7 @@ export default function UploadImage({ partCode }) {
     let tempArray = [...selectedImage];
     tempArray.splice(index, 1);
     setSelectedImage(tempArray);
-    // console.log(index, "RE")
   };
-  console.log(typeof selectedImage[0], typeof selectedImage[1], selectedImage);
-  // console.log(selectedImage[0]&&selectedImage[0].split(',', 2));
   return (
     <>
       <Box>
@@ -162,9 +159,7 @@ export default function UploadImage({ partCode }) {
                             position: "relative",
                             right: "-160px",
                             bottom: "-32px",
-                          }}
-                          onClick={() => removeImage(1)}
-                        />
+                          }}                        />
                       <img
                         alt="not found"
                         style={{ marginTop: "12px", width: "100%", height: "60%" }}
@@ -220,7 +215,6 @@ export default function UploadImage({ partCode }) {
                             right: "-160px",
                             bottom: "-32px",
                           }}
-                          onClick={() => removeImage(1)}
                         />
                       <img
                         alt="not found"
@@ -277,7 +271,7 @@ export default function UploadImage({ partCode }) {
                             right: "-160px",
                             bottom: "-32px",
                           }}
-                          onClick={() => removeImage(1)}
+                         
                         />
                       <img
                         alt="not found"
@@ -304,11 +298,6 @@ export default function UploadImage({ partCode }) {
                         />
                       </>
                     )}
-                    {/* <img
-                                                alt="not found"
-                                                style={{ marginTop: "12px", width: "100%", height: "60%" }}
-                                                src={typeof(selectedImage[2]) === "string" ? "data:image/png;base64,"+selectedImage[0] : URL.createObjectURL(selectedImage[2])}
-                                            /> */}
                   </div>
                 )}
               </div>

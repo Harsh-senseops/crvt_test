@@ -54,12 +54,13 @@ import {
   UPDATE_THERMAL_SHOCK_MONTHLY_PLANNER_BY_PART_CODE,
   UPDATE_VIBRATION_MONTHLY_PLANNER_BY_PART_CODE,
   UPDATE_UNPLANNED_LIST,
+  UPDATE_DASHBOARD_DETAILS
 } from "apis/queries";
 import CircularProgress from "@mui/material/CircularProgress";
 import Collapse from "@mui/material/Collapse";
 import alertAndLoaders from "utils/alertAndLoaders";
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
@@ -130,6 +131,8 @@ const monthNames = [
 // function getMonth(testDuration,sevenDaysRunning,) {
 // }
 
+const ROW_NAME = "unplanned_test"
+
 function UnplannedListUpload() {
   const [show, setShow] = useState(false);
   const [dateValue, setDateValue] = useState(new Date());
@@ -166,7 +169,7 @@ function UnplannedListUpload() {
   const monthlyPlannerStore = useSelector((store) => store.monthlyPlanner);
   const [resMutateMonthlyPlanner, mutateMonthlyPlanner] = useMutation(mutate);
   const [resUpdateMonthlyPlanner, updateMonthlyPlanner] = useMutation(UPDATE_UNPLANNED_LIST);
-
+  const [updateDashBoardDetailsRes, updateDashBoardDetails] = useMutation(UPDATE_DASHBOARD_DETAILS);
   const dispatch = useDispatch();
   let [componentList, setComponentList] = useState([]);
 
@@ -191,14 +194,8 @@ function UnplannedListUpload() {
         let chamberIndex = names.findIndex((val) =>
           key.toLowerCase().includes(val.name.toLowerCase().replace(/\s/g, ""))
         );
+        console.log(data[key])
         if (data[key].nodes.length === 0) {
-          // setIsDisabled(true);
-          // alertAndLoaders(
-          //   "UNSHOW_ALERT",
-          //   dispatch,
-          //   `The specified chamber is not present. ${names[chamberIndex].name}`,
-          //   "warning"
-          // );
           setDetails((prev) => [
             ...prev,
             {
@@ -210,6 +207,7 @@ function UnplannedListUpload() {
               month: "",
             },
           ]);
+          return;
         }
         if (data[key].nodes.length !== 0) {
           let yearlyPlan = JSON.parse(data[key].nodes[0].testDetails);
@@ -259,7 +257,7 @@ function UnplannedListUpload() {
               if (flag) {
                 if (index === 0 && startMonthIndex > currentMonthIndex) {
                   flag = false;
-
+                  console.log(yearlyPlan[index + 2]?.startDate.split("-")[0]);
                   setDetails((prev) => [
                     ...prev,
                     {
@@ -271,7 +269,7 @@ function UnplannedListUpload() {
                       month: month,
                       schdeuledComponentsDetails: {
                         monthlyDetails,
-                        newMonth: yearlyPlan[index + 2].startDate.split("-")[0],
+                        newMonth: yearlyPlan[index + 2]?.startDate.split("-")[0],
                       },
                     },
                   ]);
@@ -292,7 +290,7 @@ function UnplannedListUpload() {
                       month: endMonth,
                       schdeuledComponentsDetails: {
                         monthlyDetails,
-                        newMonth: yearlyPlan[index + 2].startDate.split("-")[0],
+                        newMonth: yearlyPlan[index + 2]?.startDate.split("-")[0],
                       },
                     },
                   ]);
@@ -301,6 +299,7 @@ function UnplannedListUpload() {
                   currentMonthIndex === startMonthIndex &&
                   Number(startDay) > Number(currentDay)
                 ) {
+                  console.log(yearlyPlan[index + 1].startDate.split("-")[0]);
                   flag = false;
                   setDetails((prev) => [
                     ...prev,
@@ -313,11 +312,10 @@ function UnplannedListUpload() {
                       month: endMonth,
                       schdeuledComponentsDetails: {
                         monthlyDetails,
-                        newMonth: yearlyPlan[index + 1].startDate.split("-")[0],
+                        newMonth: yearlyPlan[index + 1]?.startDate.split("-")[0],
                       },
                     },
                   ]);
-                  console.log(yearlyPlan);
                 } else if (currentMonthIndex < startMonthIndex) {
                   setDetails((prev) => [
                     ...prev,
@@ -452,6 +450,12 @@ function UnplannedListUpload() {
     } else {
       alertAndLoaders("UNSHOW_ALERT", dispatch, `Please Correct the data`, "warning");
     }
+    updateDashBoardDetails({
+      rowName:ROW_NAME,
+      canIncrement:true,
+    }).then((res)=>{
+      console.log(res);
+    })
   };
 
   return (
@@ -474,11 +478,11 @@ function UnplannedListUpload() {
                 />
               </LocalizationProvider>
             </Grid>
-            <Grid item xs={12} sm={2}>
+            {/* <Grid item xs={12} sm={2}>
               <MDButton color="info" type="submit" startIcon={<FilterListIcon />}>
                 Filter
               </MDButton>
-            </Grid>
+            </Grid> */}
             <Grid item xs={12} sm={4}>
               <form onSubmit={handleClickOpen}>
                 {role.roles === 3 && (
@@ -528,7 +532,6 @@ function UnplannedListUpload() {
                               />
                             )}
                           />
-                       
                         </Grid>
                       </Grid>
                     </Grid>

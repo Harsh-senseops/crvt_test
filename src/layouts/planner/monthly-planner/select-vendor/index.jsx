@@ -17,7 +17,11 @@ import {
   setShouldPauseNotification,
   addNotifications,
 } from "reduxSlices/notifications";
-import { ADD_MONTHLY_UPLOAD_HISTORY, ADD_NOTIFICATION } from "apis/queries";
+import {
+  ADD_MONTHLY_UPLOAD_HISTORY,
+  ADD_NOTIFICATION,
+  UPDATE_DASHBOARD_DETAILS,
+} from "apis/queries";
 import { setSampleRemaining } from "reduxSlices/monthlyPlanner";
 import { PRE_RESULT_SAMPLE } from "apis/queries";
 import { POST_RESULT_SAMPLE } from "apis/queries";
@@ -42,8 +46,8 @@ function ConfirmationDialogRaw({
   const [addNotificationResult, addNotification] = useMutation(ADD_NOTIFICATION);
   const [addPreResults, addPreResultsPart] = useMutation(PRE_RESULT_SAMPLE);
   const [addPostResults, addPostResultsPart] = useMutation(POST_RESULT_SAMPLE);
-  
-
+  const [updateDashBoardDetailsRes, updateDashBoardDetails] = useMutation(UPDATE_DASHBOARD_DETAILS);
+  const ROW_NAME = ["test_planned","test_in_progress"]
   useEffect(() => {
     if (!open) {
       setValue(valueProp);
@@ -104,28 +108,34 @@ function ConfirmationDialogRaw({
                 console.log(res2);
                 if (res2.data) {
                   setShouldPauseNotification(false);
-                  // dispatch(setSampleRemaining({testName:store.testName,componentName:store.detailsToPush.partName}))
                   dispatch(incrementCounter(1));
                   dispatch(addNotifications("New planner added"));
-
-                  // let nCount = localStorage.getItem("cn") || 0
-                  // localStorage.setItem("cn",nCount+1)
-                  // dispatch(setSampleRemaining({testName:store.testName,componentName:store.detailsToPush.partName}))
                   dispatch(incrementCounter(1));
                   dispatch(addNotifications("New planner added"));
                   addPreResultsPart({
-                  partCode: store.detailsToPush.partCode,
-                  partName: store.detailsToPush.partName,
-                 }).then((res)=>{
-                  if(res.data){
-                    addPostResultsPart({
-                      partCode: store.detailsToPush.partCode,
-                      partName: store.detailsToPush.partName,
-                    })
-                  }
-                  console.log(res)
-                 })
-                  
+                    partCode: store.detailsToPush.partCode,
+                    partName: store.detailsToPush.partName,
+                  }).then((res) => {
+                    if (res.data) {
+                      addPostResultsPart({
+                        partCode: store.detailsToPush.partCode,
+                        partName: store.detailsToPush.partName,
+                      }).then((res) => {
+                        if (res.data) {
+
+                          ROW_NAME.map((val)=>{
+                            updateDashBoardDetails({
+                              rowName:val,
+                              canIncrement:true,
+                            }).then((res)=>{
+                              console.log(res);
+                            })
+                          })
+                         
+                        }
+                      });
+                    }
+                  });
                 }
               });
             }
@@ -133,7 +143,6 @@ function ConfirmationDialogRaw({
         }
       });
 
-      //   alert(JSON.stringify(store.detailsToPush) + JSON.stringify({ vendorName, vendorCode }));
       onClose(value);
     } else {
       alertAndLoaders("UNSHOW_ALERT", dispatch, "Please Select Vendor Name.", "warning");
@@ -182,7 +191,6 @@ function ConfirmationDialogRaw({
         </Button>
         <Button onClick={handleOk}>Ok</Button>
         {/* <Button onClick={()=>dispatch(setSampleRemaining({testName:store.testName,componentName:store.detailsToPush.partName}))}>nope</Button> */}
-
       </DialogActions>
     </Dialog>
   );

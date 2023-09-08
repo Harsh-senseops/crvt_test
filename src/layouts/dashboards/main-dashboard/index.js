@@ -1,71 +1,45 @@
-/**
-=========================================================
-* Material Dashboard 2 PRO React - v2.0.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-pro-react
-* Copyright 2021 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
-// @mui material components
 import Grid from "@mui/material/Grid";
 import Tooltip from "@mui/material/Tooltip";
 import Icon from "@mui/material/Icon";
-
-// Material Dashboard 2 PRO React components
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
-
-// Material Dashboard 2 PRO React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
+import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatisticsCard";
+import reportsLineChartData from "layouts/dashboards/analytics/data/reportsLineChartData";
+import { useQuery } from "urql";
+import { EVERY_TEST_DEATILS } from "apis/queries";
+import { useEffect } from "react";
+import { useState } from "react";
 import ReportsBarChart from "examples/Charts/BarCharts/ReportsBarChart";
 import ReportsLineChart from "examples/Charts/LineCharts/ReportsLineChart";
-import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatisticsCard";
-import BookingCard from "examples/Cards/BookingCard";
-
-// Anaytics dashboard components
-import SalesByCountry from "layouts/dashboards/analytics/components/SalesByCountry";
-
-// Data
 import reportsBarChartData from "layouts/dashboards/analytics/data/reportsBarChartData";
-import reportsLineChartData from "layouts/dashboards/analytics/data/reportsLineChartData";
-
-// Images
-import booking1 from "assets/images/products/product-1-min.jpg";
-import booking2 from "assets/images/products/product-2-min.jpg";
-import booking3 from "assets/images/products/product-3-min.jpg";
+// import reportsLineChartData from "layouts/dashboards/analytics/data/reportsLineChartData";
 
 function MainDashboard() {
   const { sales, tasks } = reportsLineChartData;
+  const [everyTestDetails, rexTestEveryDetails] = useQuery({
+    query: EVERY_TEST_DEATILS,
+  });
 
-  // Action buttons for the BookingCard
-  const actionButtons = (
-    <>
-      <Tooltip title="Refresh" placement="bottom">
-        <MDTypography
-          variant="body1"
-          color="primary"
-          lineHeight={1}
-          sx={{ cursor: "pointer", mx: 3 }}
-        >
-          <Icon color="inherit">refresh</Icon>
-        </MDTypography>
-      </Tooltip>
-      <Tooltip title="Edit" placement="bottom">
-        <MDTypography variant="body1" color="info" lineHeight={1} sx={{ cursor: "pointer", mx: 3 }}>
-          <Icon color="inherit">edit</Icon>
-        </MDTypography>
-      </Tooltip>
-    </>
-  );
+  const [dashBoardTestDetails,setEveryTestDetails] = useState({
+    test_planned:0,
+    unplanned_test:0,
+    test_in_progress:0,
+    test_completed:0,
+  }) 
+
+  useEffect(()=>{
+    if(everyTestDetails.data?.allCrvtDashboardDetails?.nodes?.length !== 0){
+      let tempObj = {}
+      tempObj.test_completed =  everyTestDetails.data?.allCrvtDashboardDetails?.nodes[0].testCompleted
+      tempObj.test_in_progress =  everyTestDetails.data?.allCrvtDashboardDetails?.nodes[0].testInProgress
+      tempObj.test_planned =  everyTestDetails.data?.allCrvtDashboardDetails?.nodes[0].testPlanned
+      tempObj.unplanned_test =  everyTestDetails.data?.allCrvtDashboardDetails?.nodes[0].unplannedTest
+      setEveryTestDetails(tempObj);
+    }
+  },[everyTestDetails.data])
 
   return (
     <DashboardLayout>
@@ -74,9 +48,72 @@ function MainDashboard() {
         {/* <Grid container>
           <SalesByCountry />
         </Grid> */}
+        <MDBox mt={1.5}>
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={6} lg={3}>
+              <MDBox mb={1.5}>
+                <ComplexStatisticsCard
+                  color="warning"
+                  icon="event_note"
+                  title="Test Planned"
+                  count={dashBoardTestDetails.test_planned}
+                  percentage={{
+                    color: "success",
+                    amount: "0%",
+                    label: "than lask week",
+                  }}
+                />
+              </MDBox>
+            </Grid>
+            <Grid item xs={12} md={6} lg={3}>
+              <MDBox mb={1.5}>
+                <ComplexStatisticsCard
+                  icon="event_repeat"
+                  title="Unplanned Test"
+                  count={dashBoardTestDetails.unplanned_test}
+                  percentage={{
+                    color: "success",
+                    amount: "0%",
+                    label: "than last month",
+                  }}
+                />
+              </MDBox>
+            </Grid>
+            <Grid item xs={12} md={6} lg={3}>
+              <MDBox mb={1.5}>
+                <ComplexStatisticsCard
+                  color="success"
+                  icon="event_upcoming"
+                  title="Test in-progress"
+                  count={dashBoardTestDetails.test_in_progress}
+                  percentage={{
+                    color: "success",
+                    amount: "0%",
+                    label: "than yesterday",
+                  }}
+                />
+              </MDBox>
+            </Grid>
+            <Grid item xs={12} md={6} lg={3}>
+              <MDBox mb={1.5}>
+                <ComplexStatisticsCard
+                  color="primary"
+                  icon="event_available"
+                  title="Test completed"
+                  count={dashBoardTestDetails.test_completed}
+                  percentage={{
+                    color: "success",
+                    amount: "",
+                    label: "Just updated",
+                  }}
+                />
+              </MDBox>
+            </Grid>
+          </Grid>
+        </MDBox>
         {/* <MDBox mt={6}>
           <Grid container spacing={3}>
-            <Grid item xs={12} md={6} lg={4}>
+            <Grid item xs={12} md={6} lg={6}>
               <MDBox mb={3}>
                 <ReportsBarChart
                   color="info"
@@ -87,7 +124,7 @@ function MainDashboard() {
                 />
               </MDBox>
             </Grid>
-            <Grid item xs={12} md={6} lg={4}>
+            <Grid item xs={12} md={6} lg={6}>
               <MDBox mb={3}>
                 <ReportsLineChart
                   color="success"
@@ -115,69 +152,6 @@ function MainDashboard() {
             </Grid>
           </Grid>
         </MDBox> */}
-        <MDBox mt={1.5}>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6} lg={3}>
-              <MDBox mb={1.5}>
-                <ComplexStatisticsCard
-                  color="warning"
-                  icon="event_note"
-                  title="Test Planned"
-                  count={281}
-                  percentage={{
-                    color: "success",
-                    amount: "+55%",
-                    label: "than lask week",
-                  }}
-                />
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={6} lg={3}>
-              <MDBox mb={1.5}>
-                <ComplexStatisticsCard
-                  icon="event_repeat"
-                  title="Unplanned Test"
-                  count="23"
-                  percentage={{
-                    color: "success",
-                    amount: "+3%",
-                    label: "than last month",
-                  }}
-                />
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={6} lg={3}>
-              <MDBox mb={1.5}>
-                <ComplexStatisticsCard
-                  color="success"
-                  icon="event_upcoming"
-                  title="Test in-progress"
-                  count="34"
-                  percentage={{
-                    color: "success",
-                    amount: "+1%",
-                    label: "than yesterday",
-                  }}
-                />
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={6} lg={3}>
-              <MDBox mb={1.5}>
-                <ComplexStatisticsCard
-                  color="primary"
-                  icon="event_available"
-                  title="Test completed"
-                  count="91"
-                  percentage={{
-                    color: "success",
-                    amount: "",
-                    label: "Just updated",
-                  }}
-                />
-              </MDBox>
-            </Grid>
-          </Grid>
-        </MDBox>
         {/* <MDBox mt={2}>
           <Grid container spacing={3}>
             <Grid item xs={12} md={6} lg={4}>

@@ -25,7 +25,7 @@ const columns = [
   { Header: "Description", accessor: "description" },
   { Header: "Employee Code", accessor: "empCode" },
   { Header: "Planner/Report", accessor: "notificationFrom" },
-  { Header: "Edit", accessor: "notificationFrom" },
+  // { Header: "Edit", accessor: "notificationFrom" },
 ];
 function Notification() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -45,7 +45,7 @@ function Notification() {
       setShouldPause(true);
     }
   }, [notificationsData.data]);
-
+  console.log(data)
   return (
     <DashboardLayout>
       <MDBox width="calc(100% - 48px)" position="absolute" top="1.75rem">

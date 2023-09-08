@@ -9,8 +9,8 @@ export const machineAlerts = createSlice({
     name:"MACHINE_ALERTS",
     initialState,
     reducers:{
-        setCounter : (state,actions) => {
-            state.counter+=(actions.payload)
+        setAlertCounter : (state,actions) => {
+            state.counter = actions.payload
         },
         setAlerts: (state,actions) => {
             if(typeof(actions.payload) === "object"){
@@ -23,7 +23,7 @@ export const machineAlerts = createSlice({
 })
 
 export const {
-    setCounter,setAlerts
+    setAlertCounter,setAlerts
 } = machineAlerts.actions;
 
 export default machineAlerts.reducer;

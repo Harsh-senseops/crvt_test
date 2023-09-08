@@ -57,6 +57,28 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+function isValueNull(obj,noOFSamples,str) {
+    let objLen = Object.keys(obj);
+    let newObj = {};
+    let isEmpty = false;
+    objLen.map((keys)=>{
+        if(obj[keys] === ""){
+            isEmpty = true;
+        }
+    })
+    
+    if(isEmpty || noOFSamples !== objLen.length){
+        console.log("ran")
+        objLen.map((keys)=>{
+            newObj[keys] = str
+        })
+        return {isEmpty,newObj}
+    }
+    return {
+        isEmpty,
+    }
+}
+
 export default function PreResult({ partCode }) {
     const [show, setShow] = React.useState(false)
     const [pledge, setPledge] = useState(true)
@@ -233,6 +255,16 @@ export default function PreResult({ partCode }) {
         }
         setShowSamples(true)
     }
+
+    const onCancel = () => {
+        setShow(prev=>!prev);
+        rexFatchPreData({requestPolicy:"network-only"});
+    }
+
+    const onEdit = () => {
+        setShow(prev=>!prev);
+        rexFatchPreData({requestPolicy:"network-only"});
+    }
     return (
         <>
             <Card style={{ margin: "12px" }}>
@@ -331,6 +363,8 @@ export default function PreResult({ partCode }) {
                                         ...prevValues,
                                         [name]: value,
                                     }));
+
+                                    
                                 };
                                 return (
                                     <Grid sm={2} m={1}>
@@ -342,16 +376,18 @@ export default function PreResult({ partCode }) {
                             })}
                         </Grid>
                         <Grid className={classes.parentFlexRight}>
-                            <MDButton color="info"
-                                onClick={() => setShow(!show)}
+                       {!show ? <MDButton color="info"
+                                onClick={onEdit}
                             >
-                                {show ? "Cancel" : "Edit"}
-                            </MDButton>
-                            {show ? <MDButton color="info" style={{ marginLeft: "5px" }}
-                            onClick={saveValues}
-                            >
+                                Edit
+                            </MDButton> : <div style={{display:"flex",gap:"15px"}}>
+                            <MDButton color="error" onClick={saveValues}>
                                 Save
-                            </MDButton> : null}
+                            </MDButton>
+                            <MDButton color="dark" onClick={onCancel}>
+                                Cancel
+                            </MDButton>
+                            </div>}
                         </Grid>
                     </>}
             </Card>

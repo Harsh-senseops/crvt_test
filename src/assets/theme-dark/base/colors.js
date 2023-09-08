@@ -75,7 +75,7 @@ export default {
     main: "#F44335",
     focus: "#f65f53",
   },
-
+ 
   light: {
     main: "#f0f2f566",
     focus: "#f0f2f566",

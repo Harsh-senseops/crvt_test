@@ -17,6 +17,8 @@ import Masterpartlistupload from "./master-part-list-upload";
 import DropFileInput from "./drop-file-input";
 import { useSelector } from "react-redux";
 import MDAlert from "components/MDAlert";
+import MDButton from "components/MDButton";
+import sampleMasterPartList from "../../../assets/Sample-Master-Partlist.xlsx"
 // import { DUST_YEARLY_PLANNER,OVEN_YEARLY_PLANNER } from "apis/queries";
 
 const DUST_YEARLY_PLANNER = `
@@ -166,20 +168,19 @@ let testDataObj = [
     allPlanners: "allCrvtVibrationYearlyPlanners",
     expanded: false,
   },
-]
+];
 function AnnualPlanner() {
   const alertStore = useSelector((store) => store.alert);
-  const [testData, setTestData] = useState([]
-  );
+  const [testData, setTestData] = useState([]);
   const role = useSelector((store) => {
     return store.userRoles;
   });
   const onFileChange = (files) => {
     console.log(files);
   };
-  useEffect(()=>{
-    setTestData(testDataObj)
-  },[])
+  useEffect(() => {
+    setTestData(testDataObj);
+  }, []);
 
   const handleExpandClick = (index) => {
     setTestData((prevTestData) =>
@@ -189,7 +190,7 @@ function AnnualPlanner() {
       }))
     );
   };
- 
+
   return (
     <DashboardLayout>
       {alertStore.showAlert ? (
@@ -204,14 +205,9 @@ function AnnualPlanner() {
       <MDBox width="calc(100% - 48px)" position="absolute" top="1.75rem">
         <DashboardNavbar dark absolute />
       </MDBox>
-      <MDBox
-        pt={10}
-        pb={3}
-        style={{ background: "#202940", borderRadius: "10px" }}
-      >
-        <Card style={{background:"#202940"}}>
-          <MDBox p={3} lineHeight={1}>
-          </MDBox>
+      <MDBox pt={10} pb={3} style={{ background: "#202940", borderRadius: "10px" }}>
+        <Card style={{ background: "#202940" }}>
+          <MDBox p={3} lineHeight={1}></MDBox>
           {role.roles === 3 ? (
             <Grid
               container
@@ -220,13 +216,20 @@ function AnnualPlanner() {
               alignItems="center"
               justifyContent="center"
             >
-              <Grid item xs={3} >
+              <Grid item xs={3}>
                 <DropFileInput onFileChange={(files) => onFileChange(files)} />
               </Grid>
             </Grid>
           ) : (
             ""
           )}
+          <Grid display="flex" justifyContent="flex-end" marginRight={4}>
+            <MDButton color="info">
+              <a href={sampleMasterPartList} download style={{color:"white"}}>
+                Download sample excel
+              </a>
+            </MDButton>
+          </Grid>
           <Grid
             style={{ background: "#394259" }}
             mt={3}
@@ -238,14 +241,14 @@ function AnnualPlanner() {
           >
             {testData.map((val, i) => {
               return (
-                <div key={i}  onClick={() => handleExpandClick(i)}>
+                <div key={i} onClick={() => handleExpandClick(i)}>
                   <YearlyPlannerComponent
                     name={val?.name}
                     query={val?.query}
                     allPlanners={val?.allPlanners}
                     expanded={val.expanded}
                   />
-                 </div>
+                </div>
               );
             })}
           </Grid>

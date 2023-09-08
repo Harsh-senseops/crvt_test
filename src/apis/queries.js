@@ -673,7 +673,7 @@ createCrvtNotification(input: {crvtNotification: {empCode: $empCode, message: $m
 }
 `;
 const NOTIFICATION_MESSAGE_BY_DATE = `
-query MyQuery($dateTime: Datetime!) {
+subscription MyQuery($dateTime: Datetime!) {
 allCrvtNotifications(filter: {datetime: {greaterThan: $dateTime}}) {
   nodes {
     message
@@ -1134,6 +1134,35 @@ crvtPostResultTableByPartCode(partCode: $partCode) {
   postImages
 }
 }`;
+
+const ALL_ACTIVE_ALERTS = `subscription allCrvtActiveAlerts {
+  allCrvtAlerts(condition: {alertStatus: 1}) {
+    nodes {
+      machineStatus
+      remarks
+      crvtTestingEquipmentByEquipmentName {
+        equipmentName
+      }
+    }
+  }
+}
+`
+const EVERY_TEST_DEATILS = `query everyTestDetails {
+  allCrvtDashboardDetails {
+    nodes {
+      testCompleted
+      testInProgress
+      testPlanned
+      unplannedTest
+    }
+  }
+}
+`
+const UPDATE_DASHBOARD_DETAILS = `
+mutation updatedashBoardDetails($rowName: String!,$canIncrement: Boolean!) {
+  updatedashBoardDetails(rowName: $rowName, canIncrement: $canIncrement)
+}
+`
 export {
   AUTH,
   ADD_USER,
@@ -1250,4 +1279,7 @@ export {
   UPDATE_ALERT_STATUS_BY_ID,
   UPLOAD_POST_IMAGES,
   IMAGE_FETCH,
+  ALL_ACTIVE_ALERTS,
+  EVERY_TEST_DEATILS,
+  UPDATE_DASHBOARD_DETAILS
 };
