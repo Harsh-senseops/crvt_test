@@ -114,14 +114,14 @@ function MonthlyPlanner() {
     setTestData(testDataObj)
   },[])
 
-  const handleExpandClick = (index) => {
-    setTestData((prevTestData) =>
-      prevTestData.map((val, i) => ({
-        ...val,
-        expanded: i === index ? !val.expanded : false,
-      }))
-    );
-  };
+  // const handleExpandClick = (index) => {
+  //   setTestData((prevTestData) =>
+  //     prevTestData.map((val, i) => ({
+  //       ...val,
+  //       expanded: i === index ? !val.expanded : false,
+  //     }))
+  //   );
+  // };
 
   return (
     <DashboardLayout>

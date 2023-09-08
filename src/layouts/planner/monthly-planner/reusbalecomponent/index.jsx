@@ -86,7 +86,6 @@ const ReusabaleMonthlyPlannerTests = ({
   testName,
   allTestNameYearlyPlanner,
   mutation,
-  expanded,
   monthlyPlannerByDate,
   allTestNameMonthlyPlanner,
 }) => {

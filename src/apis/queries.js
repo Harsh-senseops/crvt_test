@@ -29,9 +29,6 @@ updateCrvtEmployeeDetailByEmployeeCode(
   input: {crvtEmployeeDetailPatch: {name: $name, employeeCode: $empCode, password: $password, role: $role}, employeeCode: $empCode}
 ) {
   clientMutationId
-  employeeDetail {
-    name
-  }
 }
 }
 `;
@@ -220,7 +217,7 @@ allCrvtThermalCycleYearlyPlanners {
 }
 `;
 
-const EQUIPMENT_DETAILS = `subscription equipments_details {
+const EQUIPMENT_DETAILS = `query equipments_details {
 allCrvtComponentDetails {
   nodes {
     partName

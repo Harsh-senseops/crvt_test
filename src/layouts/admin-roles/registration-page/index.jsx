@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import * as action from "../../../reduxSlices/userManagement";
 import * as alertActions from "../../../reduxSlices/alert";
 import alertAndLoaders from "utils/alertAndLoaders";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogActions,
@@ -30,10 +30,12 @@ export default function MDDialog({ updateOrAdd, title }) {
   });
   const dispatch = useDispatch();
   const [addUserRes, addUser] = useMutation(ADD_USER);
-  const [updateUserRes, updateUser] = useMutation(UPDATE_USER, {
-    empCode: store.employeeID,
-  });
-
+  const [updateUserRes, updateUser] = useMutation(UPDATE_USER);
+  const [employeeCode,setEmployeeCode] = useState(store.employeeID)
+console.log(store.employeeID)
+useEffect(()=>{
+  setEmployeeCode(store.employeeID)
+},[store.employeeID])
   const handleClickOpenAdd = (_, event) => {
     if (event === "backdropClick") {
       dispatch(action.setOpenDialoge(false));
@@ -95,6 +97,7 @@ export default function MDDialog({ updateOrAdd, title }) {
         name: store.name,
         password: store.password,
         role: store.role,
+        employeeCode:store.employeeID,
       }).then((res) => {
         console.log(res);
         if (
@@ -111,12 +114,12 @@ export default function MDDialog({ updateOrAdd, title }) {
           return;
         } else if (res.data) {
           console.log(res.data);
-          console.log(store.employeeID, store.name, store.password, store.role);
+          // console.log(store.employeeID, store.name, store.password, store.role);
           alertAndLoaders(
             "UNSHOW_ALERT",
             dispatch,
             "User updated successfully.",
-            "primary"
+            "success"
           );
         }
         // dispatch(action.setOpenDialoge(false));
@@ -163,16 +166,17 @@ export default function MDDialog({ updateOrAdd, title }) {
           fullWidth
           variant="outlined"
         />
-        <TextField
-          onChange={(e) => dispatch(action.setEmployeeId(e.target.value))}
-          value={store.employeeID}
+        {/* <TextField
+          onChange={(e) => setEmployeeCode(e.target.value)}
+          // onBlur={(e)=>setEmployeeCode(e.target.value)}
+          value={employeeCode}
           margin="dense"
           id="name"
           label="Employee ID"
           type="text"
           fullWidth
           variant="outlined"
-        />
+        /> */}
         <FormControl fullWidth style={{ marginTop: "10px" }}>
           <InputLabel id="demo-simple-select-label" style={{ height: "20px" }}>
             Role
@@ -207,6 +211,7 @@ export default function MDDialog({ updateOrAdd, title }) {
                   aria-label="toggle password"
                   edge="end"
                   onClick={() => setPassIcon(!passIcon)}
+                  color="white"
                 >
                   {passIcon ? <VisibilityIcon /> : <VisibilityOffIcon />}
                 </IconButton>

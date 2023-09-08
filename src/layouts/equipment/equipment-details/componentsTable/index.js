@@ -21,11 +21,13 @@ import { EQUIPMENT_DETAILS } from "apis/queries";
 import OvenTest from "../OvenTest";
 import "./index.css"
 import PrePostTest from "../PrePostTest";
+import { setShouldPause } from "reduxSlices/yearlyPlanner";
 
 function ComponentsTable() {
   const [componentDetails, setComponentDetails] = useState([])
   const [detailsOpen, setDetailsOpen] = useState(false)
-  const [formtitle, setFormtitle] = useState(null)
+  const [formtitle, setFormtitle] = useState(null);
+  const [pause,shouldPause] = useState(true)
   const columns = [
     {
       title: "Component",
@@ -49,15 +51,22 @@ function ComponentsTable() {
   };
   const [partId, setPartID] = useState("");
 
-  const [getEquipment, getEquipmentResult] = useSubscription({
-    query: EQUIPMENT_DETAILS
+  const [getEquipment, getEquipmentResult] = useQuery({
+    query: EQUIPMENT_DETAILS,
+    // pause:shouldPause
   })
 
-  const { data: equipmentData, fetching: equipmentFetching, error: equipmentError } = getEquipment
+  // const { data: equipmentData, fetching: equipmentFetching, error: equipmentError } = getEquipment
 
   useEffect(() => {
-    if (equipmentData) setComponentDetails(equipmentData.allCrvtComponentDetails.nodes)
-  }, [equipmentData])
+    if(shouldPause){
+      setShouldPause(false);
+    }
+    if (getEquipment.data){
+      setComponentDetails(getEquipment.data.allCrvtComponentDetails.nodes)
+      setShouldPause(true)
+    } 
+  }, [getEquipment.data,shouldPause])
 
   const handleEdit = (rowdata) => {
     setFormtitle(rowdata.partName)
@@ -67,8 +76,8 @@ function ComponentsTable() {
   const handleFormClose = () => {
     setDetailsOpen(false)
   }
-  if (equipmentFetching) return <p style={{ color: "dark", fontWeight: "bold" }}>Loading Component...</p>
-  if (equipmentError) return <p>Oh no... {equipmentError.message}</p>
+  // if (equipmentFetching) return <p style={{ color: "white", fontWeight: "bold" }}>Loading Component...</p>
+  // if (equipmentError) return <p>Oh no... {equipmentError.message}</p>
 
   return (
     <Grid >
