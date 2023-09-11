@@ -19,8 +19,9 @@ const useStyles = makeStyles((theme) => ({
     color: "#202940",
     outline: "none",
     transition: ".5s",
+    width: "40%",
     "&:hover": {
-      width: 350,
+      // width: 350,
       background: "none",
       borderRadius: 8,
       zIndex: 1,

@@ -71,10 +71,7 @@ const useStyles = makeStyles((theme) => ({
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
   return (
-    <IconButton
-      {...other}
-      style={{ color: "#1A73E8", position: "relative", zIndex: "100" }}
-    />
+    <IconButton {...other} style={{ color: "#1A73E8", position: "relative", zIndex: "100" }} />
   );
 })(({ theme, expand }) => ({
   transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
@@ -83,13 +80,7 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-export default function YearlyPlannerComponent({
-  name,
-  query,
-  allPlanners,
-  expanded,
-  onClick,
-}) {
+export default function YearlyPlannerComponent({ name, query, allPlanners, expanded, onClick }) {
   // const [expanded, setExpanded] = React.useState(false);
   // const [shouldPause, setShouldPause] = React.useState(false);
   const yearlyPlannerStore = useSelector((store) => {
@@ -164,7 +155,7 @@ export default function YearlyPlannerComponent({
   const classes = useStyles();
 
   return (
-    <Card style={{ marginBottom: "0.7em",background:"#202940" }}>
+    <Card style={{ marginBottom: "0.7em", background: "#202940" }}>
       <CardHeader
         sx={{
           transition: "all 250ms",
@@ -210,14 +201,11 @@ export default function YearlyPlannerComponent({
       {!toggleEnable && (
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           {data.length !== 0 ? (
-            <TableContainer style={{marginTop:"10px"}}>
+            <TableContainer style={{ marginTop: "10px" }}>
               <Table>
                 <TableRow style={{ background: "#003e66" }}>
                   {columns.map((column, i) => (
-                    <TableCell
-                      key={i}
-                      style={{ color: "whitesmoke", fontWeight: "bold" }}
-                    >
+                    <TableCell key={i} style={{ color: "whitesmoke", fontWeight: "bold" }}>
                       {column}
                     </TableCell>
                   ))}
@@ -235,11 +223,7 @@ export default function YearlyPlannerComponent({
                           >
                             <TableCell>{val.name}</TableCell>
                             {val.samples.map((val2, i) => {
-                              return (
-                                <TableCell style={{ textAlign: "center" }}>
-                                  {val2}
-                                </TableCell>
-                              );
+                              return <TableCell style={{ textAlign: "center" }}>{val2}</TableCell>;
                             })}
                           </TableRow>
                         );
@@ -249,7 +233,7 @@ export default function YearlyPlannerComponent({
               </Table>
             </TableContainer>
           ) : (
-            "No yearly planner created"
+            <MDTypography style={{ padding: "1em" }}>No yearly planner created</MDTypography>
           )}
         </Collapse>
       )}

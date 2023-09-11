@@ -18,7 +18,7 @@ import DialogSelectComponent from "../select-vendor";
 import alertAndLoaders from "utils/alertAndLoaders";
 import { PARTDEAILS_BY_PART_CODE } from "apis/queries";
 import { ADD_MONTHLY_UPLOAD_HISTORY } from "apis/queries";
-import { setMonthlyPlanner } from "../../../../reduxSlices/monthlyPlanner";
+import { setMonthlyPlanner,setDoFetch } from "../../../../reduxSlices/monthlyPlanner";
 
 const columns = [
   { Header: "part name", accessor: "partName" },
@@ -186,7 +186,12 @@ const ReusabaleMonthlyPlannerTests = ({
       dispatch(monthlyPlannerAction.setShouldPause(false));
     }
     let tempArray = [];
-    if (testNameYp.data && monthlyPlannerStore.date.year >= 2012) {
+
+    let keys = Object.keys(monthlyPlannerStore.monthlyDetails);
+
+    keys.map((val)=>{
+      if(monthlyPlannerStore.monthlyDetails[val].length === 0){
+ if (testNameYp.data && monthlyPlannerStore.date.year >= 2012) {
       let isSevenDaysRunning = "";
       dispatch(monthlyPlannerAction.setShouldPause(true));
       testNameYp.data[allTestNameYearlyPlanner]?.nodes.forEach((val, i) => {
@@ -263,7 +268,27 @@ const ReusabaleMonthlyPlannerTests = ({
         }
       });
     }
-    dispatch(setMonthlyPlanner({ testName, data: tempArry2 }));
+      dispatch(setMonthlyPlanner({ testName, data: tempArry2 }));
+      }
+      // console.log(monthlyPlannerStore.monthlyDetails[val].length)
+    })
+    
+   
+
+    // let keys = Object.keys(monthlyPlannerStore.monthlyDetails);
+    // // console.log(keys)
+    // for(let i = 0; i < keys.length;i++){
+    //   if(monthlyPlannerStore.monthlyDetails[keys[i]].length === 0){
+    //     console.log(monthlyPlannerStore.monthlyDetails[keys[i]].length)
+    //     setDoFetch(true);
+    //     // break;
+    //   }else{
+    //     setDoFetch(false);
+    //   }
+    // }
+    // return()=>{
+    //   dispatch(setDoFetch(true))
+    // }
     // setData({ columns, rows: tempArry2 });
   }, [testNameYp.data, monthlyPlannerStore.shouldPause, dispatch, monthMP.data]);
 

@@ -182,7 +182,7 @@ function MDTable({ data, searchTerm, onTouch }) {
                       cursor: "pointer",
                       backgroundColor: "#384158 !important",
                       borderRadius: "10px",
-                      transform: "scale(1.02)",
+                      // transform: "scale(1.02)",
                     },
                   }}
                 >

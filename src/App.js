@@ -45,6 +45,7 @@ import { SubscriptionClient } from "subscriptions-transport-ws";
 import { devtoolsExchange } from '@urql/devtools';
 import UserContext from "layouts/pages/userContext";
 import {useSelector} from "react-redux";
+import "./App.css"
 
 // graphql url
 const senseopsHTTPServerURL = "http://127.0.0.1:5052/graphql";
