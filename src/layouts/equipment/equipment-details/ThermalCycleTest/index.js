@@ -244,7 +244,7 @@ export default function ThermalCycleTestDetail({ details, componentName, id }) {
                           WebkitTextFillColor: "gray",
                         },
                       }}
-                      disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      // disabled={role.roles === 1 || role.roles === 2 || !enabled}
                       className={toggleEnable ? "" : classes.disabledTextField}
                       value={testDurationMax.newData}
                       label="Test Duration(hr max)"
@@ -261,7 +261,7 @@ export default function ThermalCycleTestDetail({ details, componentName, id }) {
                           WebkitTextFillColor: "gray",
                         },
                       }}
-                      disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      // disabled={role.roles === 1 || role.roles === 2 || !enabled}
                       className={toggleEnable ? "" : classes.disabledTextField}
 
                       value={testDurationMin.newData}
@@ -279,7 +279,7 @@ export default function ThermalCycleTestDetail({ details, componentName, id }) {
                           WebkitTextFillColor: "gray",
                         },
                       }}
-                      disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      // disabled={role.roles === 1 || role.roles === 2 || !enabled}
                       className={toggleEnable ? "" : classes.disabledTextField}
                       value={equipmentRunning.newData}
                       label="Equipment Running (hr)"
@@ -296,7 +296,7 @@ export default function ThermalCycleTestDetail({ details, componentName, id }) {
                           WebkitTextFillColor: "gray",
                         },
                       }}
-                      disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      // disabled={role.roles === 1 || role.roles === 2 || !enabled}
                       className={toggleEnable ? "" : classes.disabledTextField}
                       value={simultaneously.newData}
                       label="Simultaneously"
@@ -312,7 +312,7 @@ export default function ThermalCycleTestDetail({ details, componentName, id }) {
                           WebkitTextFillColor: "gray",
                         },
                       }}
-                      disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      // disabled={role.roles === 1 || role.roles === 2 || !enabled}
                       className={toggleEnable ? "" : classes.disabledTextField}
                       value={sampleQty.newData}
                       label="Sample Quantity"

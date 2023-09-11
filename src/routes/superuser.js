@@ -234,7 +234,7 @@ const superUserRoutes = [
       },
       {
         name:"Pre-Post Details",
-        key: "pre-post-details",
+        key: "pre-post details",
         route: "/equipment/pre-post-details",
         component: <ProtectedRoute Component={PrePostResult}/>,
       },
@@ -250,7 +250,7 @@ const superUserRoutes = [
     type: "collapse",
     name: "Report",
     key: "report",
-    icon: <DescriptionRoundedIcon/>,
+    icon: <Icon fontSize="medium">description</Icon>,
     collapse: [
       {
         name: "Daily Report",

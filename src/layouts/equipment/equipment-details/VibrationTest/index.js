@@ -292,7 +292,7 @@ export default function VibrationTest({ details, componentName, id }) {
                               WebkitTextFillColor: "gray",
                             },
                           }}
-                          disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                          // disabled={role.roles === 1 || role.roles === 2 || !enabled}
                           className={toggleEnable ? "" : classes.disabledTextField}
 
                           value={frequencyMin.newData}
@@ -311,7 +311,7 @@ export default function VibrationTest({ details, componentName, id }) {
                               WebkitTextFillColor: "gray",
                             },
                           }}
-                          disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                          // disabled={role.roles === 1 || role.roles === 2 || !enabled}
                           className={toggleEnable ? "" : classes.disabledTextField}
 
                           value={frequencyMax.newData}
@@ -330,7 +330,7 @@ export default function VibrationTest({ details, componentName, id }) {
                               WebkitTextFillColor: "gray",
                             },
                           }}
-                          disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                          // disabled={role.roles === 1 || role.roles === 2 || !enabled}
                           className={toggleEnable ? "" : classes.disabledTextField}
 
                           value={acceleration.newData}
@@ -349,7 +349,7 @@ export default function VibrationTest({ details, componentName, id }) {
                               WebkitTextFillColor: "gray",
                             },
                           }}
-                          disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                          // disabled={role.roles === 1 || role.roles === 2 || !enabled}
                           className={toggleEnable ? "" : classes.disabledTextField}
 
                           value={testDurationMax.newData}
@@ -368,7 +368,7 @@ export default function VibrationTest({ details, componentName, id }) {
                               WebkitTextFillColor: "gray",
                             },
                           }}
-                          disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                          // disabled={role.roles === 1 || role.roles === 2 || !enabled}
                           className={toggleEnable ? "" : classes.disabledTextField}
                           value={testDurationMin.newData}
                           label="Test Duration(hr min)"
@@ -385,7 +385,7 @@ export default function VibrationTest({ details, componentName, id }) {
                               WebkitTextFillColor: "gray",
                             },
                           }}
-                          disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                          // disabled={role.roles === 1 || role.roles === 2 || !enabled}
                           className={toggleEnable ? "" : classes.disabledTextField}
 
                           value={cycleTime.newData}
@@ -404,7 +404,7 @@ export default function VibrationTest({ details, componentName, id }) {
                               WebkitTextFillColor: "gray",
                             },
                           }}
-                          disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                          // disabled={role.roles === 1 || role.roles === 2 || !enabled}
                           className={toggleEnable ? "" : classes.disabledTextField}
 
                           value={equipmentRunning.newData}
@@ -423,7 +423,7 @@ export default function VibrationTest({ details, componentName, id }) {
                               WebkitTextFillColor: "gray",
                             },
                           }}
-                          disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                          // disabled={role.roles === 1 || role.roles === 2 || !enabled}
                           className={toggleEnable ? "" : classes.disabledTextField}
 
                           value={simultaneously.newData}
@@ -442,7 +442,7 @@ export default function VibrationTest({ details, componentName, id }) {
                               WebkitTextFillColor: "gray",
                             },
                           }}
-                          disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                          // disabled={role.roles === 1 || role.roles === 2 || !enabled}
                           className={toggleEnable ? "" : classes.disabledTextField}
 
                           value={sampleQty.newData}

@@ -1,8 +1,5 @@
 import Grid from "@mui/material/Grid";
-import Tooltip from "@mui/material/Tooltip";
-import Icon from "@mui/material/Icon";
 import MDBox from "components/MDBox";
-import MDTypography from "components/MDTypography";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
@@ -12,9 +9,6 @@ import { useQuery } from "urql";
 import { EVERY_TEST_DEATILS } from "apis/queries";
 import { useEffect } from "react";
 import { useState } from "react";
-import ReportsBarChart from "examples/Charts/BarCharts/ReportsBarChart";
-import ReportsLineChart from "examples/Charts/LineCharts/ReportsLineChart";
-import reportsBarChartData from "layouts/dashboards/analytics/data/reportsBarChartData";
 // import reportsLineChartData from "layouts/dashboards/analytics/data/reportsLineChartData";
 
 function MainDashboard() {
@@ -68,7 +62,7 @@ function MainDashboard() {
             <Grid item xs={12} md={6} lg={3}>
               <MDBox mb={1.5}>
                 <ComplexStatisticsCard
-                  icon="event_repeat"
+                  icon="queue"
                   title="Unplanned Test"
                   count={dashBoardTestDetails.unplanned_test}
                   percentage={{
@@ -83,7 +77,7 @@ function MainDashboard() {
               <MDBox mb={1.5}>
                 <ComplexStatisticsCard
                   color="success"
-                  icon="event_upcoming"
+                  icon="rotate_right"
                   title="Test in-progress"
                   count={dashBoardTestDetails.test_in_progress}
                   percentage={{
@@ -98,7 +92,7 @@ function MainDashboard() {
               <MDBox mb={1.5}>
                 <ComplexStatisticsCard
                   color="primary"
-                  icon="event_available"
+                  icon="fact_check"
                   title="Test completed"
                   count={dashBoardTestDetails.test_completed}
                   percentage={{

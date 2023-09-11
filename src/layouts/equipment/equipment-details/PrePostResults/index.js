@@ -158,7 +158,6 @@ export default function PrePostResult({}) {
         //  && !val.frequency && !val.insulatioRs
         //     && !val.soundLvl
       });
-      console.log("ran from useEffect");
       setPartDetails(tempArray);
       setShouldPause(true);
     }
