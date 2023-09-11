@@ -1,0 +1,38 @@
+/* body{
+    scrollbar-width: thin;
+    /* width: 20px; */
+    /* color: aqua; */
+    /* background: "white" !important; */
+  
+
+ body::-webkit-scrollbar {
+    width: 4px;
+    /* background:rgb(240, 182, 182); */
+    /* height: 2em */
+}
+body::-webkit-scrollbar-button {
+    /* background: #ccc */
+}
+body::-webkit-scrollbar-track-piece {
+    background: #292d42
+}
+body::-webkit-scrollbar-thumb {
+    background: #eee
+}
+
+.MuiDrawer-paperAnchorLeft::-webkit-scrollbar{
+    width: 0px;
+}
+
+.MuiSvgIcon-fontSizeInherit {
+    fill: white !important;
+}
+
+.MuiSvgIcon-fontSizeInherit:hover {
+    /* fill: rgb(43, 41, 41) !important; */
+    background: transparent;
+}
+
+/* .css-1en5aa5-MuiPaper-root-MuiTableContainer-root::-webkit-scrollbar{
+    width: 0;
+} */

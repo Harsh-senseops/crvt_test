@@ -22,7 +22,7 @@ import {
   ADD_NOTIFICATION,
   UPDATE_DASHBOARD_DETAILS,
 } from "apis/queries";
-import { setSampleRemaining } from "reduxSlices/monthlyPlanner";
+import { setSampleRemaining,clearMonthlyPlanner } from "reduxSlices/monthlyPlanner";
 import { PRE_RESULT_SAMPLE } from "apis/queries";
 import { POST_RESULT_SAMPLE } from "apis/queries";
 
@@ -93,6 +93,7 @@ function ConfirmationDialogRaw({
             if (res.error) {
               console.log(res.error);
             } else if (res.data) {
+              dispatch(clearMonthlyPlanner())
               alertAndLoaders(
                 "UNSHOW_ALERT",
                 dispatch,

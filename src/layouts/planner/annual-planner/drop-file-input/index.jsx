@@ -168,8 +168,13 @@ const DropFileInput = (props) => {
     setDragAndDrop(false);
     setMakePlanner(true);
 
-    setOpen(true);
+   
 
+    if(masterPartDetails.length === 0){
+      alertAndLoaders("UNSHOW_ALERT", dispatch, "The master part list is inaccurate.", "warning");
+      return
+    }
+    setOpen(true);
     let timer = setInterval(() => {
       setProgress((prev) => {
         let newProgress = prev + 1;
@@ -183,7 +188,6 @@ const DropFileInput = (props) => {
       }
       )
     }, 40);
-
     createYearlyPlanner().then((res)=>{
       masterPartDetails.map((val) => {
         val.partCode.map((val1) => {
@@ -201,7 +205,7 @@ const DropFileInput = (props) => {
             vendorDetails: JSON.stringify(val1.details.vendorsInfo),
           }).then((res) => {
             dispatch(yearlyPlanner.setShouldPause(false))
-            console.log(res)
+            console.log(res,"createMasterPartListQryData")
           });
         });
       });

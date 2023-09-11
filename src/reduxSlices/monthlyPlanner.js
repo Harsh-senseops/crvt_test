@@ -47,6 +47,7 @@ const initialState = {
     "THERMAL SHOCK":false,
     "VIBRATION":false
   },
+  doFetch:true,
 };
 
 export const monthlyPlanner = createSlice({
@@ -92,6 +93,15 @@ export const monthlyPlanner = createSlice({
         }
       }
     },
+    setDoFetch:(state,action)=>{
+      state.doFetch = action.payload;
+    },
+    clearMonthlyPlanner:(state,action) =>{
+      let keys =Object.keys(state.monthlyDetails);
+      keys.map((val)=>{
+        state.monthlyDetails[val] = [];
+      })
+    }
   },
 });
 
@@ -103,7 +113,9 @@ export const {
   setSampleDetils,
   setSampleRemaining,
   setMonthlyPlanner,
-  setIsExpanded
+  setIsExpanded,
+  setDoFetch,
+  clearMonthlyPlanner
 } = monthlyPlanner.actions;
 
 export default monthlyPlanner.reducer;

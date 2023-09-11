@@ -173,6 +173,9 @@ function UnplannedListUpload() {
   const dispatch = useDispatch();
   let [componentList, setComponentList] = useState([]);
 
+  useEffect(()=>{
+    dispatch(monthlyPlanner.clearMonthlyPlanner())
+  },[monthlyPlannerStore.date.month])
   useEffect(() => {
     if (!allComponets.data || componentList.length === 0) {
       setShouldPause(false);
@@ -432,6 +435,7 @@ function UnplannedListUpload() {
           if (res.data.updateUnplannedList === "error") {
             alertAndLoaders("UNSHOW_ALERT", dispatch, `An Error occured`, "error");
           } else if (res.data.updateUnplannedList === "success")
+          dispatch(monthlyPlanner.clearMonthlyPlanner())
             alertAndLoaders(
               "UNSHOW_ALERT",
               dispatch,
