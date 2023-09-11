@@ -360,8 +360,8 @@ crvtVibrationTestDetailByPartName(partName: $partname) {
 }`;
 
 const SAVE_VIBRATION_DETAILS = `mutation updateVibrationTestDetailByPartName($testDetails:JSON!,$partName:Int!) {
-updateVibrationTestDetailByPartName(
-  input: {vibrationTestDetailPatch: {testDetails: $testDetails}, partName: $partName}
+updateCrvtVibrationTestDetailByPartName(
+  input: {crvtVibrationTestDetailPatch: {testDetails: $testDetails}, partName: $partName}
 ) {
   clientMutationId
 }
@@ -603,8 +603,8 @@ updateCrvtThermalCycleTestDetailByPartName(
 }
 }`;
 const ADD_THERMAL_SHOCK_STATUS = `mutation updateThermalShockChamberTestDetailByPartName($status:Int!,$partName:Int!) {
-updateThermalShockChamberTestDetailByPartName(
-input: {thermalShockChamberTestDetailPatch: {status: $status}, partName: $partName}
+updateCrvtThermalShockChamberTestDetailByPartName(
+input: {crvtThermalShockChamberTestDetailPatch: {status: $status}, partName: $partName}
 ) {
 clientMutationId
 }

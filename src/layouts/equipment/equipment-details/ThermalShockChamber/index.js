@@ -271,7 +271,7 @@ export default function ThermalShockChamber({ details, componentName, id }) {
                         ...prevData,
                         newData: e.target.value
                       }))}
-                      disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      // disabled={role.roles === 1 || role.roles === 2 || !enabled}
                       className={toggleEnable ? "" : classes.disabledTextField}
                       sx={{
                         "& .MuiInputBase-input.Mui-disabled": {
@@ -294,7 +294,7 @@ export default function ThermalShockChamber({ details, componentName, id }) {
                           WebkitTextFillColor: "gray",
                         },
                       }}
-                      disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      // disabled={role.roles === 1 || role.roles === 2 || !enabled}
                       className={toggleEnable ? "" : classes.disabledTextField}
 
                       value={hot.newData}
@@ -312,7 +312,7 @@ export default function ThermalShockChamber({ details, componentName, id }) {
                           WebkitTextFillColor: "gray",
                         },
                       }}
-                      disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      // disabled={role.roles === 1 || role.roles === 2 || !enabled}
                       className={toggleEnable ? "" : classes.disabledTextField}
 
                       value={cycleTime.newData}
@@ -330,7 +330,7 @@ export default function ThermalShockChamber({ details, componentName, id }) {
                           WebkitTextFillColor: "gray",
                         },
                       }}
-                      disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      // disabled={role.roles === 1 || role.roles === 2 || !enabled}
                       className={toggleEnable ? "" : classes.disabledTextField}
 
                       value={totalCycle.newData}
@@ -348,7 +348,7 @@ export default function ThermalShockChamber({ details, componentName, id }) {
                           WebkitTextFillColor: "gray",
                         },
                       }}
-                      disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      // disabled={role.roles === 1 || role.roles === 2 || !enabled}
                       className={toggleEnable ? "" : classes.disabledTextField}
 
                       value={testDurationMax.newData}
@@ -367,7 +367,7 @@ export default function ThermalShockChamber({ details, componentName, id }) {
                           WebkitTextFillColor: "gray",
                         },
                       }}
-                      disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      // disabled={role.roles === 1 || role.roles === 2 || !enabled}
                       className={toggleEnable ? "" : classes.disabledTextField}
 
                       value={testDurationMin.newData}
@@ -386,7 +386,7 @@ export default function ThermalShockChamber({ details, componentName, id }) {
                           WebkitTextFillColor: "gray",
                         },
                       }}
-                      disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      // disabled={role.roles === 1 || role.roles === 2 || !enabled}
                       className={toggleEnable ? "" : classes.disabledTextField}
 
                       value={simultaneously.newData}
@@ -405,7 +405,7 @@ export default function ThermalShockChamber({ details, componentName, id }) {
                           WebkitTextFillColor: "gray",
                         },
                       }}
-                      disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      // disabled={role.roles === 1 || role.roles === 2 || !enabled}
                       className={toggleEnable ? "" : classes.disabledTextField}
 
                       value={sampleQty.newData}
@@ -423,7 +423,7 @@ export default function ThermalShockChamber({ details, componentName, id }) {
                           WebkitTextFillColor: "gray",
                         },
                       }}
-                      disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      // disabled={role.roles === 1 || role.roles === 2 || !enabled}
                       className={toggleEnable ? "" : classes.disabledTextField}
 
                       value={equipmentRunning.newData}

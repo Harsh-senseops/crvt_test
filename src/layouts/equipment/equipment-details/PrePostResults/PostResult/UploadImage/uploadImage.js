@@ -309,14 +309,6 @@ export default function UploadImage({ partCode }) {
               >
                 Upload
               </MDButton>
-              <MDButton
-                style={{ background: "#1A73E8", color: "white" }}
-                onClick={() => {
-                  alert("Cancel");
-                }}
-              >
-                Cancel
-              </MDButton>
             </Grid>
           </Card>
         </Card>

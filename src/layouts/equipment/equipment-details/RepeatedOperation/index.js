@@ -277,7 +277,7 @@ export default function RepeatedOperation({ details, componentName, id }) {
                           WebkitTextFillColor: "gray",
                         },
                       }}
-                      disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      // disabled={role.roles === 1 || role.roles === 2 || !enabled}
                       className={toggleEnable ? "" : classes.disabledTextField}
                       value={cycleTime.newData}
                       label="Cycle Time"
@@ -294,7 +294,7 @@ export default function RepeatedOperation({ details, componentName, id }) {
                           WebkitTextFillColor: "gray",
                         },
                       }}
-                      disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      // disabled={role.roles === 1 || role.roles === 2 || !enabled}
                       className={toggleEnable ? "" : classes.disabledTextField}
                       value={totalCycle.newData}
                       label="Total Cycle"
@@ -311,7 +311,7 @@ export default function RepeatedOperation({ details, componentName, id }) {
                           WebkitTextFillColor: "gray",
                         },
                       }}
-                      disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      // disabled={role.roles === 1 || role.roles === 2 || !enabled}
                       className={toggleEnable ? "" : classes.disabledTextField}
                       value={testDurationMax.newData}
                       label="Test Duration(hr max)"
@@ -328,7 +328,7 @@ export default function RepeatedOperation({ details, componentName, id }) {
                           WebkitTextFillColor: "gray",
                         },
                       }}
-                      disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      // disabled={role.roles === 1 || role.roles === 2 || !enabled}
                       className={toggleEnable ? "" : classes.disabledTextField}
                       value={testDurationMin.newData}
                       label="Test Duration(hr min)"
@@ -345,7 +345,7 @@ export default function RepeatedOperation({ details, componentName, id }) {
                           WebkitTextFillColor: "gray",
                         },
                       }}
-                      disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      // disabled={role.roles === 1 || role.roles === 2 || !enabled}
                       className={toggleEnable ? "" : classes.disabledTextField}
 
                       value={equipmentRunning.newData}
@@ -363,7 +363,7 @@ export default function RepeatedOperation({ details, componentName, id }) {
                           WebkitTextFillColor: "gray",
                         },
                       }}
-                      disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      // disabled={role.roles === 1 || role.roles === 2 || !enabled}
                       className={toggleEnable ? "" : classes.disabledTextField}
 
                       value={simultaneously.newData}
@@ -382,7 +382,7 @@ export default function RepeatedOperation({ details, componentName, id }) {
                           WebkitTextFillColor: "gray",
                         },
                       }}
-                      disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      // disabled={role.roles === 1 || role.roles === 2 || !enabled}
                       className={toggleEnable ? "" : classes.disabledTextField}
 
                       value={sampleQty.newData}

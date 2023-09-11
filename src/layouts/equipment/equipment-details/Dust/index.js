@@ -300,7 +300,7 @@ export default function DustTest({ details, componentName, id }) {
                           WebkitTextFillColor: "gray",
                         },
                       }}
-                      disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      // disabled={role.roles === 1 || role.roles === 2 || !enabled}
                       className={toggleEnable ? "" : classes.disabledTextField}
                       value={dust.newData}
                       label="Dust (sec)"
@@ -319,7 +319,7 @@ export default function DustTest({ details, componentName, id }) {
                           WebkitTextFillColor: "gray",
                         },
                       }}
-                      disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      // disabled={role.roles === 1 || role.roles === 2 || !enabled}
                       className={toggleEnable ? "" : classes.disabledTextField}
                       value={rest.newData}
                       label="Rest (mins)"
@@ -338,7 +338,7 @@ export default function DustTest({ details, componentName, id }) {
                           WebkitTextFillColor: "gray",
                         },
                       }}
-                      disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      // disabled={role.roles === 1 || role.roles === 2 || !enabled}
                       className={toggleEnable ? "" : classes.disabledTextField}
                       value={testDurationMin.newData}
                       label="Test Duration (hr min)"
@@ -357,7 +357,7 @@ export default function DustTest({ details, componentName, id }) {
                           WebkitTextFillColor: "gray",
                         },
                       }}
-                      disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      // disabled={role.roles === 1 || role.roles === 2 || !enabled}
                       className={toggleEnable ? "" : classes.disabledTextField}
                       value={testDurationMax.newData}
                       label="Test Duration (hr max)"
@@ -376,7 +376,7 @@ export default function DustTest({ details, componentName, id }) {
                           WebkitTextFillColor: "gray",
                         },
                       }}
-                      disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      // disabled={role.roles === 1 || role.roles === 2 || !enabled}
                       className={toggleEnable ? "" : classes.disabledTextField}
                       value={equipmentRunning.newData}
                       label="Equipment Running (hr)"
@@ -395,7 +395,7 @@ export default function DustTest({ details, componentName, id }) {
                           WebkitTextFillColor: "gray",
                         },
                       }}
-                      disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      // disabled={role.roles === 1 || role.roles === 2 || !enabled}
                       className={toggleEnable ? "" : classes.disabledTextField}
                       value={simultaneously.newData}
                       label="Simultaneously"
@@ -414,7 +414,7 @@ export default function DustTest({ details, componentName, id }) {
                           WebkitTextFillColor: "gray",
                         },
                       }}
-                      disabled={role.roles === 1 || role.roles === 2 || !enabled}
+                      // disabled={role.roles === 1 || role.roles === 2 || !enabled}
                       className={toggleEnable ? "" : classes.disabledTextField}
                       value={sampleQty.newData}
                       label="Sample Quantity"
