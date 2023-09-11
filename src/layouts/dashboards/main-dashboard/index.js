@@ -1,5 +1,10 @@
 import Grid from "@mui/material/Grid";
+
 import MDBox from "components/MDBox";
+import Tooltip from "@mui/material/Tooltip";
+import Icon from "@mui/material/Icon";
+import MDBox from "components/MDBox";
+import MDTypography from "components/MDTypography";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
@@ -9,6 +14,10 @@ import { useQuery } from "urql";
 import { EVERY_TEST_DEATILS } from "apis/queries";
 import { useEffect } from "react";
 import { useState } from "react";
+import ReportsBarChart from "examples/Charts/BarCharts/ReportsBarChart";
+import ReportsLineChart from "examples/Charts/LineCharts/ReportsLineChart";
+import reportsBarChartData from "layouts/dashboards/analytics/data/reportsBarChartData";
+
 // import reportsLineChartData from "layouts/dashboards/analytics/data/reportsLineChartData";
 
 function MainDashboard() {
