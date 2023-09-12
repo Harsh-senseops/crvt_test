@@ -144,6 +144,11 @@ export default function ThermalShockChamber({ details, componentName, id }) {
         }
       }
     })
+    if(thermalShockdetailByID.data){
+      let data=thermalShockdetailByID.data.crvtThermalShockChamberTestDetailByPartName.status
+      setToggleEnable(data === 1 ? true: false)
+      setEnabled(data === 1 ? true: false)
+    }
   }, [details, thermalShockdetailByID])
 
   const saveData = () => {

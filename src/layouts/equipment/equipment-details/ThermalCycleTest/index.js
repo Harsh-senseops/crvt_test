@@ -127,6 +127,11 @@ export default function ThermalCycleTestDetail({ details, componentName, id }) {
         }
       }
     })
+    if(thermalCycledeailsByID.data){
+      let data = thermalCycledeailsByID.data.crvtThermalCycleTestDetailByPartName.status
+      setToggleEnable(data === 1 ? true: false)
+      setEnabled(data === 1 ? true: false)
+    }
   }, [details, thermalCycledeailsByID])
 
   const saveData = () => {

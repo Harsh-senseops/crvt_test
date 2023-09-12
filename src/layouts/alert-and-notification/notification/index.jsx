@@ -45,7 +45,6 @@ function Notification() {
       setShouldPause(true);
     }
   }, [notificationsData.data]);
-  console.log(data)
   return (
     <DashboardLayout>
       <MDBox width="calc(100% - 48px)" position="absolute" top="1.75rem">

@@ -103,7 +103,6 @@ export default function VibrationTest({ details, componentName, id }) {
     query: VIBRATION_TEST_DETAILS,
     variables: { partName: id }
   })
-
   const [saveVibrationStatusRes, saveVibartionStatus] = useMutation(ADD_VIBRATION_STATUS)
   const [equipmentHistoryRes, saveEquipmentHistory] = useMutation(ADD_EQUIPMENT_UPDATE_HISTORY)
 
@@ -122,6 +121,7 @@ export default function VibrationTest({ details, componentName, id }) {
       setCycleTime({ newData: constValues.cycle_time_sec, oldData: constValues.cycle_time_sec })
       setAcceleration({ newData: constValues.acceleration, oldData: constValues.acceleration })
       setSampleQty({ newData: constValues.sample_qty, oldData: constValues.sample_qty })
+
     }
 
     details.map((val) => {
@@ -150,10 +150,14 @@ export default function VibrationTest({ details, componentName, id }) {
           setToggleEnable(false)
           setEnabled(false)
         }
-
-
       }
     })
+    if(vibrationdeailsByID.data){
+      let data=vibrationdeailsByID.data.crvtVibrationTestDetailByPartName.status
+      setToggleEnable(data === 1 ? true: false)
+      setEnabled(data === 1 ? true: false)
+    }
+    // console.log(vibrationdeailsByID.data.crvtVibrationTestDetailByPartName.status)
   }, [details, vibrationdeailsByID])
 
 

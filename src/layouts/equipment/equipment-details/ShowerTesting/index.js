@@ -139,6 +139,11 @@ export default function ShowerTesting({ details, componentName, id }) {
         }
       }
     })
+    if(showerdetailByID.data){
+      let data = showerdetailByID.data.crvtShowerTestDetailByPartName.status
+      setToggleEnable(data === 1 ? true: false)
+      setEnabled(data === 1 ? true: false)
+    }
   }, [details, showerdetailByID])
 
 
@@ -238,7 +243,6 @@ export default function ShowerTesting({ details, componentName, id }) {
                 aria-expanded={expanded}
                 aria-label="show more"
                 color='info'
-
               >
                 <ExpandMoreIcon />
               </IconButton>
