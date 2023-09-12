@@ -278,6 +278,7 @@ allCrvtComponentDetails {
 const DUST_TEST_DETAILS = `subscription dustTestDetailByPartName($partName:Int!) {
 crvtDustTestDetailByPartName(partName: $partName) {
   testDetails
+  status
 }
 }`;
 

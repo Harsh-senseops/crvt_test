@@ -28,6 +28,7 @@ import { FATCH_DIFF_RESULTS } from "apis/queries";
 import { FATCH_DIFFERENCE } from "apis/queries";
 import UploadImage from "./PostResult/UploadImage/uploadImage";
 import { setNoOfSamples, setPrePostIndex } from "reduxSlices/prePost";
+import MDHoverSearch from "components/MDHoverSearch";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -78,8 +79,17 @@ let initialSampleState = [
   { value: 4, color: "#2D3D59" },
 ];
 
+const searchPrePost = (data,searchTerm) => {
+  const filteredData = data.filter(
+    (item) =>
+      item.partCode.toLowerCase().includes(searchTerm.toLowerCase()) 
+  );
+  return filteredData;
+}
+
 export default function PrePostResult({}) {
   // const [expanded, setExpanded] = React.useState(false);
+  const [searchTerm, setSearchTerm] = useState("")
   const [show, setShow] = useState(false);
   const [partDetails, setPartDetails] = useState([]);
   const [change, setChange] = useState(initialSampleState);
@@ -158,10 +168,12 @@ export default function PrePostResult({}) {
         //  && !val.frequency && !val.insulatioRs
         //     && !val.soundLvl
       });
-      setPartDetails(tempArray);
+      // searchPrePost(tempArray,searchTerm)
+      setPartDetails(searchPrePost(tempArray,searchTerm));
       setShouldPause(true);
+      console.log(searchPrePost(partDetails,searchTerm))
     }
-  }, [plannerByName.data, preTableData.data]);
+  }, [plannerByName.data, preTableData.data,searchTerm]);
 
   const handleExchange = (e) => {
     e.stopPropagation();
@@ -264,7 +276,12 @@ export default function PrePostResult({}) {
         <DashboardNavbar dark absolute />
       </MDBox>
       <MDBox pt={10} pb={3}>
+          {/* <MDHoverSearch onInputChange={(value) => setSearchTerm(value)}/><br/> */}
         <Card style={{ background: "#394259" }}>
+          <div style={{padding:"1em"}}>
+          <MDHoverSearch onInputChange={(value) => setSearchTerm(value)}/>
+          </div>
+       
           {partDetails.length !== 0 &&
             partDetails.map((val, i) => {
               return (

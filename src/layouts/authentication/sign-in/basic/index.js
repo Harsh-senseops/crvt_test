@@ -35,6 +35,9 @@ import MDTypography from "components/MDTypography";
 import MDInput from "components/MDInput";
 import MDButton from "components/MDButton";
 import { useQuery } from "urql";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import { IconButton, InputAdornment } from "@mui/material";
 
 // Authentication layout components
 import BasicLayout from "layouts/authentication/components/BasicLayout";
@@ -62,7 +65,7 @@ function Basic() {
   });
   const dispatch = useDispatch();
   const { data, fetching, error } = userResult;
- 
+  const [passIcon, setPassIcon] = useState(false);
 
   useEffect(() => {
     // console.log(userResult)
@@ -115,7 +118,21 @@ function Basic() {
                 <MDInput type="text" label="User name" fullWidth name="userName" />
               </MDBox>
               <MDBox mb={2}>
-                <MDInput type="password" label="Password" name="password" fullWidth />
+                <MDInput type={passIcon ? "text" : "password"} label="Password" name="password" fullWidth  InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password"
+                  edge="end"
+                  onClick={() => setPassIcon(!passIcon)}
+                  color="white"
+                  size="small"
+                >
+                  {passIcon ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }} />
                 {msg.msg ? (
                   <span style={{ fontSize: "13px", marginLeft: "10px", color: `${msg.color}` }}>
                     {msg.msg}
