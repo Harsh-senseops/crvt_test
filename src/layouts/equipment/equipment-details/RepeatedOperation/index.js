@@ -148,6 +148,12 @@ export default function RepeatedOperation({ details, componentName, id }) {
         }
       }
     })
+    if(repeatedOperationdeailsByID.data){
+      let data = repeatedOperationdeailsByID.data.crvtRepeatedOperationTestDetailByPartName.status
+      setToggleEnable(data === 1 ? true: false)
+      setEnabled(data === 1 ? true: false)
+    
+    }
   }, [details, repeatedOperationdeailsByID])
 
   const saveData = () => {

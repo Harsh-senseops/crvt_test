@@ -53,10 +53,8 @@ function ComponentsTable() {
 
   const [getEquipment, getEquipmentResult] = useQuery({
     query: EQUIPMENT_DETAILS,
-    // pause:shouldPause
   })
 
-  // const { data: equipmentData, fetching: equipmentFetching, error: equipmentError } = getEquipment
 
   useEffect(() => {
     if(shouldPause){
@@ -76,8 +74,6 @@ function ComponentsTable() {
   const handleFormClose = () => {
     setDetailsOpen(false)
   }
-  // if (equipmentFetching) return <p style={{ color: "white", fontWeight: "bold" }}>Loading Component...</p>
-  // if (equipmentError) return <p>Oh no... {equipmentError.message}</p>
 
   return (
     <Grid >
@@ -122,7 +118,7 @@ function ComponentsTable() {
                 {
                   icon: () => <EditIcon
                   color="error" />,
-                  tooltip: 'Edit machine data',
+                  tooltip: 'Edit chamber data',
                   onClick: (event, rowdata) => { handleEdit(rowdata) }
                 }
               ]}
