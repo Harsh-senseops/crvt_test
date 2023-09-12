@@ -293,6 +293,7 @@ updateCrvtDustTestDetailByPartName(
 const OVEN_TEST_DETAILS = `subscription ovenTestDetailByPartName($partName:Int!) {
 crvtOvenTestDetailByPartName(partName:$partName) {
   testDetails
+  status
 }
 }`;
 
@@ -307,6 +308,7 @@ updateCrvtOvenTestDetailByPartName(
 const REPEATED_OPERATION_TEST_DETAILS = `subscription repeatedOperationTestDetailByPartName($partName:Int!) {
 crvtRepeatedOperationTestDetailByPartName(partName: $partName) {
   testDetails
+  status
 }
 }
 `;
@@ -319,6 +321,7 @@ clientMutationId
 const SHOWER_TEST_DETAILS = `subscription showerTestDetailByPartName($partName:Int!) {
 crvtShowerTestDetailByPartName(partName: $partName) {
   testDetails
+  status
 }
 }`;
 
@@ -333,6 +336,7 @@ updateCrvtShowerTestDetailByPartName(
 const THERMAL_CYCLE_TEST_DETAILS = `subscription thermalCycleTestDetailByPartName($partName:Int!) {
 crvtThermalCycleTestDetailByPartName(partName: $partName) {
   testDetails
+  status
 }
 }`;
 const SAVE_THERMAL_CYCLE_DETAILS = `mutation updateThermalCycleTestDetailByPartName($testDetails:JSON!,$partName:Int!) {updateCrvtThermalCycleTestDetailByPartName(
@@ -344,6 +348,7 @@ clientMutationId
 const THERMAL_SHOCK_TEST_DETAILS = `subscription thermalShockChamberTestDetailByPartName($partName:Int!) {
 crvtThermalShockChamberTestDetailByPartName(partName: $partName) {
   testDetails
+  status
 }
 }`;
 
@@ -354,11 +359,12 @@ updateCrvtThermalShockChamberTestDetailByPartName(
   clientMutationId
 }
 }`;
-const VIBRATION_TEST_DETAILS = `subscription vibrationTestDetailByPartName($partname:Int!){
-crvtVibrationTestDetailByPartName(partName: $partname) {
-  testDetails
-}
-}`;
+const VIBRATION_TEST_DETAILS = `subscription vibrationTestDetailByPartName($partName:Int!){
+  crvtVibrationTestDetailByPartName(partName: $partName) {
+    testDetails
+    status
+  }
+  }`;
 
 const SAVE_VIBRATION_DETAILS = `mutation updateVibrationTestDetailByPartName($testDetails:JSON!,$partName:Int!) {
 updateCrvtVibrationTestDetailByPartName(

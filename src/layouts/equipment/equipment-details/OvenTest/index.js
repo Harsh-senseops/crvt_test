@@ -137,8 +137,15 @@ export default function OvenTest({ details, componentName, id }) {
         }
       }
     })
+    if(oventestdeailsByID.data){
+      let data=oventestdeailsByID.data.crvtOvenTestDetailByPartName.status
+          setToggleEnable(data === 1 ? true : false)
+            setEnabled(data === 1?true:false)
+    }
+    // console.log(oventestdeailsByID.data.crvtOvenTestDetailByPartName.status);
   }, [details, oventestdeailsByID])
 
+  console.log(oventestdeailsByID);
   const saveData = () => {
 
     let data = JSON.stringify({
