@@ -4,13 +4,13 @@ const initialState = {
   fileName:"",
   shouldPause:true,
   yearlyPlanner:{
-   allCrvtDustYearlyPlanners:[],
-   allCrvtOvenYearlyPlanners:[],
-   allCrvtRoYearlyPlanners:[],
-   allCrvtShowerYearlyPlanners:[],
-   allCrvtThermalCycleYearlyPlanners:[],
-   allCrvtThermalShockYearlyPalnners:[],
-   allCrvtVibrationYearlyPlanners:[]
+   allCrvtDustYearlyPlanners:null,
+   allCrvtOvenYearlyPlanners:null,
+   allCrvtRoYearlyPlanners:null,
+   allCrvtShowerYearlyPlanners:null,
+   allCrvtThermalCycleYearlyPlanners:null,
+   allCrvtThermalShockYearlyPalnners:null,
+   allCrvtVibrationYearlyPlanners:null
   }
   };
 

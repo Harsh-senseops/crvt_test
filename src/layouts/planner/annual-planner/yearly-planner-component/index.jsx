@@ -111,10 +111,9 @@ export default function YearlyPlannerComponent({ name, query, allPlanners, expan
   const [data, setData] = React.useState([]);
   React.useEffect(() => {
     let keys = Object.keys(yearlyPlannerStore.yearlyPlanner);
-    console.log(yearlyPlannerStore.yearlyPlanner[keys[0]])
     if (dustYearlyPlanner.data) {
       keys.map((val)=>{
-        if(yearlyPlannerStore.yearlyPlanner[val].length === 0){
+        if(!yearlyPlannerStore.yearlyPlanner[val]){
           let tempArr = [];
           dustYearlyPlanner.data[allPlanners].nodes.map((val, i) => {
             let parsed = JSON.parse(val.testDetails);
@@ -158,7 +157,7 @@ export default function YearlyPlannerComponent({ name, query, allPlanners, expan
     
     }
   }, [dustYearlyPlanner.data]);
-  console.log(yearlyPlannerStore.yearlyPlanner.allPlanners)
+  console.log(yearlyPlannerStore.yearlyPlanner[allPlanners])
 
   const classes = useStyles();
 
@@ -219,8 +218,8 @@ export default function YearlyPlannerComponent({ name, query, allPlanners, expan
                   ))}
                 </TableRow>
                 <TableBody>
-                  {data 
-                    ? data.map((val, index) => {
+                  {yearlyPlannerStore.yearlyPlanner[allPlanners] 
+                    ? yearlyPlannerStore.yearlyPlanner[allPlanners].map((val, index) => {
                         return (
                           <TableRow
                             style={{
