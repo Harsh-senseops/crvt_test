@@ -2,7 +2,16 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   fileName:"",
-  shouldPause:true
+  shouldPause:true,
+  yearlyPlanner:{
+   allCrvtDustYearlyPlanners:[],
+   allCrvtOvenYearlyPlanners:[],
+   allCrvtRoYearlyPlanners:[],
+   allCrvtShowerYearlyPlanners:[],
+   allCrvtThermalCycleYearlyPlanners:[],
+   allCrvtThermalShockYearlyPalnners:[],
+   allCrvtVibrationYearlyPlanners:[]
+  }
   };
 
   export const yearlyPlanner = createSlice({
@@ -14,10 +23,13 @@ const initialState = {
      },
      setShouldPause:(state,actions)=> {
         state.shouldPause = actions.payload
-     }  
+     } ,
+     setYearlyPlanner:(state,action)=>{
+      state.yearlyPlanner[action.payload.testName] = action.payload.data;
+     } 
     },
   });
   
-  export const { setFileName,setShouldPause } = yearlyPlanner.actions;
+  export const { setFileName,setShouldPause,setYearlyPlanner } = yearlyPlanner.actions;
   
   export default yearlyPlanner.reducer;

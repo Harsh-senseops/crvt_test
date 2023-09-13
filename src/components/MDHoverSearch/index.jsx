@@ -20,13 +20,15 @@ const useStyles = makeStyles((theme) => ({
     outline: "none",
     transition: ".5s",
     width: "40%",
-    "&:hover": {
-      // width: 350,
-      background: "none",
-      borderRadius: 8,
-      zIndex: 1,
-      color: "white",
-    },
+    border:"1px solid grey",
+    color:"white"
+    // "&:hover": {
+    //   // width: 350,
+    //   background: "none",
+    //   borderRadius: 8,
+    //   zIndex: 1,
+    //   color: "white",
+    // },
   },
   icon: {
     position: "relative",
@@ -60,6 +62,7 @@ export default function MDHoverSearch({ onInputChange }) {
         type="text"
         className={classes.input}
         value={inputValue}
+        // onBlur={handleChange}
         onChange={handleChange}
         placeholder="Search"
       /> 

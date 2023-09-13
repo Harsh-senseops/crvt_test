@@ -336,7 +336,7 @@ const AdminTable = () => {
                     <IconButton
                       sx={{
                         "&:hover": {
-                          background: "#f0f2f5",
+                          // background: "#f0f2f5",
                           cursor: "pointer",
                         },
                       }}
@@ -351,7 +351,7 @@ const AdminTable = () => {
                     <IconButton
                       sx={{
                         "&:hover": {
-                          background: "#f0f2f5",
+                          // background: "#f0f2f5",
                           cursor: "pointer",
                         },
                       }}

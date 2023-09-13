@@ -15,7 +15,7 @@ import { useQuery, useSubscription } from "urql";
 import { useSelector, useDispatch } from "react-redux";
 import DataTable from "examples/Tables/DataTable";
 import MDCard from "components/MDCard";
-import { setShouldPause } from "reduxSlices/yearlyPlanner";
+import { setShouldPause,setYearlyPlanner } from "reduxSlices/yearlyPlanner";
 import { useCallback } from "react";
 import clsx from "clsx";
 import MDTypography from "components/MDTypography";
@@ -80,6 +80,21 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
+const monthNames = [
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+  "January",
+  "February",
+  "March",
+];
+
 export default function YearlyPlannerComponent({ name, query, allPlanners, expanded, onClick }) {
   // const [expanded, setExpanded] = React.useState(false);
   // const [shouldPause, setShouldPause] = React.useState(false);
@@ -95,62 +110,55 @@ export default function YearlyPlannerComponent({ name, query, allPlanners, expan
   });
   const [data, setData] = React.useState([]);
   React.useEffect(() => {
-    if (data.length === 0) {
-      dispatch(setShouldPause(false));
-    }
+    let keys = Object.keys(yearlyPlannerStore.yearlyPlanner);
+    console.log(yearlyPlannerStore.yearlyPlanner[keys[0]])
     if (dustYearlyPlanner.data) {
-      const monthNames = [
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December",
-        "January",
-        "February",
-        "March",
-      ];
-      let tempArr = [];
-      dustYearlyPlanner.data[allPlanners].nodes.map((val, i) => {
-        let parsed = JSON.parse(val.testDetails);
-        if (parsed.length >= 12) {
-          tempArr.push({
-            name: val.crvtComponentDetailByComponentId.partName,
-            samples: Array(12).fill(val.samples),
-          });
-        } else {
-          let monthsArray = [];
-          let index = 0;
-          monthNames.map((val) => {
-            if (index === parsed.length) {
-              monthsArray.push("");
-              return;
-            }
-            let [startDay, day] = parsed[index].startDate.split("-");
-            if (val === startDay) {
-              monthsArray.push(parsed[index].samples);
-              index++;
+      keys.map((val)=>{
+        if(yearlyPlannerStore.yearlyPlanner[val].length === 0){
+          let tempArr = [];
+          dustYearlyPlanner.data[allPlanners].nodes.map((val, i) => {
+            let parsed = JSON.parse(val.testDetails);
+            if (parsed.length >= 12) {
+              tempArr.push({
+                name: val.crvtComponentDetailByComponentId.partName,
+                samples: Array(12).fill(val.samples),
+              });
             } else {
-              monthsArray.push("");
+              let monthsArray = [];
+              let index = 0;
+              monthNames.map((val) => {
+                if (index === parsed.length) {
+                  monthsArray.push("");
+                  return;
+                }
+                let [startDay, day] = parsed[index].startDate.split("-");
+                if (val === startDay) {
+                  monthsArray.push(parsed[index].samples);
+                  index++;
+                } else {
+                  monthsArray.push("");
+                }
+              });
+              tempArr.push({
+                name: val.crvtComponentDetailByComponentId.partName,
+                samples: monthsArray,
+              });
             }
           });
-          tempArr.push({
-            name: val.crvtComponentDetailByComponentId.partName,
-            samples: monthsArray,
+    
+          const sortedArray = tempArr.sort((a, b) => {
+            return a.name.localeCompare(b.name);
           });
+          setData(sortedArray);
+          dispatch(setYearlyPlanner({testName:allPlanners,data:sortedArray}))
+          dispatch(setShouldPause(false));
         }
-      });
-
-      const sortedArray = tempArr.sort((a, b) => {
-        return a.name.localeCompare(b.name);
-      });
-      setData(sortedArray);
-      dispatch(setShouldPause(false));
+      })
+   
+    
     }
-  }, [dustYearlyPlanner]);
+  }, [dustYearlyPlanner.data]);
+  console.log(yearlyPlannerStore.yearlyPlanner.allPlanners)
 
   const classes = useStyles();
 
@@ -211,7 +219,7 @@ export default function YearlyPlannerComponent({ name, query, allPlanners, expan
                   ))}
                 </TableRow>
                 <TableBody>
-                  {data
+                  {data 
                     ? data.map((val, index) => {
                         return (
                           <TableRow
