@@ -157,9 +157,8 @@ export default function YearlyPlannerComponent({ name, query, allPlanners, expan
     
     }
   }, [dustYearlyPlanner.data]);
-  console.log(yearlyPlannerStore.yearlyPlanner[allPlanners])
-
   const classes = useStyles();
+  // console.log(yearlyPlannerStore.yearlyPlanner[allPlanners]);
 
   return (
     <Card style={{ marginBottom: "0.7em", background: "#202940" }}>
@@ -201,13 +200,13 @@ export default function YearlyPlannerComponent({ name, query, allPlanners, expan
               paddingTop: "1%",
             }}
           >
-            Total Components found {data.length}
+            Total Components found {yearlyPlannerStore.yearlyPlanner[allPlanners] ? yearlyPlannerStore.yearlyPlanner[allPlanners].length :0 }
           </MDTypography>
         }
       />
       {!toggleEnable && (
         <Collapse in={expanded} timeout="auto" unmountOnExit>
-          {data.length !== 0 ? (
+          {yearlyPlannerStore.yearlyPlanner[allPlanners]  ? (
             <TableContainer style={{ marginTop: "10px" }}>
               <Table>
                 <TableRow style={{ background: "#003e66" }}>
