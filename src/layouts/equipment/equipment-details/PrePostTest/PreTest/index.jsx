@@ -206,7 +206,6 @@ export default function PreTest({ id }) {
         prInsulationRs: InsulationVal,
         prFrequency: frequencyVal,
         prSoundLvl: soundVal,
-        // prDifferance: differanceVal,
       }).then((res) => {
         console.log(res);
         if (res.data) {

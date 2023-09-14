@@ -93,7 +93,7 @@ function ConfirmationDialogRaw({
             if (res.error) {
               console.log(res.error);
             } else if (res.data) {
-              dispatch(clearMonthlyPlanner())
+              // dispatch(clearMonthlyPlanner())  
               alertAndLoaders(
                 "UNSHOW_ALERT",
                 dispatch,

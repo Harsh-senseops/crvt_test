@@ -718,9 +718,9 @@ allCrvtAlerts {
 }
 }
 `;
-const CREATE_PRE_TEST = `mutation createPreTestTable($componentId: Int!, $prCurrent: JSON!, $prFrequency: JSON!, $prDifferance: JSON!, $prInsulationRs: JSON!, $prSoundLvl: JSON!) {
-createPreTestTable(
-  input: {preTestTable: {componentId: $componentId, prCurrent: $prCurrent, prFrequency: $prFrequency, prDifferance: $prDifferance, prInsulationRs: $prInsulationRs, prSoundLvl: $prSoundLvl}}
+const CREATE_PRE_TEST = `mutation createPreTestTable($componentId: Int!, $prCurrent: JSON!, $prFrequency: JSON!, $prInsulationRs: JSON!, $prSoundLvl: JSON!) {
+  createCrvtPreTestTable(
+  input: {crvtPreTestTable: {componentId: $componentId, prCurrent: $prCurrent, prFrequency: $prFrequency, prInsulationRs: $prInsulationRs, prSoundLvl: $prSoundLvl}}
 ) {
   clientMutationId
 }

@@ -35,8 +35,8 @@ const AddPartCode = ({ buttonText, onAddPartCode }) => {
   const [open, setOpen] = useState(false);
 
   return (
-    <div>
-      <Button onClick={handleClickOpen} style={{ float: 'right', background: '#344767',color:"white" }}>
+    <>
+      <Button onClick={handleClickOpen} style={{ float: 'right', background: '#344767',color:"white",}}>
         {buttonText}
       </Button>
       <Dialog
@@ -65,7 +65,7 @@ const AddPartCode = ({ buttonText, onAddPartCode }) => {
           <Button onClick={handleAddPartCode}>Add</Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </>
   );
 };
 

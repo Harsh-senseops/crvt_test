@@ -5,11 +5,11 @@ import Icon from "@mui/material/Icon";
 const useStyles = makeStyles((theme) => ({
   box: {
     position: "relative",
+    display:"inline"
   },
   input: {
     position: "relative",
     padding: 8,
-    width: 50,
     height: 40,
     background: "#202940",
     border: `1px solid #202940`,

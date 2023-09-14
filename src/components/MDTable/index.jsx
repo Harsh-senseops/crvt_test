@@ -10,6 +10,7 @@ import Paper from "@mui/material/Paper";
 import React, { useState, useEffect } from "react";
 import MDTypography from "components/MDTypography";
 import { Button } from "@mui/material";
+import MDBox from "components/MDBox";
 
 function formattedTime(dateTime) {
   const dateTimeString = dateTime;
@@ -89,23 +90,55 @@ const sortData = (data, sortDirection, sortBy, searchTerm) => {
   );
 
   const resultData = filteredData.length > 0 ? filteredData : data;
+  // const sortedData = resultData.sort((a, b) => {
+  //   if (sortDirection === SORT_DIRECTION.ASC && (a[sortBy].length !== 0 || 0)) {
+  //     if (typeof a[sortBy] === "string" || a[sortBy] instanceof String) {
+  //       return a[sortBy].toLowerCase() > b[sortBy].toLowerCase() ? 1 : -1;
+  //     } else {
+  //       return a[sortBy] > b[sortBy] ? 1 : -1;
+  //     }
+  //   } else {
+  //     if (typeof a[sortBy] === "string" || a[sortBy] instanceof String) {
+  //       return a[sortBy].toLowerCase() < b[sortBy].toLowerCase() ? 1 : -1;
+  //     } else {
+  //       return a[sortBy] < b[sortBy] ? 1 : -1;
+  //     }
+  //   }
+  // });
+  const sortedData = [...resultData]; // Create a new array to avoid modifying the original data
 
-  const sortedData = resultData.sort((a, b) => {
-    if (sortDirection === SORT_DIRECTION.ASC) {
-      if (typeof a[sortBy] === "string" || a[sortBy] instanceof String) {
-        return a[sortBy].toLowerCase() > b[sortBy].toLowerCase() ? 1 : -1;
+  if (sortDirection === SORT_DIRECTION.ASC) {
+    sortedData.sort((a, b) => {
+      const aValue = a[sortBy];
+      const bValue = b[sortBy];
+  
+      if (aValue !== undefined && aValue !== null) {
+        if (typeof aValue === "string") {
+          return aValue.toLowerCase().localeCompare(bValue.toLowerCase());
+        } else {
+          return aValue - bValue;
+        }
       } else {
-        return a[sortBy] > b[sortBy] ? 1 : -1;
+        return bValue !== undefined && bValue !== null ? -1 : 0;
       }
-    } else {
-      if (typeof a[sortBy] === "string" || a[sortBy] instanceof String) {
-        return a[sortBy].toLowerCase() < b[sortBy].toLowerCase() ? 1 : -1;
+    });
+  } else {
+    sortedData.sort((a, b) => {
+      const aValue = a[sortBy];
+      const bValue = b[sortBy];
+  
+      if (aValue !== undefined && aValue !== null) {
+        if (typeof aValue === "string") {
+          return bValue.toLowerCase().localeCompare(aValue.toLowerCase());
+        } else {
+          return bValue - aValue;
+        }
       } else {
-        return a[sortBy] < b[sortBy] ? 1 : -1;
+        return bValue !== undefined && bValue !== null ? 1 : 0;
       }
-    }
-  });
-
+    });
+  }
+  
   return sortedData;
 };
 
@@ -157,7 +190,7 @@ function MDTable({ data, searchTerm, onTouch }) {
                     }}
                   >
                     <MDTypography variant="h6" fontWeight="medium">
-                      {column.Header}
+                      {column.Header.toUpperCase()}
                     </MDTypography>
                   </TableSortLabel>
                 </TableCell>
@@ -188,22 +221,29 @@ function MDTable({ data, searchTerm, onTouch }) {
                 >
                   {row &&
                     Object.entries(row).map(([key, value]) => {
+                    // let columnKeys = Object.keys(data.c)
+                    const index = data.columns.findIndex((obj) => obj.accessor === key);
+                    console.log(key)
                       if (key === "ignore" || key === "__typename") return;
+                      if(index === -1) return
                       return (
                         <TableCell align={row.aign ? row.align : "left"} component="th" scope="row">
                           <MDTypography variant="p" fontWeight="light" style={{ color: "#fff" }}>
                             <div>
                               {key.toLowerCase().includes("datetime") ? (
                                 <>
-                                  <span>
+                                  <MDTypography variant="h6" fontWeight="regular">
                                     {formattedTime(value).date}
                                   
-                                  </span>
+                                  </MDTypography>
                                   <br />
-                                  <span>{formattedTime(value).time}</span>
+                                  <MDTypography variant="h6" fontWeight="regular">{formattedTime(value).time}</MDTypography>
                                 </>
                               ) : (
-                                value
+                                <MDTypography variant="h6" fontWeight="regular">
+                                  {value}
+                                </MDTypography>
+                                
                               )}
                             </div>
 
@@ -229,14 +269,14 @@ function MDTable({ data, searchTerm, onTouch }) {
             })}
         </TableBody>
       </Table>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          margin: "1em 0",
-        }}
+         <MDBox
+        display="flex"
+        flexDirection={{ xs: "column", sm: "row" }}
+        justifyContent="space-between"
+        alignItems={{ xs: "flex-start", sm: "center" }}
+        p={3}
       >
+        <MDTypography variant="h6" style={{fontSize:"0.8rem"}} fontWeight="regular">Showing {pageData.length} out of {rows.length}</MDTypography>
         <Pagination
           count={Math.ceil(rows.length / ENTRIES_PER_PAGE)}
           hidePrevButton={state.page === 0}
@@ -245,7 +285,8 @@ function MDTable({ data, searchTerm, onTouch }) {
           page={state.page + 1}
           onChange={handlePageChange}
         />
-      </div>
+      </MDBox>
+        
     </TableContainer>
   );
 }

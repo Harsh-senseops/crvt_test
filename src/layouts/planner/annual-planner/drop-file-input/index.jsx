@@ -355,9 +355,9 @@ const DropFileInput = (props) => {
               <MDTypography
                 variant="h5"
                 fontWeight="regular"
-                style={{ color: "whitesmoke", margin: "-20px" }}
+                style={{ color: "whitesmoke",position:"relative",bottom:"-10px"  }}
               >
-                Loading...
+                Creating yearly planner...
               </MDTypography>
             </div>
           </Card>

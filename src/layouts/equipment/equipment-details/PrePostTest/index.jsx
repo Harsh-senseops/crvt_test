@@ -92,7 +92,7 @@ export default function PrePostTest({ id }) {
                         </div>
                     }
                     title={<MDTypography variant="h6" fontWeight="medium">Pre and Post Test</MDTypography>}
-                    subheader={<MDTypography style={{ color: '#FB8C00', fontSize: '14px', paddingTop: '1%' }}>Configured PrePostTest Details </MDTypography>}
+                    subheader={<MDTypography style={{ color: '#FB8C00', fontSize: '14px', paddingTop: '1%' }}>Configure Pre-Post Test Details</MDTypography>}
                 />
                 <Collapse in={expanded} timeout="auto" unmountOnExit>
                     <form onSubmit={(e) => handleFormSubmit(e)}>

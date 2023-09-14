@@ -54,7 +54,8 @@ import {
   UPDATE_THERMAL_SHOCK_MONTHLY_PLANNER_BY_PART_CODE,
   UPDATE_VIBRATION_MONTHLY_PLANNER_BY_PART_CODE,
   UPDATE_UNPLANNED_LIST,
-  UPDATE_DASHBOARD_DETAILS
+  UPDATE_DASHBOARD_DETAILS,
+  ADD_NOTIFICATION
 } from "apis/queries";
 import CircularProgress from "@mui/material/CircularProgress";
 import Collapse from "@mui/material/Collapse";
@@ -170,6 +171,7 @@ function UnplannedListUpload() {
   const [resMutateMonthlyPlanner, mutateMonthlyPlanner] = useMutation(mutate);
   const [resUpdateMonthlyPlanner, updateMonthlyPlanner] = useMutation(UPDATE_UNPLANNED_LIST);
   const [updateDashBoardDetailsRes, updateDashBoardDetails] = useMutation(UPDATE_DASHBOARD_DETAILS);
+  const [addNotificationRes,addNotification] = useMutation(ADD_NOTIFICATION)
   const dispatch = useDispatch();
   let [componentList, setComponentList] = useState([]);
 
@@ -442,6 +444,12 @@ function UnplannedListUpload() {
               `Successfully added unplanned list`,
               "success"
             );
+            addNotification({
+  empCode: role.empCode,
+  message: "Unplanned list added",
+  notificationFrom: `Unplanned list`,
+  description: `${role.empCode} Added new Unplanned list`,
+})
         }
       });
       setOpen(false);
