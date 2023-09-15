@@ -238,7 +238,6 @@ const AdminTable = () => {
             justifyContent="flex-start"
             alignItems="center"
           >
-      
           </Grid>
           <Grid container xs={8} p={2}>
             <Box

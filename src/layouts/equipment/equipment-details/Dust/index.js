@@ -152,7 +152,7 @@ export default function DustTest({ details, componentName, id }) {
       setToggleEnable(data === 1 ? true:false)
       setEnabled(data === 1 ? true : false) 
     }
-  }, [details, dustdetailByID]);
+  }, [details, dustdetailByID.data]);
 
   const saveData = () => {
     let data = JSON.stringify({

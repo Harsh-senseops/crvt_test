@@ -154,7 +154,7 @@ export default function RepeatedOperation({ details, componentName, id }) {
       setEnabled(data === 1 ? true: false)
     
     }
-  }, [details, repeatedOperationdeailsByID])
+  }, [details, repeatedOperationdeailsByID.data])
 
   const saveData = () => {
 

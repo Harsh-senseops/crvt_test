@@ -149,7 +149,7 @@ export default function ThermalShockChamber({ details, componentName, id }) {
       setToggleEnable(data === 1 ? true: false)
       setEnabled(data === 1 ? true: false)
     }
-  }, [details, thermalShockdetailByID])
+  }, [details, thermalShockdetailByID.data])
 
   const saveData = () => {
 

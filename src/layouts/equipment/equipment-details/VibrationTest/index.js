@@ -157,8 +157,7 @@ export default function VibrationTest({ details, componentName, id }) {
       setToggleEnable(data === 1 ? true: false)
       setEnabled(data === 1 ? true: false)
     }
-    // console.log(vibrationdeailsByID.data.crvtVibrationTestDetailByPartName.status)
-  }, [details, vibrationdeailsByID])
+  }, [details, vibrationdeailsByID.data])
 
 
   const saveData = () => {

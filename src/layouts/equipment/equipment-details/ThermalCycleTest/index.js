@@ -132,7 +132,7 @@ export default function ThermalCycleTestDetail({ details, componentName, id }) {
       setToggleEnable(data === 1 ? true: false)
       setEnabled(data === 1 ? true: false)
     }
-  }, [details, thermalCycledeailsByID])
+  }, [details, thermalCycledeailsByID.data])
 
   const saveData = () => {
     let data = JSON.stringify({
