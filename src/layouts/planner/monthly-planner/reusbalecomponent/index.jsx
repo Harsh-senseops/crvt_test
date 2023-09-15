@@ -18,7 +18,7 @@ import DialogSelectComponent from "../select-vendor";
 import alertAndLoaders from "utils/alertAndLoaders";
 import { PARTDEAILS_BY_PART_CODE } from "apis/queries";
 import { ADD_MONTHLY_UPLOAD_HISTORY } from "apis/queries";
-import { setMonthlyPlanner,setDoFetch } from "../../../../reduxSlices/monthlyPlanner";
+import { setMonthlyPlanner, setDoFetch } from "../../../../reduxSlices/monthlyPlanner";
 import MDTable from "components/MDTable";
 import MDHoverSearch from "components/MDHoverSearch";
 
@@ -188,7 +188,7 @@ const ReusabaleMonthlyPlannerTests = ({
       dispatch(monthlyPlannerAction.setShouldPause(false));
     }
     let tempArray = [];
- if (testNameYp.data && monthlyPlannerStore.date.year >= 2012) {
+    if (testNameYp.data && monthlyPlannerStore.date.year >= 2012) {
       let isSevenDaysRunning = "";
       dispatch(monthlyPlannerAction.setShouldPause(true));
       testNameYp.data[allTestNameYearlyPlanner]?.nodes.forEach((val, i) => {
@@ -202,7 +202,8 @@ const ReusabaleMonthlyPlannerTests = ({
           )["7daysrunning"];
         if (testName === "RO")
           isSevenDaysRunning = JSON.parse(
-            val.crvtComponentDetailByComponentId.crvtEquipmentRunningDetailByPartId.repeatedOperationErt
+            val.crvtComponentDetailByComponentId.crvtEquipmentRunningDetailByPartId
+              .repeatedOperationErt
           )["7daysrunning"];
         if (testName === "SHOWER")
           isSevenDaysRunning = JSON.parse(
@@ -246,6 +247,15 @@ const ReusabaleMonthlyPlannerTests = ({
       let index = 0;
       for (let i = 0; i < mp.length; i++) {
         index = findIndex(tempArry2, mp[i].partName);
+        if(tempArry2[index].partName !== mp[i].partName){
+          // console.log(mp[i],tempArry2[index])
+          // tempArray
+          // console.log(index,"inside")
+          tempArry2.push({partName:mp[i].partName,partCode:mp[i].partCode,vendorName:JSON.parse(mp[i].vendorDetails).vendorName,status:mp[i].status === 0 ? "Scheduled":"Progress",sevenDaysRunning:tempArry2[index].sevenDaysRunning  === 0 ? false : true,testDuration:tempArry2[index].testDuration})
+          console.log(mp[i]);
+          continue;
+        }
+        console.log(index)
         tempArry2[index].partCode = mp[i].partCode;
         tempArry2[index].status = mp[i].status === 0 ? "Scheduled" : "Progress";
         tempArry2[index].vendorName = JSON.parse(mp[i].vendorDetails).vendorName;
@@ -264,22 +274,25 @@ const ReusabaleMonthlyPlannerTests = ({
         }
       });
     }
+    dispatch(setMonthlyPlanner({ testName, data: tempArry2 }));
     setData({ columns, rows: tempArry2 });
   }, [testNameYp.data, dispatch, monthMP.data]);
-
+  
+  // useEffect(()=>{
+  //   if(testNameYp.data){
+  //     console.log(testNameYp.data)
+  //   }
+  // },[testNameYp.data])
+  
   const handleAddPartCode = useCallback((partCode) => {
     setPartCode(partCode);
-    // setShouldPause(false);
-  }, []);
-  useEffect(() => {
-    return () => {};
   }, []);
 
   const classes = useStyles();
 
   return (
     //  background:monthlyPlannerStore?.isExpanded[testName] ? "#394259":"#202940"
-    <Card style={{ marginBottom: "15px", }} >
+    <Card style={{ marginBottom: "15px" }}>
       <CardHeader
         onClick={() => dispatch(monthlyPlannerAction.setIsExpanded(testName))}
         sx={{
@@ -321,33 +334,31 @@ const ReusabaleMonthlyPlannerTests = ({
               paddingTop: "1%",
             }}
           >
-            {Math.floor(data.rows.length / 2)} components
-            scheduled
+            {Math.floor(data.rows.length / 2)} components scheduled
           </MDTypography>
         }
       />
       {!toggleEnable && (
         <Collapse in={monthlyPlannerStore?.isExpanded[testName]} timeout="auto" unmountOnExit>
-          <CardContent style={{padding:"0px !important",margin:"0px !important"}}>
-            <MDBox style={{padding:"1em",borderRadius:"10px",}}>
-            <MDHoverSearch onInputChange={(value) => setSearchTerm(value)}/>
-            {userStore.roles === 3 ? (
-              <AddPartCode onAddPartCode={handleAddPartCode} buttonText="Add PartCode" />
-            ) : (
-              ""
-            )}
+          <CardContent style={{ padding: "0px !important", margin: "0px !important" }}>
+            <MDBox style={{ padding: "1em", borderRadius: "10px" }}>
+              <MDHoverSearch onInputChange={(value) => setSearchTerm(value)} />
+              {userStore.roles === 3 ? (
+                <AddPartCode onAddPartCode={handleAddPartCode} buttonText="Add PartCode" />
+              ) : (
+                ""
+              )}
             </MDBox>
             <MDBox pr={1}>
-           
               {/* <DataTable
                 table={{ columns, rows: data.rows }}
                 canSearch={true}
               /> */}
               <MDTable
-              data={{columns, rows: data.rows}}
-              canSearch={true}
-              searchTerm={searchTerm}
-               />
+                data={{ columns, rows: data.rows }}
+                canSearch={true}
+                searchTerm={searchTerm}
+              />
             </MDBox>
           </CardContent>
         </Collapse>

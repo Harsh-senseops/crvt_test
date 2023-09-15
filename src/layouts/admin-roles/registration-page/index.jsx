@@ -32,7 +32,6 @@ export default function MDDialog({ updateOrAdd, title }) {
   const [addUserRes, addUser] = useMutation(ADD_USER);
   const [updateUserRes, updateUser] = useMutation(UPDATE_USER);
   const [employeeCode,setEmployeeCode] = useState(store.employeeID)
-console.log(store.employeeID)
 useEffect(()=>{
   setEmployeeCode(store.employeeID)
 },[store.employeeID])
@@ -99,7 +98,6 @@ useEffect(()=>{
         role: store.role,
         employeeCode:store.employeeID,
       }).then((res) => {
-        console.log(res);
         if (
           res.error?.message.includes(
             "duplicate key value violates unique constraint"
@@ -113,8 +111,6 @@ useEffect(()=>{
           );
           return;
         } else if (res.data) {
-          console.log(res.data);
-          // console.log(store.employeeID, store.name, store.password, store.role);
           alertAndLoaders(
             "UNSHOW_ALERT",
             dispatch,
@@ -122,11 +118,6 @@ useEffect(()=>{
             "success"
           );
         }
-        // dispatch(action.setOpenDialoge(false));
-        // dispatch(action.setEmployeeId(""));
-        // dispatch(action.setName(""));
-        // dispatch(action.setPassword(""));
-        // dispatch(action.setRole(""));
         handleClickClose();
         dispatch(action.setRexecuteQuery(false));
       });
