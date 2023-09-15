@@ -55,7 +55,7 @@ import {
   UPDATE_VIBRATION_MONTHLY_PLANNER_BY_PART_CODE,
   UPDATE_UNPLANNED_LIST,
   UPDATE_DASHBOARD_DETAILS,
-  ADD_NOTIFICATION
+  ADD_NOTIFICATION,
 } from "apis/queries";
 import CircularProgress from "@mui/material/CircularProgress";
 import Collapse from "@mui/material/Collapse";
@@ -132,7 +132,7 @@ const monthNames = [
 // function getMonth(testDuration,sevenDaysRunning,) {
 // }
 
-const ROW_NAME = "unplanned_test"
+const ROW_NAME = "unplanned_test";
 
 function UnplannedListUpload() {
   const [show, setShow] = useState(false);
@@ -171,13 +171,13 @@ function UnplannedListUpload() {
   const [resMutateMonthlyPlanner, mutateMonthlyPlanner] = useMutation(mutate);
   const [resUpdateMonthlyPlanner, updateMonthlyPlanner] = useMutation(UPDATE_UNPLANNED_LIST);
   const [updateDashBoardDetailsRes, updateDashBoardDetails] = useMutation(UPDATE_DASHBOARD_DETAILS);
-  const [addNotificationRes,addNotification] = useMutation(ADD_NOTIFICATION)
+  const [addNotificationRes, addNotification] = useMutation(ADD_NOTIFICATION);
   const dispatch = useDispatch();
   let [componentList, setComponentList] = useState([]);
 
-  useEffect(()=>{
-    dispatch(monthlyPlanner.clearMonthlyPlanner())
-  },[monthlyPlannerStore.date.month])
+  useEffect(() => {
+    dispatch(monthlyPlanner.clearMonthlyPlanner());
+  }, [monthlyPlannerStore.date.month]);
   useEffect(() => {
     if (!allComponets.data || componentList.length === 0) {
       setShouldPause(false);
@@ -199,7 +199,7 @@ function UnplannedListUpload() {
         let chamberIndex = names.findIndex((val) =>
           key.toLowerCase().includes(val.name.toLowerCase().replace(/\s/g, ""))
         );
-        console.log(data[key])
+        console.log(data[key]);
         if (data[key].nodes.length === 0) {
           setDetails((prev) => [
             ...prev,
@@ -437,19 +437,14 @@ function UnplannedListUpload() {
           if (res.data.updateUnplannedList === "error") {
             alertAndLoaders("UNSHOW_ALERT", dispatch, `An Error occured`, "error");
           } else if (res.data.updateUnplannedList === "success")
-          dispatch(monthlyPlanner.clearMonthlyPlanner())
-            alertAndLoaders(
-              "UNSHOW_ALERT",
-              dispatch,
-              `Successfully added unplanned list`,
-              "success"
-            );
-            addNotification({
-  empCode: role.empCode,
-  message: "Unplanned list added",
-  notificationFrom: `Unplanned list`,
-  description: `${role.empCode} Added new Unplanned list`,
-})
+            dispatch(monthlyPlanner.clearMonthlyPlanner());
+          alertAndLoaders("UNSHOW_ALERT", dispatch, `Successfully added unplanned list`, "success");
+          addNotification({
+            empCode: role.empCode,
+            message: "Unplanned list added",
+            notificationFrom: `Unplanned list`,
+            description: `${role.empCode} Added new Unplanned list`,
+          });
         }
       });
       setOpen(false);
@@ -463,11 +458,11 @@ function UnplannedListUpload() {
       alertAndLoaders("UNSHOW_ALERT", dispatch, `Please Correct the data`, "warning");
     }
     updateDashBoardDetails({
-      rowName:ROW_NAME,
-      canIncrement:true,
-    }).then((res)=>{
+      rowName: ROW_NAME,
+      canIncrement: true,
+    }).then((res) => {
       console.log(res);
-    })
+    });
   };
 
   return (
