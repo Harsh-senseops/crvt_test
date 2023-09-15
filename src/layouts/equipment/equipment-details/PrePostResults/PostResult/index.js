@@ -14,7 +14,6 @@ import { POST_CURRENT, POST_FREQUENCY, POST_INSULATION, POST_SOUND } from "apis/
 import { FATCH_POST_RESULT } from "apis/queries";
 import { setNoOfSamples } from "reduxSlices/prePost";
 
-
 const useStyles = makeStyles((theme) => ({
     root: {
         maxWidth: "100%",
@@ -112,10 +111,8 @@ export default function PostResult({ partCode }) {
                 setPtFrequency(JSON.parse(data?.ptFrequency) || "")
                 setPtSound(JSON.parse(data?.ptSoundLvl) || "")
                 setPtInsulation(JSON.parse(data?.ptInsulationRs) || "")
-
             }
         }
-        
     }, [plannerByName.data, fatchPostData.data]);
 
     const saveValues = () => {
@@ -138,9 +135,7 @@ export default function PostResult({ partCode }) {
             updatePostCurrentResults({
                 partCode: partCode,
                 ptCurrent: currentVal,
-
             }).then((res) => {
-                console.log(res);
                 if (res.data !== null) {
                     alertAndLoaders("UNSHOW_ALERT", dispatch, "Post Test Current Values Are Saved... ", "success");
                 } else if (res.error) {
@@ -164,7 +159,6 @@ export default function PostResult({ partCode }) {
                 partCode: partCode,
                 ptSoundLvl: soundVal,
             }).then((res) => {
-                console.log(res);
                 if (res.data !== null) {
                     alertAndLoaders("UNSHOW_ALERT", dispatch, "Post Test Sound Values Are Saved... ", "success");
                 } else if (res.error) {
@@ -188,7 +182,6 @@ export default function PostResult({ partCode }) {
                 partCode: partCode,
                 ptInsulationRs: insulationVal,
             }).then((res) => {
-                console.log(res);
                 if (res.data !== null) {
                     alertAndLoaders("UNSHOW_ALERT", dispatch, "Post Test Insulation Values Are Saved... ", "success");
                 } else if (res.error) {
@@ -212,7 +205,6 @@ export default function PostResult({ partCode }) {
                 partCode: partCode,
                 ptFrequency: frequencyVal,
             }).then((res) => {
-                console.log(res);
                 if (res.data !== null) {
                     alertAndLoaders("UNSHOW_ALERT", dispatch, "Post Test Frequency Values Are Saved... ", "success");
                 } else if (res.error) {
@@ -258,7 +250,6 @@ export default function PostResult({ partCode }) {
                                             value={ptcurrent ? ptcurrent[`n${val}`] : ''}
                                             onChange={handleChange} /> : <MDTypography variant="h6" fontWeight="small" style={{ textAlign: "center", background: "#394259", padding: "5px 0px", borderRadius: "8px" }}>{ptcurrent ? ptcurrent[`n${val}`] : "N/A"}</MDTypography>}
                                     </Grid>
-
                                 )
                             })}
                         </Grid>

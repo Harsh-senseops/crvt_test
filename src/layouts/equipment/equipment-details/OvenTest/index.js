@@ -142,10 +142,8 @@ export default function OvenTest({ details, componentName, id }) {
           setToggleEnable(data === 1 ? true : false)
             setEnabled(data === 1?true:false)
     }
-    // console.log(oventestdeailsByID.data.crvtOvenTestDetailByPartName.status);
-  }, [details, oventestdeailsByID])
+  }, [details, oventestdeailsByID.data])
 
-  console.log(oventestdeailsByID);
   const saveData = () => {
 
     let data = JSON.stringify({

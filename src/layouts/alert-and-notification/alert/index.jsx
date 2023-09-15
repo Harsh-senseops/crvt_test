@@ -97,7 +97,6 @@ function Alert() {
   useEffect(() => {
     let timerArray = {}
     if (allTimers.data) {
-      console.log(JSON.parse(allTimers.data.getAllTimers))
       JSON.parse(allTimers.data.getAllTimers).map((val)=>{
         if(val.timer === 0){
           updateAlertStatusById({
@@ -108,7 +107,6 @@ function Alert() {
             machineId:Number(val.id)
           })
         }
-        console.log(val.id);
         timerArray[val.id] = {};
         timerArray[val.id].timer = val.timer
         timerArray[val.id].interval = setInterval(() => {
@@ -120,7 +118,6 @@ function Alert() {
               id:Number(val.id)
             })
           }
-          console.log(timerArray[val.id].timer,val.id)
         }, 1000);
       })
     }
@@ -158,7 +155,6 @@ function Alert() {
         actionTaken:actionTakenValue,
         id:Number(machineId.tableId)
       }).then((res)=>{
-        console.log(res)
         if(res.data){
           alertAndLoaders("UNSHOW_ALERT", dispatch, `Successfully updated`, "success");
         }
@@ -176,7 +172,6 @@ function Alert() {
         actionTaken:actionTakenValue,
         id:Number(machineId.tableId)
       }).then((res)=>{
-        console.log(res)
         if(res.data){
           alertAndLoaders("UNSHOW_ALERT", dispatch, `Successfully updated`, "success");
           updateDashBoardDetails({
@@ -209,7 +204,6 @@ function Alert() {
             actionTaken:actionTakenValue,
             id:Number(machineId.tableId)
           }).then((res)=>{
-            console.log(res)
             if(res.data){
               alertAndLoaders("UNSHOW_ALERT", dispatch, `Successfully updated`, "success");
             }

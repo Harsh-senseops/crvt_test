@@ -171,7 +171,6 @@ export default function PrePostResult({}) {
       // searchPrePost(tempArray,searchTerm)
       setPartDetails(searchPrePost(tempArray,searchTerm));
       setShouldPause(true);
-      console.log(searchPrePost(partDetails,searchTerm))
     }
   }, [plannerByName.data, preTableData.data,searchTerm]);
 
@@ -261,7 +260,6 @@ export default function PrePostResult({}) {
         diffFrequency: frequencyVal,
         diffSound: soundVal,
       }).then((res) => {
-        console.log(res);
         if (res.data) {
           alertAndLoaders("UNSHOW_ALERT", dispatch, "Difference Results Are Saved... ", "success");
         } else if (res.error) {
@@ -398,7 +396,6 @@ export default function PrePostResult({}) {
                               >
                                 {prePostStore.noOFSamples.map((val, i) => {
                                   const handleChange = (event) => {
-                                    console.log(frequency);
                                     const { name, value } = event.target;
                                     setSound((prevValues) => ({
                                       ...prevValues,

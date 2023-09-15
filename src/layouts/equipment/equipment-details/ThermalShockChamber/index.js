@@ -149,7 +149,7 @@ export default function ThermalShockChamber({ details, componentName, id }) {
       setToggleEnable(data === 1 ? true: false)
       setEnabled(data === 1 ? true: false)
     }
-  }, [details, thermalShockdetailByID])
+  }, [details, thermalShockdetailByID.data])
 
   const saveData = () => {
 
@@ -218,7 +218,6 @@ export default function ThermalShockChamber({ details, componentName, id }) {
     }).then((res) => {
       toggleEnable ? alertAndLoaders("UNSHOW_ALERT", dispatch, "Thermal Shock Test Is Disabled... ", "warning") : alertAndLoaders("UNSHOW_ALERT", dispatch, "Themal Shock Test Is Enabled... ", "success")
     })
-
   }
 
   return (
@@ -262,7 +261,6 @@ export default function ThermalShockChamber({ details, componentName, id }) {
           }
           title={<MDTypography variant="h6" fontWeight="medium">Thermal Shock Test</MDTypography>}
           subheader={toggleEnable ? <MDTypography style={{ color: 'lime', fontSize: '14px', paddingTop: '1%' }}>Thermal Shock Test is Enabled</MDTypography> : <MDTypography style={{ color: 'red', fontSize: '14px', paddingTop: '1%' }}>No Thermal Shock Test</MDTypography>}
-        // subheader={subheaderdata}
         />
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <form onSubmit={(e) => handleFormSubmit(e)}>
@@ -270,7 +268,6 @@ export default function ThermalShockChamber({ details, componentName, id }) {
               <MDBox pr={1}>
                 <Grid container spacing={3}>
                   <Grid item xs={12} sm={3}>
-
                     <TextField
                       onChange={(e) => setCold(prevData => ({
                         ...prevData,
@@ -288,7 +285,6 @@ export default function ThermalShockChamber({ details, componentName, id }) {
                     />
                   </Grid>
                   <Grid item xs={12} sm={3}>
-
                     <TextField
                       onChange={(e) => setHot(prevData => ({
                         ...prevData,
@@ -301,7 +297,6 @@ export default function ThermalShockChamber({ details, componentName, id }) {
                       }}
                       // disabled={role.roles === 1 || role.roles === 2 || !enabled}
                       className={toggleEnable ? "" : classes.disabledTextField}
-
                       value={hot.newData}
                       label="Hot (℃)"
                     />
@@ -380,7 +375,6 @@ export default function ThermalShockChamber({ details, componentName, id }) {
                     />
                   </Grid>
                   <Grid item xs={12} sm={3}>
-
                     <TextField
                       onChange={(e) => setSimultaneously(prevData => ({
                         ...prevData,
@@ -399,7 +393,6 @@ export default function ThermalShockChamber({ details, componentName, id }) {
                     />
                   </Grid>
                   <Grid item xs={12} sm={3}>
-
                     <TextField
                       onChange={(e) => setSampleQty(prevData => ({
                         ...prevData,
@@ -412,7 +405,6 @@ export default function ThermalShockChamber({ details, componentName, id }) {
                       }}
                       // disabled={role.roles === 1 || role.roles === 2 || !enabled}
                       className={toggleEnable ? "" : classes.disabledTextField}
-
                       value={sampleQty.newData}
                       label="Sample Quantity"
                     />
@@ -430,7 +422,6 @@ export default function ThermalShockChamber({ details, componentName, id }) {
                       }}
                       // disabled={role.roles === 1 || role.roles === 2 || !enabled}
                       className={toggleEnable ? "" : classes.disabledTextField}
-
                       value={equipmentRunning.newData}
                       label="Equipment Running (hr)"
                     />
