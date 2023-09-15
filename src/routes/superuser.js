@@ -204,8 +204,6 @@ const superUserRoutes = [
       }
     ],
   },
-  
-  
   {
     type: "collapse",
     name: "Master Part List",

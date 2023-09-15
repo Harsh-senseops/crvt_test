@@ -55,7 +55,6 @@ const DropFileInput = (props) => {
 
   const [partCodeDetails, createPartCodeDetails] = useMutation(PART_CODE_DETAILS);
 
-  // console.log("Create master part list qry data", createMasterPartListQryData)
 
   const onDragEnter = () => wrapperRef.current.classList.add("dragover");
 
@@ -136,7 +135,6 @@ const DropFileInput = (props) => {
           });
         })
         .catch((error) => {
-          console.error("Error converting Excel to JSON:", error);
         });
     }
     setVendors(tempArr);
@@ -207,7 +205,6 @@ const DropFileInput = (props) => {
             vendorDetails: JSON.stringify(val1.details.vendorsInfo),
           }).then((res) => {
             dispatch(yearlyPlanner.setShouldPause(false))
-            console.log(res,"createMasterPartListQryData")
           });
         });
       });
@@ -223,7 +220,6 @@ const DropFileInput = (props) => {
       fileName,
       empCode: store.empCode,
     }).then((result) => {
-      console.log(result, "result1234")
     });
   };
 

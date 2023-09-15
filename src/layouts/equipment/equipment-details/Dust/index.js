@@ -148,10 +148,11 @@ export default function DustTest({ details, componentName, id }) {
       }
     });
     if(dustdetailByID.data){
-      setToggleEnable(dustdetailByID.data.crvtDustTestDetailByPartName.status === 1 ? true : false ) 
-      setEnabled(dustdetailByID.data.crvtDustTestDetailByPartName.status === 1 ? true : false)
-       }
-  }, [details, dustdetailByID.data,]);
+      let data=dustdetailByID.data.crvtDustTestDetailByPartName.status
+      setToggleEnable(data === 1 ? true:false)
+      setEnabled(data === 1 ? true : false) 
+    }
+  }, [details, dustdetailByID]);
 
   const saveData = () => {
     let data = JSON.stringify({
@@ -172,7 +173,6 @@ export default function DustTest({ details, componentName, id }) {
       testDetails: data,
       partName: id,
     }).then((res) => {
-      console.log(res);
       if (res.data) {
         let obj = {
           "Dust (sec)": dust,
@@ -218,7 +218,6 @@ export default function DustTest({ details, componentName, id }) {
     });
     // setTimeout(()=>{
     //   rexDustDetailByID({requestPolicy:"cache-and-network"})
-    //   console.log("I ran")
     // },1000)
   };
 

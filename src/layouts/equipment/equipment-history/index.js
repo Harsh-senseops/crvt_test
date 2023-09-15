@@ -70,5 +70,4 @@ function EquipmentHistory() {
     </DashboardLayout>
   );
 }
-
 export default EquipmentHistory;

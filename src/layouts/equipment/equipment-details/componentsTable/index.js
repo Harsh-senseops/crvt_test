@@ -55,7 +55,6 @@ function ComponentsTable() {
     query: EQUIPMENT_DETAILS,
   })
 
-
   useEffect(() => {
     if(shouldPause){
       setShouldPause(false);
@@ -140,5 +139,4 @@ function ComponentsTable() {
     </Grid>
   )
 }
-
 export default ComponentsTable;

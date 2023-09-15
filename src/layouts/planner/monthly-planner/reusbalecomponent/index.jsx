@@ -174,7 +174,6 @@ const ReusabaleMonthlyPlannerTests = ({
         }).then((res) => {
           if (res.error) {
             alert("Failed To upadate");
-            console.log(res.error);
           } else if (res.data) {
             alertAndLoaders("UNSHOW_ALERT", dispatch, `No Parts found in ${testName}.`, "warning");
           }
@@ -235,7 +234,6 @@ const ReusabaleMonthlyPlannerTests = ({
                 testDuration: val2?.testDuration,
               };
             }
-            // console.log(val2?.testDuration,"testDuration")
           }
         });
       });

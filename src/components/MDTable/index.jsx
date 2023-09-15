@@ -147,7 +147,6 @@ function MDTable({ data, searchTerm, onTouch }) {
   const classes = useStyles();
   const [state, setState] = useState(INITIAL_STATE);
   const [rows, setRows] = useState([]);
-  //   console.log(data.rows)
   const pageStartIndex = state.page * ENTRIES_PER_PAGE;
   const pageEndIndex = pageStartIndex + ENTRIES_PER_PAGE;
   const pageData = rows.slice(pageStartIndex, pageEndIndex);
@@ -223,7 +222,6 @@ function MDTable({ data, searchTerm, onTouch }) {
                     Object.entries(row).map(([key, value]) => {
                     // let columnKeys = Object.keys(data.c)
                     const index = data.columns.findIndex((obj) => obj.accessor === key);
-                    console.log(key)
                       if (key === "ignore" || key === "__typename") return;
                       if(index === -1) return
                       return (

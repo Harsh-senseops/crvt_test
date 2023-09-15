@@ -12,11 +12,6 @@ import { useQuery } from "urql";
 import { EVERY_TEST_DEATILS } from "apis/queries";
 import { useEffect } from "react";
 import { useState } from "react";
-import ReportsBarChart from "examples/Charts/BarCharts/ReportsBarChart";
-import ReportsLineChart from "examples/Charts/LineCharts/ReportsLineChart";
-import reportsBarChartData from "layouts/dashboards/analytics/data/reportsBarChartData";
-
-// import reportsLineChartData from "layouts/dashboards/analytics/data/reportsLineChartData";
 
 function MainDashboard() {
   const { sales, tasks } = reportsLineChartData;
@@ -46,9 +41,6 @@ function MainDashboard() {
     <DashboardLayout>
       <DashboardNavbar />
       <MDBox py={3}>
-        {/* <Grid container>
-          <SalesByCountry />
-        </Grid> */}
         <MDBox mt={1.5}>
           <Grid container spacing={3}>
             <Grid item xs={12} md={6} lg={3}>

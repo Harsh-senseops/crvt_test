@@ -38,12 +38,10 @@ export default function UploadImage({ partCode }) {
     if (fetchImage.data) {
       if (fetchImage.data?.crvtPostResultTableByPartCode?.postImages) {
         setFetchedImage(true);
-        // console.log(fetchImage.data?.crvtPostResultTableByPartCode?.postImages)
         let data = JSON.parse(fetchImage.data?.crvtPostResultTableByPartCode.postImages);
         setSelectedImage([]);
         for (let key in data) {
           setSelectedImage((prev) => [...prev, data[key]]);
-          // console.log(data[key])
         }
       }
     }
@@ -61,7 +59,6 @@ export default function UploadImage({ partCode }) {
     });
 
     setTimeout(() => {
-      // console.log(arr.length, arr)
       let obj = {};
       arr.map((val, i) => {
         obj[`img${i + 1}`] = val;
@@ -70,7 +67,6 @@ export default function UploadImage({ partCode }) {
         partCode: partCode,
         postImages: JSON.stringify(obj),
       }).then((res) => {
-        // console.log(res)
         if (res.data) {
           alertAndLoaders("UNSHOW_ALERT", dispatch, "Images Are Uploaded... ", "success");
         } else if (res.error) {
@@ -197,7 +193,6 @@ export default function UploadImage({ partCode }) {
                       type="file"
                       name="Image2"
                       onChange={(event) => {
-                        // console.log(event.target.files);
                         setSelectedImage((prev) => [...prev, event.target.files[0]]);
                       }}
                       style={{ display: "none" }}
@@ -253,7 +248,6 @@ export default function UploadImage({ partCode }) {
                       type="file"
                       name="Image3"
                       onChange={(event) => {
-                        // console.log(event.target.files);
                         setSelectedImage((prev) => [...prev, event.target.files[0]]);
                       }}
                       style={{ display: "none" }}
