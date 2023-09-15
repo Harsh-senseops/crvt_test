@@ -216,9 +216,6 @@ export default function DustTest({ details, componentName, id }) {
         ? alertAndLoaders("UNSHOW_ALERT", dispatch, "Dust Test Is Disabled...", "warning")
         : alertAndLoaders("UNSHOW_ALERT", dispatch, "Dust Test Is Enabled... ", "success");
     });
-    // setTimeout(()=>{
-    //   rexDustDetailByID({requestPolicy:"cache-and-network"})
-    // },1000)
   };
 
   return (
