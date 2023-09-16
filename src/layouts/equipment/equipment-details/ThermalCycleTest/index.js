@@ -16,10 +16,7 @@ import { CardActions, TextField } from '@mui/material';
 import { useSubscription, useMutation, useQuery } from 'urql'
 import Grid from "@mui/material/Grid";
 import { useSelector, useDispatch } from "react-redux";
-import { THERMAL_CYCLE_TEST_DETAILS } from 'apis/queries';
-import { SAVE_THERMAL_CYCLE_DETAILS } from 'apis/queries';
-import { ADD_THERMAL_CYCLE_STATUS } from 'apis/queries';
-import { ADD_EQUIPMENT_UPDATE_HISTORY } from 'apis/queries';
+import { ADD_EQUIPMENT_UPDATE_HISTORY,UPDATE_THERMAL_CYCLE_ERD,ADD_THERMAL_CYCLE_STATUS,SAVE_THERMAL_CYCLE_DETAILS,THERMAL_CYCLE_TEST_DETAILS } from 'apis/queries';
 import alertAndLoaders from 'utils/alertAndLoaders';
 
 const useStyles = makeStyles((theme) => ({
@@ -91,6 +88,7 @@ export default function ThermalCycleTestDetail({ details, componentName, id }) {
   })
   const [thermalCycleStatusRes, saveThermalCycleStatus] = useMutation(ADD_THERMAL_CYCLE_STATUS)
   const [equipmentHistoryRes, saveEquipmentHistory] = useMutation(ADD_EQUIPMENT_UPDATE_HISTORY)
+  const [updateTermalCycleErdRes, updateTermalCycleErd] = useMutation(UPDATE_THERMAL_CYCLE_ERD)
 
   useEffect(() => {
 
@@ -164,7 +162,24 @@ export default function ThermalCycleTestDetail({ details, componentName, id }) {
             updateValues: handleCompare(obj)
           }
         ).then((res) => {
-          alertAndLoaders("UNSHOW_ALERT", dispatch, "Thermal Cycle Test Details Are Saved... ", "success")       
+          if(res.data){
+            updateTermalCycleErd({
+              partId: id,
+              dustErt: JSON.stringify({
+                simultaniously: parseInt(simultaneously.newData),
+                days: parseInt(testDurationMax.newData) / parseInt(equipmentRunning.newData),
+                "7daysrunning": oldData.running,
+                sample_qty: parseInt(sampleQty.newData),
+              }),
+            }).then((res)=>{
+              if(res.error){
+                console.log(res.error)
+              }if(res.data){
+                alertAndLoaders("UNSHOW_ALERT", dispatch, "Thermal Cycle Test Details Are Saved... ", "success")       
+
+              }
+            })
+          }
         })
       }
     })

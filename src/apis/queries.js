@@ -1167,6 +1167,63 @@ mutation updatedashBoardDetails($rowName: String!,$canIncrement: Boolean!) {
   updatedashBoardDetails(rowName: $rowName, canIncrement: $canIncrement)
 }
 `
+
+const UPDATE_DUST_ERD = `mutation dustERD($dustErt: JSON, $partId: Int!) {
+  updateCrvtEquipmentRunningDetailByPartId(
+    input: {crvtEquipmentRunningDetailPatch: {dustErt: $dustErt}, partId: $partId}
+  ) {
+    clientMutationId
+  }
+}
+`
+const UPDATE_OVEN_ERD = `mutation ovenERD($ovenErt: JSON, $partId: Int!) {
+  updateCrvtEquipmentRunningDetailByPartId(
+    input: {crvtEquipmentRunningDetailPatch: {ovenErt: $ovenErt}, partId: $partId}
+  ) {
+    clientMutationId
+  }
+}
+`
+const UPDATE_RO_ERD = `mutation ROERD($repeatedOperationErt: JSON, $partId: Int!) {
+  updateCrvtEquipmentRunningDetailByPartId(
+    input: {crvtEquipmentRunningDetailPatch: {repeatedOperationErt: $repeatedOperationErt}, partId: $partId}
+  ) {
+    clientMutationId
+  }
+}
+`
+const UPDATE_SHOWER_ERD = `mutation showerERD($showerErt: JSON, $partId: Int!) {
+  updateCrvtEquipmentRunningDetailByPartId(
+    input: {crvtEquipmentRunningDetailPatch: {showerErt: $showerErt}, partId: $partId}
+  ) {
+    clientMutationId
+  }
+}
+`
+const UPDATE_THERMAL_CYCLE_ERD = `mutation thermalCycleERD($showerErt: JSON, $partId: Int!) {
+  updateCrvtEquipmentRunningDetailByPartId(
+    input: {crvtEquipmentRunningDetailPatch: {showerErt: $showerErt}, partId: $partId}
+  ) {
+    clientMutationId
+  }
+}
+`
+const UPDATE_THERMAL_SHOCK_ERD = `mutation thermalShockERD($thermalShockErt: JSON, $partId: Int!) {
+  updateCrvtEquipmentRunningDetailByPartId(
+    input: {crvtEquipmentRunningDetailPatch: {thermalShockErt: $thermalShockErt}, partId: $partId}
+  ) {
+    clientMutationId
+  }
+}
+`
+const UPDATE_VIBRATION_ERD = `mutation vibrationERD($vibrationErt: JSON, $partId: Int!) {
+  updateCrvtEquipmentRunningDetailByPartId(
+    input: {crvtEquipmentRunningDetailPatch: {vibrationErt: $vibrationErt}, partId: $partId}
+  ) {
+    clientMutationId
+  }
+}
+`
 export {
   AUTH,
   ADD_USER,
@@ -1285,5 +1342,12 @@ export {
   IMAGE_FETCH,
   ALL_ACTIVE_ALERTS,
   EVERY_TEST_DEATILS,
-  UPDATE_DASHBOARD_DETAILS
+  UPDATE_DASHBOARD_DETAILS,
+  UPDATE_DUST_ERD,
+  UPDATE_OVEN_ERD,
+  UPDATE_RO_ERD,
+  UPDATE_SHOWER_ERD,
+  UPDATE_THERMAL_CYCLE_ERD,
+  UPDATE_THERMAL_SHOCK_ERD,
+  UPDATE_VIBRATION_ERD
 };
