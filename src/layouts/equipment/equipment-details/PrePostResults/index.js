@@ -98,7 +98,7 @@ export default function PrePostResult({}) {
   const [partDetails, setPartDetails] = useState([]);
   const [change, setChange] = useState(initialSampleState);
   const classes = useStyles();
-  const [preTestValues,setPreTestValues] = useState({});
+  const [preTestValues, setPreTestValues] = useState({});
   const [diffData, setDiffData] = useState([]);
   const [open, setOpen] = useState(false);
   const [pledge, setPledge] = useState(true);
@@ -185,7 +185,10 @@ export default function PrePostResult({}) {
           partName: val.crvtComponentDetailByComponentId.partName,
           current: { min: JSON.parse(val.prCurrent).min, max: JSON.parse(val.prCurrent).max },
           frequency: { min: JSON.parse(val.prFrequency).min, max: JSON.parse(val.prFrequency).max },
-          insulation: { min: JSON.parse(val.prInsulationRs).min, max: JSON.parse(val.prInsulationRs).max },
+          insulation: {
+            min: JSON.parse(val.prInsulationRs).min,
+            max: JSON.parse(val.prInsulationRs).max,
+          },
           sound: { min: JSON.parse(val.prSoundLvl).min, max: JSON.parse(val.prSoundLvl).max },
         });
       });
@@ -223,20 +226,23 @@ export default function PrePostResult({}) {
         });
         setPartCode(partCode);
         if (!partDetails[index].isExpanded) {
-          preData &&
-            preData.map((val, i) => {
-              if (
-                index === i &&
-                !val.current &&
-                !val.frequency &&
-                !val.insulatioRs &&
-                !val.soundLvl &&
-                !frequency &&
-                !sound
-              ) {
-                setOpen(true);
-              }
-            });
+          console.log(preData)
+          // if (!preData) {
+          //   setOpen(true);
+          // }
+          preData.map((val, i) => {
+            if (
+              index === i &&
+              !val.current &&
+              !val.frequency &&
+              !val.insulatioRs &&
+              !val.soundLvl &&
+              !frequency &&
+              !sound
+            ) {
+              setOpen(true);
+            }
+          });
         } else {
           dispatch(setNoOfSamples(0));
         }
@@ -247,7 +253,7 @@ export default function PrePostResult({}) {
             isExpanded: i === index ? !val.isExpanded : false,
           }))
         );
-        setPreTestValues(allPrestestEquipmentArray[i])
+        setPreTestValues(allPrestestEquipmentArray[i]);
         return;
       }
     }
@@ -393,7 +399,7 @@ export default function PrePostResult({}) {
                       <Card style={{ background: "#394259", margin: "10px" }}>
                         <Grid container lg={12} xl={12}>
                           <Grid xs={6} sm={6}>
-                            <PreResult partCode={val.partCode} details={preTestValues}/>
+                            <PreResult partCode={val.partCode} details={preTestValues} />
                           </Grid>
                           <Grid sm={6} xs={6}>
                             <PostResult partCode={val.partCode} />

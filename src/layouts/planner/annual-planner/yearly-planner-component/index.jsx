@@ -13,14 +13,13 @@ import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
 import { useQuery, useSubscription } from "urql";
 import { useSelector, useDispatch } from "react-redux";
-import DataTable from "examples/Tables/DataTable";
-import MDCard from "components/MDCard";
 import { setShouldPause,setYearlyPlanner } from "reduxSlices/yearlyPlanner";
-import { useCallback } from "react";
 import clsx from "clsx";
 import MDTypography from "components/MDTypography";
 import { makeStyles } from "@mui/styles";
 import { CardHeader } from "@mui/material";
+import loader from "assets/loader.gif";
+import MDLoader from "components/MDLoader";
 
 const columns = [
   "Components",
@@ -95,26 +94,99 @@ const monthNames = [
   "March",
 ];
 
- function YearlyPlannerComponent({ name, query, allPlanners, expanded, onClick }) {
-  // const [expanded, setExpanded] = React.useState(false);
-  // const [shouldPause, setShouldPause] = React.useState(false);
+const allYearlyPlanner = `query dustYearlyPlanner {
+  allCrvtDustYearlyPlanners {
+    nodes {
+      crvtComponentDetailByComponentId {
+        partName
+      }
+      componentId
+      samples
+      testDetails
+      totalSamplesTested
+    }
+  }
+   allCrvtOvenYearlyPlanners {
+    nodes {
+      crvtComponentDetailByComponentId {
+        partName
+      }
+      componentId
+      samples
+      testDetails
+      totalSamplesTested
+    }
+  }
+    allCrvtRoYearlyPlanners {
+    nodes {
+      crvtComponentDetailByComponentId {
+        partName
+      }
+      componentId
+      samples
+      testDetails
+      totalSamplesTested
+    }
+  }
+   allCrvtShowerYearlyPlanners {
+    nodes {
+      crvtComponentDetailByComponentId {
+        partName
+      }
+      componentId
+      samples
+      testDetails
+      totalSamplesTested
+    }
+  }
+    allCrvtThermalCycleYearlyPlanners {
+    nodes {
+      crvtComponentDetailByComponentId {
+        partName
+      }
+      componentId
+      samples
+      testDetails
+      totalSamplesTested
+    }
+  }
+   allCrvtThermalShockYearlyPalnners {
+    nodes {
+      crvtComponentDetailByComponentId {
+        partName
+      }
+      componentId
+      samples
+      testDetails
+      totalSamplesTested
+    }
+  }
+    allCrvtVibrationYearlyPlanners {
+    nodes {
+      crvtComponentDetailByComponentId {
+        partName
+      }
+      componentId
+      samples
+      testDetails
+      totalSamplesTested
+    }
+  }
+}`
+
+ function YearlyPlannerComponent({ name, allPlanners, expanded }) {
   const yearlyPlannerStore = useSelector((store) => {
     return store.yearlyPlanner;
   });
   const [toggleEnable, setToggleEnable] = useState(false);
 
   const dispatch = useDispatch();
-  const [yearlyPlanner] = useSubscription({
-    query: query,
-    // pause: yearlyPlannerStore.shouldPause
+  const [yearlyPlanner] = useQuery({
+    query: allYearlyPlanner,
   });
-  const [data, setData] = React.useState([]);
-  
+
   React.useEffect(() => {
     let keys = Object.keys(yearlyPlannerStore.yearlyPlanner);
-    const fetchData = async () =>{
-      try{
-        await yearlyPlanner.fetching;
         if (yearlyPlanner.data) {
           keys.map((val)=>{
             if(!yearlyPlannerStore.yearlyPlanner[val]){
@@ -157,14 +229,7 @@ const monthNames = [
               dispatch(setShouldPause(false));
             }
           })
-       
-        
         }
-      }catch(err){
-        console.log("Something happend",err)
-      }
-    }
-    fetchData();
    
   }, [yearlyPlanner.data]);
 
@@ -210,7 +275,7 @@ const monthNames = [
               paddingTop: "1%",
             }}
           >
-            Total Components found {yearlyPlannerStore.yearlyPlanner[allPlanners] ? yearlyPlannerStore.yearlyPlanner[allPlanners].length :0 }
+             {yearlyPlannerStore.yearlyPlanner[allPlanners] ?"Total Components found " + yearlyPlannerStore.yearlyPlanner[allPlanners].length :<MDLoader/> }
           </MDTypography>
         }
       />
@@ -244,12 +309,12 @@ const monthNames = [
                           </TableRow>
                         );
                       })
-                    : "Loading"}
+                    :<MDTypography style={{padding:"1em"}}>Loading...</MDTypography>}
                 </TableBody>
               </Table>
             </TableContainer>
           ) : (
-            <MDTypography style={{ padding: "1em" }}>Loading...</MDTypography>
+            <MDTypography style={{padding:"1em"}}>Loading...</MDTypography>
           )}
         </Collapse>
       )}
