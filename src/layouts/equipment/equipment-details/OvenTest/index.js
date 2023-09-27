@@ -105,7 +105,6 @@ export default function OvenTest({ details, componentName, id }) {
     details.map((val) => {
       let data = "";
       if (val.partName == componentName) {
-        console.log("Iran inside")
         setToggleEnable(true);
         if (val.crvtOvenTestDetailsByPartName.nodes.length !== 0) {
           data = JSON.parse(val.crvtOvenTestDetailsByPartName.nodes[0].testDetails);
@@ -134,7 +133,6 @@ export default function OvenTest({ details, componentName, id }) {
       }
     });
     if (oventestdeailsByID.data) {
-      console.log("Iran")
       let constValues = JSON.parse(
         oventestdeailsByID.data.crvtOvenTestDetailByPartName.testDetails);
       setOldData({ eName: constValues.name, running: constValues["7daysrunning"] });

@@ -155,8 +155,6 @@ const monthNames = [
               // setData(sortedArray);
               dispatch(setYearlyPlanner({testName:allPlanners,data:sortedArray}))
               dispatch(setShouldPause(false));
-            }else{
-              console.log(yearlyPlannerStore.yearlyPlanner[val])
             }
           })
        
@@ -168,7 +166,6 @@ const monthNames = [
     }
     fetchData();
    
-    console.log(yearlyPlanner)
   }, [yearlyPlanner.data]);
 
   const classes = useStyles();

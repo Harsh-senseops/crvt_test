@@ -189,7 +189,6 @@ const ReusabaleMonthlyPlannerTests = ({
     let tempArray = [];
     const fetchData = async() => {
       await testNameYp.data
-      console.log(testNameYp.data)
     } 
     fetchData();
     if (testNameYp.data && monthlyPlannerStore.date.year >= 2012) {
@@ -252,14 +251,9 @@ const ReusabaleMonthlyPlannerTests = ({
       for (let i = 0; i < mp.length; i++) {
         index = findIndex(tempArry2, mp[i].partName);
         if(tempArry2[index].partName !== mp[i].partName){
-          // console.log(mp[i],tempArry2[index])
-          // tempArray
-          // console.log(index,"inside")
           tempArry2.push({partName:mp[i].partName,partCode:mp[i].partCode,vendorName:JSON.parse(mp[i].vendorDetails).vendorName,status:mp[i].status === 0 ? "Scheduled":"Progress",sevenDaysRunning:tempArry2[index].sevenDaysRunning  === 0 ? false : true,testDuration:tempArry2[index].testDuration})
-          console.log(mp[i]);
           continue;
         }
-        console.log(index)
         tempArry2[index].partCode = mp[i].partCode;
         tempArry2[index].status = mp[i].status === 0 ? "Scheduled" : "Progress";
         tempArry2[index].vendorName = JSON.parse(mp[i].vendorDetails).vendorName;
@@ -281,12 +275,6 @@ const ReusabaleMonthlyPlannerTests = ({
     dispatch(setMonthlyPlanner({ testName, data: tempArry2 }));
     setData({ columns, rows: tempArry2 });
   }, [testNameYp.data, dispatch, monthMP.data]);
-  
-  // useEffect(()=>{
-  //   if(testNameYp.data){
-  //     console.log(testNameYp.data)
-  //   }
-  // },[testNameYp.data])
   
   const handleAddPartCode = useCallback((partCode) => {
     setPartCode(partCode);

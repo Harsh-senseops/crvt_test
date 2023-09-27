@@ -225,7 +225,6 @@ export default function RepeatedOperation({ details, componentName, id }) {
                 console.error(res.error);
               }
               if (res.data) {
-                console.log(res,testDurationMax.newData,oldData.running,equipmentRunning.newData)
                 alertAndLoaders(
                   "UNSHOW_ALERT",
                   dispatch,
@@ -274,7 +273,6 @@ export default function RepeatedOperation({ details, componentName, id }) {
           );
     });
   };
-console.log(oldData)
   return (
     <>
       <Card style={{ marginTop: "2%" }}>

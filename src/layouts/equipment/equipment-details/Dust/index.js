@@ -199,7 +199,6 @@ export default function DustTest({ details, componentName, id }) {
           }).then((res)=>{
             if(res.data){
               alertAndLoaders("UNSHOW_ALERT", dispatch, "Dust Test Details Are Saved... ", "success");
-              console.log(res);
             }
             if(res.error){
               console.log(res.error)
