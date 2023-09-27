@@ -226,7 +226,7 @@ export default function PrePostResult({}) {
         });
         setPartCode(partCode);
         if (!partDetails[index].isExpanded) {
-          console.log(preData)
+          // console.log(preData)
           // if (!preData) {
           //   setOpen(true);
           // }
