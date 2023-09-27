@@ -101,31 +101,6 @@ export default function ShowerTesting({ details, componentName, id }) {
   const [updateShowerErdRes, updateShowerErd] = useMutation(UPDATE_SHOWER_ERD);
 
   useEffect(() => {
-    if (showerdetailByID.data) {
-      let constValues = JSON.parse(
-        showerdetailByID.data.crvtShowerTestDetailByPartName.testDetails
-      );
-      setOldData({ eName: constValues.name, running: constValues["7daysrunning"] });
-
-      setFlow({ newData: constValues.flow, oldData: constValues.flow });
-      setTestDurationMin({
-        newData: constValues.test_duration_hr.min,
-        oldData: constValues.test_duration_hr.min,
-      });
-      setTestDurationMax({
-        newData: constValues.test_duration_hr.max,
-        oldData: constValues.test_duration_hr.max,
-      });
-      setEquipmentRunning({
-        newData: constValues.equipment_running,
-        oldData: constValues.equipment_running,
-      });
-      setSimultaneously({
-        newData: constValues.simultaneously,
-        oldData: constValues.simultaneously,
-      });
-      setSampleQty({ newData: constValues.sample_qty, oldData: constValues.sample_qty });
-    }
     details.map((val) => {
       let data = "";
       if (val.partName == componentName) {
@@ -156,6 +131,32 @@ export default function ShowerTesting({ details, componentName, id }) {
         }
       }
     });
+    if (showerdetailByID.data) {
+      let constValues = JSON.parse(
+        showerdetailByID.data.crvtShowerTestDetailByPartName.testDetails
+      );
+      setOldData({ eName: constValues.name, running: constValues["7daysrunning"] });
+
+      setFlow({ newData: constValues.flow, oldData: constValues.flow });
+      setTestDurationMin({
+        newData: constValues.test_duration_hr.min,
+        oldData: constValues.test_duration_hr.min,
+      });
+      setTestDurationMax({
+        newData: constValues.test_duration_hr.max,
+        oldData: constValues.test_duration_hr.max,
+      });
+      setEquipmentRunning({
+        newData: constValues.equipment_running,
+        oldData: constValues.equipment_running,
+      });
+      setSimultaneously({
+        newData: constValues.simultaneously,
+        oldData: constValues.simultaneously,
+      });
+      setSampleQty({ newData: constValues.sample_qty, oldData: constValues.sample_qty });
+    }
+
     if (showerdetailByID.data) {
       let data = showerdetailByID.data.crvtShowerTestDetailByPartName.status;
       setToggleEnable(data === 1 ? true : false);
@@ -200,27 +201,26 @@ export default function ShowerTesting({ details, componentName, id }) {
             console.log(res.error);
           }
           if (res.data) {
-            console.log(res.data);
             updateShowerErd({
               partId: id,
-              dustErt: JSON.stringify({
+              showerErt: JSON.stringify({
                 simultaniously: parseInt(simultaneously.newData),
                 days: parseInt(testDurationMax.newData) / parseInt(equipmentRunning.newData),
                 "7daysrunning": oldData.running,
-                sample_qty: parseInt(sampleQty.newData),
-              }),
+                sample_qty: parseInt(sampleQty.newData)
+              })
             }).then((res) => {
+              console.log(res,updateShowerErdRes,id);
               if (res.data) {
-                console.log(res.data);
-              }
-              if (res.error) {
-                console.log(res.error);
                 alertAndLoaders(
                   "UNSHOW_ALERT",
                   dispatch,
                   "Shower Test Details Are Saved... ",
                   "success"
                 );
+              }
+              if (res.error) {
+                console.log(res.error);
               }
             });
           }

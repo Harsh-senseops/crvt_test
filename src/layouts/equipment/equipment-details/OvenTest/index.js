@@ -102,41 +102,41 @@ export default function OvenTest({ details, componentName, id }) {
   const [updateOvenErdRes,updateOvenErd] = useMutation(UPDATE_OVEN_ERD);
 
   useEffect(() => {
-    if (oventestdeailsByID.data) {
-      details.map((val) => {
-        let data = "";
-        if (val.partName == componentName) {
-          setToggleEnable(true);
-          if (val.crvtOvenTestDetailsByPartName.nodes.length !== 0) {
-            data = JSON.parse(val.crvtOvenTestDetailsByPartName.nodes[0].testDetails);
-          }
-          setHot({ newData: data.hot, oldData: data.hot });
-          setCold({ newData: data.cold, oldData: data.cold });
-          setTestDurationMin({
-            newData: data.test_duration_hr.min,
-            oldData: data.test_duration_hr.min,
-          });
-          setTestDurationMax({
-            newData: data.test_duration_hr.max,
-            oldData: data.test_duration_hr.max,
-          });
-          setEquipmentRunning({ newData: data.equipment_running, oldData: data.equipment_running });
-          setSimultaneously({ newData: data.simultaneously, oldData: data.simultaneously });
-          setSampleQty({ newData: data.sample_qty, oldData: data.sample_qty });
-  
-          if (JSON.parse(val.crvtOvenTestDetailsByPartName.nodes[0].status) === 1) {
-            setToggleEnable(true);
-            setEnabled(true);
-          } else {
-            setToggleEnable(false);
-            setEnabled(false);
-          }
+    details.map((val) => {
+      let data = "";
+      if (val.partName == componentName) {
+        console.log("Iran inside")
+        setToggleEnable(true);
+        if (val.crvtOvenTestDetailsByPartName.nodes.length !== 0) {
+          data = JSON.parse(val.crvtOvenTestDetailsByPartName.nodes[0].testDetails);
         }
-      });
+        setHot({ newData: data.hot, oldData: data.hot });
+        setCold({ newData: data.cold, oldData: data.cold });
+        setTestDurationMin({
+          newData: data.test_duration_hr.min,
+          oldData: data.test_duration_hr.min,
+        });
+        setTestDurationMax({
+          newData: data.test_duration_hr.max,
+          oldData: data.test_duration_hr.max,
+        });
+        setEquipmentRunning({ newData: data.equipment_running, oldData: data.equipment_running });
+        setSimultaneously({ newData: data.simultaneously, oldData: data.simultaneously });
+        setSampleQty({ newData: data.sample_qty, oldData: data.sample_qty });
+
+        if (JSON.parse(val.crvtOvenTestDetailsByPartName.nodes[0].status) === 1) {
+          setToggleEnable(true);
+          setEnabled(true);
+        } else {
+          setToggleEnable(false);
+          setEnabled(false);
+        }
+      }
+    });
+    if (oventestdeailsByID.data) {
+      console.log("Iran")
       let constValues = JSON.parse(
-        oventestdeailsByID.data.crvtOvenTestDetailByPartName.testDetails,
-        "datadetails"
-      );
+        oventestdeailsByID.data.crvtOvenTestDetailByPartName.testDetails);
       setOldData({ eName: constValues.name, running: constValues["7daysrunning"] });
       setHot({ newData: constValues.hot, oldData: constValues.hot });
       setCold({ newData: constValues.cold, oldData: constValues.cold });
@@ -157,14 +157,15 @@ export default function OvenTest({ details, componentName, id }) {
         oldData: constValues.simultaneously,
       });
       setSampleQty({ newData: constValues.sample_qty, oldData: constValues.sample_qty });
-    }
-
-
-    if (oventestdeailsByID.data) {
       let data = oventestdeailsByID.data.crvtOvenTestDetailByPartName.status;
       setToggleEnable(data === 1 ? true : false);
       setEnabled(data === 1 ? true : false);
     }
+
+
+    // if (oventestdeailsByID.data) {
+   
+    // }
   }, [details, oventestdeailsByID.data]);
 
   const saveData = () => {
@@ -245,6 +246,7 @@ export default function OvenTest({ details, componentName, id }) {
         ? alertAndLoaders("UNSHOW_ALERT", dispatch, "Oven Test Is Disabled...", "warning")
         : alertAndLoaders("UNSHOW_ALERT", dispatch, "Oven Test Is Enabled... ", "success");
     });
+    // window.scroll({top: 100});
   };
   return (
     <>

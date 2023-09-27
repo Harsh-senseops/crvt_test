@@ -20,12 +20,15 @@ import PreResult from "./PreResult";
 import PostResult from "./PostResult";
 import MDDialog from "components/MDDilouge";
 import { useDispatch, useSelector } from "react-redux";
-import { PRE_TABLE_DATA } from "apis/queries";
-import { UPDATE_DIFF_DATA } from "apis/queries";
 import alertAndLoaders from "utils/alertAndLoaders";
-import { ALL_COMPONENT } from "apis/queries";
-import { FATCH_DIFF_RESULTS } from "apis/queries";
-import { FATCH_DIFFERENCE } from "apis/queries";
+import {
+  ALL_COMPONENT,
+  FATCH_DIFFERENCE,
+  ALL_PRE_TEST_EQUIPMENT,
+  PRE_TABLE_DATA,
+  UPDATE_DIFF_DATA,
+  FATCH_DIFF_RESULTS,
+} from "apis/queries";
 import UploadImage from "./PostResult/UploadImage/uploadImage";
 import { setNoOfSamples, setPrePostIndex } from "reduxSlices/prePost";
 import MDHoverSearch from "components/MDHoverSearch";
@@ -79,21 +82,23 @@ let initialSampleState = [
   { value: 4, color: "#2D3D59" },
 ];
 
-const searchPrePost = (data,searchTerm) => {
-  const filteredData = data.filter(
-    (item) =>
-      item.partCode.toLowerCase().includes(searchTerm.toLowerCase()) 
+const searchPrePost = (data, searchTerm) => {
+  const filteredData = data.filter((item) =>
+    item.partCode.toLowerCase().includes(searchTerm.toLowerCase())
   );
   return filteredData;
-}
+};
+
+let allPrestestEquipmentArray = [];
 
 export default function PrePostResult({}) {
   // const [expanded, setExpanded] = React.useState(false);
-  const [searchTerm, setSearchTerm] = useState("")
+  const [searchTerm, setSearchTerm] = useState("");
   const [show, setShow] = useState(false);
   const [partDetails, setPartDetails] = useState([]);
   const [change, setChange] = useState(initialSampleState);
   const classes = useStyles();
+  const [preTestValues,setPreTestValues] = useState({});
   const [diffData, setDiffData] = useState([]);
   const [open, setOpen] = useState(false);
   const [pledge, setPledge] = useState(true);
@@ -126,6 +131,9 @@ export default function PrePostResult({}) {
   });
 
   const [updateDiff, updateDiffResults] = useMutation(UPDATE_DIFF_DATA);
+  const [allPreTestEquipment, rexAllPresTestEquipment] = useQuery({
+    query: ALL_PRE_TEST_EQUIPMENT,
+  });
 
   useEffect(() => {
     if (fatchDifference.data) {
@@ -164,15 +172,25 @@ export default function PrePostResult({}) {
           partCode: val.partCode,
           isExpanded: false,
         });
-
-        //  && !val.frequency && !val.insulatioRs
-        //     && !val.soundLvl
       });
-      // searchPrePost(tempArray,searchTerm)
-      setPartDetails(searchPrePost(tempArray,searchTerm));
+      setPartDetails(searchPrePost(tempArray, searchTerm));
       setShouldPause(true);
     }
-  }, [plannerByName.data, preTableData.data,searchTerm]);
+  }, [plannerByName.data, preTableData.data, searchTerm]);
+
+  useEffect(() => {
+    if (allPreTestEquipment.data) {
+      allPreTestEquipment.data.allCrvtPreTestTables.nodes.map((val) => {
+        allPrestestEquipmentArray.push({
+          partName: val.crvtComponentDetailByComponentId.partName,
+          current: { min: JSON.parse(val.prCurrent).min, max: JSON.parse(val.prCurrent).max },
+          frequency: { min: JSON.parse(val.prFrequency).min, max: JSON.parse(val.prFrequency).max },
+          insulation: { min: JSON.parse(val.prInsulationRs).min, max: JSON.parse(val.prInsulationRs).max },
+          sound: { min: JSON.parse(val.prSoundLvl).min, max: JSON.parse(val.prSoundLvl).max },
+        });
+      });
+    }
+  }, [allPreTestEquipment.data]);
 
   const handleExchange = (e) => {
     e.stopPropagation();
@@ -190,42 +208,54 @@ export default function PrePostResult({}) {
     setChange(tempArray);
   };
   const handleExpanded = (index, partCode) => {
-    if (prePostStore.index === index) {
-      dispatch(setPrePostIndex(null));
-    } else {
-      dispatch(setPrePostIndex(index));
-    }
-    diffData.map((val) => {
-      if (val.partCode === partCode) {
-        setSound(val.diffSound ? JSON.parse(val.diffSound) : null);
-        setFrequency(val.diffFrequency ? JSON.parse(val.diffFrequency) : null);
-      }
-    });
-    setPartCode(partCode);
-    if (!partDetails[index].isExpanded) {
-      preData &&
-        preData.map((val, i) => {
-          if (
-            index === i &&
-            !val.current &&
-            !val.frequency &&
-            !val.insulatioRs &&
-            !val.soundLvl &&
-            !frequency &&
-            !sound
-          ) {
-            setOpen(true);
+    for (let i = 0; i < allPrestestEquipmentArray.length; i++) {
+      if (allPrestestEquipmentArray[i].partName === partDetails[index].partName) {
+        if (prePostStore.index === index) {
+          dispatch(setPrePostIndex(null));
+        } else {
+          dispatch(setPrePostIndex(index));
+        }
+        diffData.map((val) => {
+          if (val.partCode === partCode) {
+            setSound(val.diffSound ? JSON.parse(val.diffSound) : null);
+            setFrequency(val.diffFrequency ? JSON.parse(val.diffFrequency) : null);
           }
         });
-    } else {
-      dispatch(setNoOfSamples(0));
+        setPartCode(partCode);
+        if (!partDetails[index].isExpanded) {
+          preData &&
+            preData.map((val, i) => {
+              if (
+                index === i &&
+                !val.current &&
+                !val.frequency &&
+                !val.insulatioRs &&
+                !val.soundLvl &&
+                !frequency &&
+                !sound
+              ) {
+                setOpen(true);
+              }
+            });
+        } else {
+          dispatch(setNoOfSamples(0));
+        }
+        setIsExpandedIndex(index);
+        setPartDetails((prevTestData) =>
+          prevTestData.map((val, i) => ({
+            ...val,
+            isExpanded: i === index ? !val.isExpanded : false,
+          }))
+        );
+        setPreTestValues(allPrestestEquipmentArray[i])
+        return;
+      }
     }
-    setIsExpandedIndex(index);
-    setPartDetails((prevTestData) =>
-      prevTestData.map((val, i) => ({
-        ...val,
-        isExpanded: i === index ? !val.isExpanded : false,
-      }))
+    alertAndLoaders(
+      "UNSHOW_ALERT",
+      dispatch,
+      "Please configure Pre test values in equipment details page.",
+      "warning"
     );
   };
   const handleClose = () => {
@@ -242,7 +272,7 @@ export default function PrePostResult({}) {
   };
   const handleCardCollapse = (index) => {
     setOpen(false);
-    // dispatch(setPrePostIndex(null));
+    dispatch(setPrePostIndex(null));
     setPartDetails((prevTestData) =>
       prevTestData.map((val, i) => ({
         ...val,
@@ -274,12 +304,12 @@ export default function PrePostResult({}) {
         <DashboardNavbar dark absolute />
       </MDBox>
       <MDBox pt={10} pb={3}>
-          {/* <MDHoverSearch onInputChange={(value) => setSearchTerm(value)}/><br/> */}
+        {/* <MDHoverSearch onInputChange={(value) => setSearchTerm(value)}/><br/> */}
         <Card style={{ background: "#394259" }}>
-          <div style={{padding:"1em"}}>
-          <MDHoverSearch onInputChange={(value) => setSearchTerm(value)}/>
+          <div style={{ padding: "1em" }}>
+            <MDHoverSearch onInputChange={(value) => setSearchTerm(value)} />
           </div>
-       
+
           {partDetails.length !== 0 &&
             partDetails.map((val, i) => {
               return (
@@ -352,7 +382,7 @@ export default function PrePostResult({}) {
                       </div>
                       <DialogActions style={{ marginTop: "20px" }}>
                         <MDButton color="error" onClick={() => handleCardCollapse(i)}>
-                          Cancal
+                          Cancel
                         </MDButton>
                         <MDButton color="success" onClick={saveSamples} autoFocus>
                           Save
@@ -363,7 +393,7 @@ export default function PrePostResult({}) {
                       <Card style={{ background: "#394259", margin: "10px" }}>
                         <Grid container lg={12} xl={12}>
                           <Grid xs={6} sm={6}>
-                            <PreResult partCode={val.partCode} />
+                            <PreResult partCode={val.partCode} details={preTestValues}/>
                           </Grid>
                           <Grid sm={6} xs={6}>
                             <PostResult partCode={val.partCode} />

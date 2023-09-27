@@ -141,25 +141,24 @@ export default function PreTest({ id }) {
         setFlag(true);
         let data = preTestById.data.crvtPreTestTableByComponentId;
         setCurrent({
-          min: parseInt(JSON.parse(data.prCurrent).min),
+          min: JSON.parse(data.prCurrent).min,
           max: JSON.parse(data.prCurrent).max,
         });
         setSound({
-          min: parseInt(JSON.parse(data.prSoundLvl).min),
+          min: JSON.parse(data.prSoundLvl).min,
           max: JSON.parse(data.prSoundLvl).max,
         });
         setFrequency({
-          min: parseInt(JSON.parse(data.prFrequency).min),
+          min: JSON.parse(data.prFrequency).min,
           max: JSON.parse(data.prFrequency).max,
         });
         setInsulation({
-          min: parseInt(JSON.parse(data.prInsulationRs).min),
+          min: JSON.parse(data.prInsulationRs).min,
           max: JSON.parse(data.prInsulationRs).max,
         });
       } else {
         setFlag(false);
       }
-      // console.log(JSON.parse(data.prDifferance).sound.min)
     }
   }, [preTestById.data]);
 

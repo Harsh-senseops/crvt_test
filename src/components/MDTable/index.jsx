@@ -171,7 +171,7 @@ function MDTable({ data, searchTerm, onTouch }) {
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableRow style={{ color: "white" }}>
+        <TableRow style={{ color: "white",}}>
           {data.length !== 0 &&
             data.columns.map((column) => {
               return (
@@ -197,7 +197,7 @@ function MDTable({ data, searchTerm, onTouch }) {
             })}
         </TableRow>
 
-        <TableBody>
+        <TableBody style={{background:"#384158"}}>
           {pageData &&
             pageData.map((row, i) => {
               let isDisabled = row?.ignore?.alertStatus ? false : true;

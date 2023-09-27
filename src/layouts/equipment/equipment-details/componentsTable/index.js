@@ -39,7 +39,6 @@ function ComponentsTable() {
       {
         background: '#202940',
         color: "#FFF !important",
-        borderRadius: "12px 0px 0px 12px",
       },
     }];
 

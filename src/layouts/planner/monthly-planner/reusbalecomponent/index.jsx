@@ -104,12 +104,12 @@ const ReusabaleMonthlyPlannerTests = ({
 
   const userStore = useSelector((store) => store.userRoles);
 
-  const [testNameYp] = useQuery({
+  const [testNameYp] = useSubscription({
     query: yearlyPlannerQuery,
     // pause: monthlyPlannerStore.shouldPause,
   });
 
-  const [partDetails] = useQuery({
+  const [partDetails] = useSubscription({
     query: PARTDEAILS_BY_PART_CODE,
     variables: { partCode },
     pause: shouldPause,
@@ -120,7 +120,6 @@ const ReusabaleMonthlyPlannerTests = ({
     pause: shouldPause,
     variables: { month: monthlyPlannerStore.date.month },
   });
-
   const [addMonthlyUploadHistoryResult, addMonthlyUploadHistory] = useMutation(
     ADD_MONTHLY_UPLOAD_HISTORY
   );
@@ -188,6 +187,11 @@ const ReusabaleMonthlyPlannerTests = ({
       dispatch(monthlyPlannerAction.setShouldPause(false));
     }
     let tempArray = [];
+    const fetchData = async() => {
+      await testNameYp.data
+      console.log(testNameYp.data)
+    } 
+    fetchData();
     if (testNameYp.data && monthlyPlannerStore.date.year >= 2012) {
       let isSevenDaysRunning = "";
       dispatch(monthlyPlannerAction.setShouldPause(true));

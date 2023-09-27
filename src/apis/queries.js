@@ -92,7 +92,7 @@ const MAKE_YEARLY_PLANNER = `mutation MyMutation {
 }
 `;
 
-const RO_YEARLY_PLANNER = `query roYearlyPlanner {
+const RO_YEARLY_PLANNER = `subscription roYearlyPlanner {
 allCrvtRoYearlyPlanners {
   nodes {
     crvtComponentDetailByComponentId {
@@ -110,7 +110,7 @@ allCrvtRoYearlyPlanners {
 }
 `;
 const THERMAL_SHOCK_YEARLY_PLANNER = `
-query thermalShockYearlyPlanner {
+subscription thermalShockYearlyPlanner {
 allCrvtThermalShockYearlyPalnners {
   nodes {
     crvtComponentDetailByComponentId {
@@ -128,7 +128,7 @@ allCrvtThermalShockYearlyPalnners {
 }
 `;
 const SHOWER_YEARLY_PLANNER = `
-query showerYearlyPlanner {
+subscription showerYearlyPlanner {
 allCrvtShowerYearlyPlanners {
   nodes {
     crvtComponentDetailByComponentId {
@@ -146,7 +146,7 @@ allCrvtShowerYearlyPlanners {
 }
 `;
 const DUST_YEARLY_PLANNER = `
-query dustYearlyPlanner {
+subscription dustYearlyPlanner {
 allCrvtDustYearlyPlanners {
   nodes {
     crvtComponentDetailByComponentId {
@@ -165,7 +165,7 @@ allCrvtDustYearlyPlanners {
 `;
 
 const VIBRATION_YEARLY_PLANNER = `
-query vibrationYearlyPlanner {
+subscription vibrationYearlyPlanner {
 allCrvtVibrationYearlyPlanners {
   nodes {
     crvtComponentDetailByComponentId {
@@ -182,7 +182,7 @@ allCrvtVibrationYearlyPlanners {
 }
 }
 `;
-const OVEN_YEARLY_PLANNER = `query ovenYearlyPlanner {
+const OVEN_YEARLY_PLANNER = `subscription ovenYearlyPlanner {
 allCrvtOvenYearlyPlanners {
   nodes {
     crvtComponentDetailByComponentId {
@@ -199,7 +199,7 @@ allCrvtOvenYearlyPlanners {
 }
 }
 `;
-const THERMAL_CYCLE_YEARLY_PLANNER = `query thermalCycleYearlyPlanner {
+const THERMAL_CYCLE_YEARLY_PLANNER = `subscription thermalCycleYearlyPlanner {
 allCrvtThermalCycleYearlyPlanners {
   nodes {
     crvtComponentDetailByComponentId {
@@ -385,7 +385,7 @@ createCrvtPartCodeDetail(
 
 `;
 const PARTDEAILS_BY_PART_CODE = `
-query MyQuery($partCode:String!) {
+subscription MyQuery($partCode:String!) {
 crvtPartCodeDetailByPartCode(partCode: $partCode) {
   he6T
   hhhd
@@ -1200,9 +1200,9 @@ const UPDATE_SHOWER_ERD = `mutation showerERD($showerErt: JSON, $partId: Int!) {
   }
 }
 `
-const UPDATE_THERMAL_CYCLE_ERD = `mutation thermalCycleERD($showerErt: JSON, $partId: Int!) {
+const UPDATE_THERMAL_CYCLE_ERD = `mutation thermalCycleERD($thermalCycleErt: JSON, $partId: Int!) {
   updateCrvtEquipmentRunningDetailByPartId(
-    input: {crvtEquipmentRunningDetailPatch: {showerErt: $showerErt}, partId: $partId}
+    input: {crvtEquipmentRunningDetailPatch: {thermalCycleErt: $thermalCycleErt}, partId: $partId}
   ) {
     clientMutationId
   }
@@ -1224,6 +1224,22 @@ const UPDATE_VIBRATION_ERD = `mutation vibrationERD($vibrationErt: JSON, $partId
   }
 }
 `
+const ALL_PRE_TEST_EQUIPMENT = `query allCrvtPreTestTables {
+  allCrvtPreTestTables {
+    nodes {
+      crvtComponentDetailByComponentId {
+        partName
+        id
+      }
+      prCurrent
+      prFrequency
+      prInsulationRs
+      prSoundLvl
+    }
+  }
+}
+`
+
 export {
   AUTH,
   ADD_USER,
@@ -1349,5 +1365,6 @@ export {
   UPDATE_SHOWER_ERD,
   UPDATE_THERMAL_CYCLE_ERD,
   UPDATE_THERMAL_SHOCK_ERD,
-  UPDATE_VIBRATION_ERD
+  UPDATE_VIBRATION_ERD,
+  ALL_PRE_TEST_EQUIPMENT
 };

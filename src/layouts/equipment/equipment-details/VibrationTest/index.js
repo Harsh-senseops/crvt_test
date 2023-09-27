@@ -107,35 +107,6 @@ export default function VibrationTest({ details, componentName, id }) {
   const [updateVibrationErdRes, updateVibrationErd] = useMutation(UPDATE_VIBRATION_ERD);
 
   useEffect(() => {
-    if (vibrationdeailsByID.data) {
-      let constValues = JSON.parse(
-        vibrationdeailsByID.data.crvtVibrationTestDetailByPartName.testDetails,
-        "datadetails"
-      );
-      setOldData({ eName: constValues.name, running: constValues["7daysrunning"] });
-      setFrequencyMax({ newData: constValues.frequency.max, oldData: constValues.frequency.max });
-      setFrequencyMin({ newData: constValues.frequency.min, oldData: constValues.frequency.min });
-      setTestDurationMin({
-        newData: constValues.test_duration_hr.min,
-        oldData: constValues.test_duration_hr.min,
-      });
-      setTestDurationMax({
-        newData: constValues.test_duration_hr.max,
-        oldData: constValues.test_duration_hr.max,
-      });
-      setEquipmentRunning({
-        newData: constValues.equipment_running,
-        oldData: constValues.equipment_running,
-      });
-      setSimultaneously({
-        newData: constValues.simultaneously,
-        oldData: constValues.simultaneously,
-      });
-      setCycleTime({ newData: constValues.cycle_time_sec, oldData: constValues.cycle_time_sec });
-      setAcceleration({ newData: constValues.acceleration, oldData: constValues.acceleration });
-      setSampleQty({ newData: constValues.sample_qty, oldData: constValues.sample_qty });
-    }
-
     details.map((val) => {
       let data = "";
       if (val.partName == componentName) {
@@ -169,6 +140,36 @@ export default function VibrationTest({ details, componentName, id }) {
         }
       }
     });
+    if (vibrationdeailsByID.data) {
+      let constValues = JSON.parse(
+        vibrationdeailsByID.data.crvtVibrationTestDetailByPartName.testDetails,
+        "datadetails"
+      );
+      setOldData({ eName: constValues.name, running: constValues["7daysrunning"] });
+      setFrequencyMax({ newData: constValues.frequency.max, oldData: constValues.frequency.max });
+      setFrequencyMin({ newData: constValues.frequency.min, oldData: constValues.frequency.min });
+      setTestDurationMin({
+        newData: constValues.test_duration_hr.min,
+        oldData: constValues.test_duration_hr.min,
+      });
+      setTestDurationMax({
+        newData: constValues.test_duration_hr.max,
+        oldData: constValues.test_duration_hr.max,
+      });
+      setEquipmentRunning({
+        newData: constValues.equipment_running,
+        oldData: constValues.equipment_running,
+      });
+      setSimultaneously({
+        newData: constValues.simultaneously,
+        oldData: constValues.simultaneously,
+      });
+      setCycleTime({ newData: constValues.cycle_time_sec, oldData: constValues.cycle_time_sec });
+      setAcceleration({ newData: constValues.acceleration, oldData: constValues.acceleration });
+      setSampleQty({ newData: constValues.sample_qty, oldData: constValues.sample_qty });
+    }
+
+
     if (vibrationdeailsByID.data) {
       let data = vibrationdeailsByID.data.crvtVibrationTestDetailByPartName.status;
       setToggleEnable(data === 1 ? true : false);
@@ -218,7 +219,7 @@ export default function VibrationTest({ details, componentName, id }) {
           if (res.data) {
             updateVibrationErd({
               partId: id,
-              dustErt: JSON.stringify({
+              vibrationErt: JSON.stringify({
                 simultaniously: parseInt(simultaneously.newData),
                 days: parseInt(testDurationMax.newData) / parseInt(equipmentRunning.newData),
                 "7daysrunning": oldData.running,

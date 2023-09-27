@@ -79,7 +79,7 @@ function isValueNull(obj,noOFSamples,str) {
     }
 }
 
-export default function PreResult({ partCode }) {
+export default function PreResult({ partCode,details }) {
     const [show, setShow] = React.useState(false)
     const [pledge, setPledge] = useState(true)
     const [current, setCurrent] = useState({})
@@ -248,14 +248,6 @@ export default function PreResult({ partCode }) {
         }
     };
 
-    const handleSamples = (event) => {
-        // alert(event.target.value)
-        for (let i = 1; i <= event.target.value; i++) {
-            setNoOSamples(prev => [...prev, i])
-        }
-        setShowSamples(true)
-    }
-
     const onCancel = () => {
         setShow(prev=>!prev);
         rexFatchPreData({requestPolicy:"network-only"});
@@ -265,6 +257,7 @@ export default function PreResult({ partCode }) {
         setShow(prev=>!prev);
         rexFatchPreData({requestPolicy:"network-only"});
     }
+    console.log(details);
     return (
         <>
             <Card style={{ margin: "12px" }}>

@@ -91,17 +91,6 @@ export default function ThermalCycleTestDetail({ details, componentName, id }) {
   const [updateTermalCycleErdRes, updateTermalCycleErd] = useMutation(UPDATE_THERMAL_CYCLE_ERD)
 
   useEffect(() => {
-
-    if (thermalCycledeailsByID.data) {
-      let constValues = JSON.parse(thermalCycledeailsByID.data.crvtThermalCycleTestDetailByPartName.testDetails, "datadetails")
-      setOldData({ eName: constValues.name, running: constValues["7daysrunning"] })
-      setTestDurationMin({ newData: constValues.test_duration_hr.min, oldData: constValues.test_duration_hr.min })
-      setTestDurationMax({ newData: constValues.test_duration_hr.max, oldData: constValues.test_duration_hr.max })
-      setEquipmentRunning({ newData: constValues.equipment_running, oldData: constValues.equipment_running })
-      setSimultaneously({ newData: constValues.simultaneously, oldData: constValues.simultaneously })
-      setSampleQty({ newData: constValues.sample_qty, oldData: constValues.sample_qty })
-
-    }
     details.map((val) => {
       let data = ""
       if (val.partName == componentName) {
@@ -125,6 +114,16 @@ export default function ThermalCycleTestDetail({ details, componentName, id }) {
         }
       }
     })
+    if (thermalCycledeailsByID.data) {
+      let constValues = JSON.parse(thermalCycledeailsByID.data.crvtThermalCycleTestDetailByPartName.testDetails, "datadetails")
+      setOldData({ eName: constValues.name, running: constValues["7daysrunning"] })
+      setTestDurationMin({ newData: constValues.test_duration_hr.min, oldData: constValues.test_duration_hr.min })
+      setTestDurationMax({ newData: constValues.test_duration_hr.max, oldData: constValues.test_duration_hr.max })
+      setEquipmentRunning({ newData: constValues.equipment_running, oldData: constValues.equipment_running })
+      setSimultaneously({ newData: constValues.simultaneously, oldData: constValues.simultaneously })
+      setSampleQty({ newData: constValues.sample_qty, oldData: constValues.sample_qty })
+
+    }
     if(thermalCycledeailsByID.data){
       let data = thermalCycledeailsByID.data.crvtThermalCycleTestDetailByPartName.status
       setToggleEnable(data === 1 ? true: false)
@@ -165,7 +164,7 @@ export default function ThermalCycleTestDetail({ details, componentName, id }) {
           if(res.data){
             updateTermalCycleErd({
               partId: id,
-              dustErt: JSON.stringify({
+              thermalCycleErt: JSON.stringify({
                 simultaniously: parseInt(simultaneously.newData),
                 days: parseInt(testDurationMax.newData) / parseInt(equipmentRunning.newData),
                 "7daysrunning": oldData.running,

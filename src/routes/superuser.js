@@ -232,7 +232,7 @@ const superUserRoutes = [
       },
       {
         name:"Pre-Post Details",
-        key: "pre-post details",
+        key: "pre-post-details",
         route: "/equipment/pre-post-details",
         component: <ProtectedRoute Component={PrePostResult}/>,
       },
