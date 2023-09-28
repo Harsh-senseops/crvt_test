@@ -115,14 +115,12 @@ const DropFileInput = (props) => {
     let tempArr = [];
     const file = event.target.files[0];
     if (file) {
-      let tempMasterPartList = [];
+      // let tempMasterPartList = [];
       const updatedList = [file];
       setFileList(updatedList);
       convertExcelToJson(file)
         .then((jsonData) => {
-          masterPartDetailsMaker(tempMasterPartList, jsonData["MASTER PART LIST"]);
-          setMasterPartListDetails(tempMasterPartList);
-          tempMasterPartList = [];
+          setMasterPartListDetails(masterPartDetailsMaker(jsonData["MASTER PART LIST"]));
           setData(jsonData["MASTER PART LIST"]);
           jsonData["MASTER PART LIST"].map((val) => {
             if (checkElement(val["Vendor Code"], tempArr)) {
@@ -155,9 +153,8 @@ const DropFileInput = (props) => {
     }
   };
 
-  const pushData = (e) => {
+  const pushData = async(e) => {
     e.preventDefault();
-
     const updatedList = [];
     setFileList(updatedList);
     props.onFileChange(updatedList);
@@ -188,10 +185,11 @@ const DropFileInput = (props) => {
         return newProgress;
       });
     }, 40);
+
     createYearlyPlanner().then((res)=>{
-      masterPartDetails.map((val) => {
-        val.partCode.map((val1) => {
-          createPartCodeDetails({
+      masterPartDetails.map((val,i) => {
+        val.partCode.map(async(val1) => {
+       await createPartCodeDetails({
             he6t: val1.details.HE6T,
             hhhd: val1.details.HHHD,
             hhhg: val1.details.HHHG,
@@ -200,11 +198,16 @@ const DropFileInput = (props) => {
             hm5v: val1.details.HM5V,
             hm6c: val1.details.HM6C,
             partCode: val1.partCode,
-            partName: val.partName,
+            partName: val.partName, 
             count: val.partCount,
             vendorDetails: JSON.stringify(val1.details.vendorsInfo),
           }).then((res) => {
-            dispatch(yearlyPlanner.setShouldPause(false))
+            if(!res.data.createCrvtPartCodeDetail){
+            //handle error situation over here
+            }else if(res.data.createCrvtPartCodeDetail){
+              console.log(i)
+              dispatch(yearlyPlanner.setShouldPause(false))
+            }           
           });
         });
       });
@@ -220,9 +223,13 @@ const DropFileInput = (props) => {
       fileName,
       empCode: store.empCode,
     }).then((result) => {
+      if(result.error){
+        console.log(result.error)
+      }
     });
-  };
 
+  };
+  
   return (
     <>
       <Grid mb={6} mt={2}>

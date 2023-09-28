@@ -102,7 +102,8 @@ const partCodeDetails = (partCode, jsonMasterPartList) => {
   return partDetails;
 };
 
-export default function masterPartDetailsMaker(arr, jsonMasterPartList) {
+export default function masterPartDetailsMaker(jsonMasterPartList) {
+  let arr = []
   jsonMasterPartList.map((newVal, i) => {
     if (i === 0) return;
     const partName = newVal["Part Name"];
@@ -122,4 +123,5 @@ export default function masterPartDetailsMaker(arr, jsonMasterPartList) {
       };
     }
   }
+  return arr;
 }
