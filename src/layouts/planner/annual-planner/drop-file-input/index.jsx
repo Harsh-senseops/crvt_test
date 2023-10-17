@@ -11,16 +11,17 @@ import masterPartDetailsMaker from "utils/masterPartListCalculation";
 import ImageConfig from "../config";
 import uploadImg from "../../../../assets/cloud-upload-regular-240.png";
 import { useQuery } from "urql";
-import { MAKE_YEARLY_PLANNER, PART_CODE_DETAILS, ADD_YEARLY_HISTORY,ADD_NOTIFICATION } from "apis/queries";
+import {
+  MAKE_YEARLY_PLANNER,
+  PART_CODE_DETAILS,
+  ADD_YEARLY_HISTORY,
+  ADD_NOTIFICATION,
+} from "apis/queries";
 import * as yearlyPlanner from "../../../../reduxSlices/yearlyPlanner";
 import { useDispatch, useSelector } from "react-redux";
 import alertAndLoaders from "utils/alertAndLoaders";
-
 import Backdrop from "@mui/material/Backdrop";
-import MDBox from "components/MDBox";
 import { Box, Card, CardContent } from "@mui/material";
-import { position } from "stylis";
-import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 
 function checkElement(val, array) {
   const pos = array.map((e) => e["vendor_code"]).indexOf(val);
@@ -43,8 +44,8 @@ const DropFileInput = (props) => {
   const [masterPartDetails, setMasterPartListDetails] = useState("");
 
   const store = useSelector((store) => {
-    return store.userRoles
-  })
+    return store.userRoles;
+  });
   const dispatch = useDispatch();
   const [showDragAndDrop, setDragAndDrop] = useState(true);
 
@@ -54,7 +55,6 @@ const DropFileInput = (props) => {
   const [createYearlyPlannerRed, createYearlyPlanner] = useMutation(MAKE_YEARLY_PLANNER);
 
   const [partCodeDetails, createPartCodeDetails] = useMutation(PART_CODE_DETAILS);
-
 
   const onDragEnter = () => wrapperRef.current.classList.add("dragover");
 
@@ -75,7 +75,9 @@ const DropFileInput = (props) => {
           const jsonData = {};
           workbook.SheetNames.forEach((sheetName) => {
             const worksheet = workbook.Sheets[sheetName];
-            const sheetData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+            const sheetData = XLSX.utils.sheet_to_json(worksheet, {
+              header: 1,
+            });
             jsonData[sheetName] = sheetData.map((row) => {
               const rowData = {};
               row.forEach((cell, columnIndex) => {
@@ -133,6 +135,7 @@ const DropFileInput = (props) => {
           });
         })
         .catch((error) => {
+          console.log(error);
         });
     }
     setVendors(tempArr);
@@ -153,7 +156,7 @@ const DropFileInput = (props) => {
     }
   };
 
-  const pushData = async(e) => {
+  const pushData = async (e) => {
     e.preventDefault();
     const updatedList = [];
     setFileList(updatedList);
@@ -161,11 +164,9 @@ const DropFileInput = (props) => {
     setDragAndDrop(false);
     setMakePlanner(true);
 
-   
-
-    if(masterPartDetails.length === 0){
+    if (masterPartDetails.length === 0) {
       alertAndLoaders("UNSHOW_ALERT", dispatch, "The master part list is inaccurate.", "warning");
-      return
+      return;
     }
     setOpen(true);
     let timer = setInterval(() => {
@@ -186,10 +187,10 @@ const DropFileInput = (props) => {
       });
     }, 40);
 
-    createYearlyPlanner().then((res)=>{
-      masterPartDetails.map((val,i) => {
-        val.partCode.map(async(val1) => {
-       await createPartCodeDetails({
+    createYearlyPlanner().then((res) => {
+      masterPartDetails.map((val, i) => {
+        val.partCode.map(async (val1) => {
+          await createPartCodeDetails({
             he6t: val1.details.HE6T,
             hhhd: val1.details.HHHD,
             hhhg: val1.details.HHHG,
@@ -198,38 +199,37 @@ const DropFileInput = (props) => {
             hm5v: val1.details.HM5V,
             hm6c: val1.details.HM6C,
             partCode: val1.partCode,
-            partName: val.partName, 
+            partName: val.partName,
             count: val.partCount,
             vendorDetails: JSON.stringify(val1.details.vendorsInfo),
           }).then((res) => {
-            if(!res.data.createCrvtPartCodeDetail){
-            //handle error situation over here
-            }else if(res.data.createCrvtPartCodeDetail){
-              console.log(i)
-              dispatch(yearlyPlanner.setShouldPause(false))
-            }           
+            if (!res.data.createCrvtPartCodeDetail) {
+              //handle error situation over here
+            } else if (res.data.createCrvtPartCodeDetail) {
+              console.log(i);
+              dispatch(yearlyPlanner.setShouldPause(false));
+            }
           });
         });
       });
       createNotification({
-        empCode:store.empCode,
-        message:"New Planner Created",
-        notificationFrom:"Planner",
-        description:`New Planner was created by the user ${store.empCode}`
-      })
-    })
+        empCode: store.empCode,
+        message: "New Planner Created",
+        notificationFrom: "Planner",
+        description: `New Planner was created by the user ${store.empCode}`,
+      });
+    });
 
     createHistory({
       fileName,
       empCode: store.empCode,
     }).then((result) => {
-      if(result.error){
-        console.log(result.error)
+      if (result.error) {
+        console.log(result.error);
       }
     });
-
   };
-  
+
   return (
     <>
       <Grid mb={6} mt={2}>
@@ -358,7 +358,11 @@ const DropFileInput = (props) => {
               <MDTypography
                 variant="h5"
                 fontWeight="regular"
-                style={{ color: "whitesmoke",position:"relative",bottom:"-10px"  }}
+                style={{
+                  color: "whitesmoke",
+                  position: "relative",
+                  bottom: "-10px",
+                }}
               >
                 Creating yearly planner...
               </MDTypography>

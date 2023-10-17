@@ -48,10 +48,10 @@ import {useSelector} from "react-redux";
 import "./App.css"
 
 // graphql url
-// const senseopsHTTPServerURL = "http://127.0.0.1:5052/graphql";
-// const senseopsWSServerURL = "ws://127.0.0.1:5052/graphql";
-const hm2gHTTPURL = "http://10.30.3.67:5052/graphql";
-const hm2gWSURL = "ws://10.30.3.67:5052/graphql";
+const senseopsHTTPServerURL = "http://127.0.0.1:5052/graphql";
+const senseopsWSServerURL = "ws://127.0.0.1:5052/graphql";
+// const hm2gHTTPURL = "http://10.30.3.67:5052/graphql";
+// const hm2gWSURL = "ws://10.30.3.67:5052/graphql";
 
 
 export default function App() {
@@ -151,13 +151,13 @@ function authorizeUser() {
   }
 
     // urql client
-    const subscriptionClient = new SubscriptionClient(hm2gWSURL, {
+    const subscriptionClient = new SubscriptionClient(senseopsWSServerURL, {
       reconnect: true,
       timeout: 30000,
     });
   
     const client = new Client({
-      url: hm2gHTTPURL,
+      url: senseopsHTTPServerURL,
       exchanges: [
         devtoolsExchange,
         ...defaultExchanges,

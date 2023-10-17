@@ -741,14 +741,16 @@ crvtPostTestTableByComponentId(componentId: $componentId) {
   ptSoundLvl
 }
 }`;
-const FATCH_PRE_DATA = `subscription preTestTableByComponentId($componentId:Int!) {
-crvtPreTestTableByComponentId(componentId: $componentId) {
-  prCurrent
-  prFrequency
-  prInsulationRs
-  prSoundLvl
+const GET_PRE_DATA = `subscription allCrvtPreTestTables($id:Int!) {
+  crvtPreTestTableByComponentId(componentId: $id) {
+    crvtComponentDetailByComponentId {
+      partName
+    }
+    componentId
+    parameters
+  }
 }
-}`;
+`;
 const UPDATE_PRE_TEST = `mutation updatePreTestTableByComponentId($prCurrent: JSON!, $prFrequency: JSON!, $prInsulationRs: JSON!, $prSoundLvl: JSON!, $componentId: Int!) {
 updateCrvtPreTestTableByComponentId(
   input: {crvtPreTestTablePatch: {prCurrent: $prCurrent, prFrequency: $prFrequency, prInsulationRs: $prInsulationRs, prSoundLvl: $prSoundLvl}, componentId: $componentId}
@@ -1329,7 +1331,7 @@ export {
   UPDATE_UNPLANNED_LIST,
   CREATE_PRE_TEST,
   CREATE_POST_TEST,
-  FATCH_PRE_DATA,
+  GET_PRE_DATA,
   FATCH_POST_DATA,
   UPDATE_PRE_TEST,
   UPDATE_POST_TEST,
