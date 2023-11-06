@@ -13,8 +13,7 @@ import MDBox from "components/MDBox";
 import { useMutation, useQuery, useSubscription } from "urql";
 
 import Grid from "@mui/material/Grid";
-import { CREATE_PRE_TEST } from "apis/queries";
-import { GET_PRE_DATA } from "apis/queries";
+import { GET_POST_DATA } from "apis/queries";
 import { useSelector, useDispatch } from "react-redux";
 import alertAndLoaders from "utils/alertAndLoaders";
 import { UPDATE_PRE_TEST } from "apis/queries";
@@ -56,35 +55,36 @@ export default function PreTest({ id }) {
   const [parameters, setParameters] = useState(null);
   const [showInputs, setShowInputs] = useState(false);
   const [preTestDetailsById, rexPreTestDetailsById] = useSubscription({
-    query: GET_PRE_DATA,
-    variables: { id },
+    query: GET_POST_DATA,
+    variables: { componentId: id },
   });
   useEffect(() => {
     if (preTestDetailsById.data) {
-      setParameters(JSON.parse(preTestDetailsById.data.crvtPreTestTableByComponentId.parameters));
+      console.log(JSON.parse(preTestDetailsById.data.crvtPostTestTableByComponentId.ptParameter));
+      setParameters(JSON.parse(preTestDetailsById.data.crvtPostTestTableByComponentId.ptParameter));
     }
-  }, [preTestDetailsById]);
+  }, [preTestDetailsById.data]);
 
-  const setMinValues = (event, index) => {
-    console.log(parameters);
-    let tempParameters = { ...parameters };
-    tempParameters.parameters[index].value.min = event.target.value;
-    setParameters(tempParameters);
-    console.log(index);
-  };
+  // const setMinValues = (event, index) => {
+  //   console.log(parameters);
+  //   let tempParameters = { ...parameters };
+  //   tempParameters.parameters[index].value.min = event.target.value;
+  //   setParameters(tempParameters);
+  //   console.log(index);
+  // };
 
-  const setMaxValues = (event, index) => {
-    console.log(parameters);
-    let tempParameters = { ...parameters };
-    tempParameters.parameters[index].value.max = event.target.value;
-    setParameters(tempParameters);
-    console.log(index);
-  };
+  // const setMaxValues = (event, index) => {
+  //   console.log(parameters);
+  //   let tempParameters = { ...parameters };
+  //   tempParameters.parameters[index].value.max = event.target.value;
+  //   setParameters(tempParameters);
+  //   console.log(index);
+  // };
 
   const onCancel = () => {
-    setShowInputs((prev)=>!prev)
-    rexPreTestDetailsById({requestPolicy:"cache-and-network"})
-  }
+    setShowInputs((prev) => !prev);
+    rexPreTestDetailsById({ requestPolicy: "cache-and-network" });
+  };
   return (
     <>
       <Card style={{ margin: "10px" }}>
@@ -93,66 +93,142 @@ export default function PreTest({ id }) {
         </MDTypography>
         <Grid p={2} container spacing={3}>
           {parameters &&
-            parameters.parameters.map((val, i) => {
+            parameters?.parameters?.map((val, i) => {
               return (
-                <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
-                  <Grid container justifyContent="center" alignItems="center">
-                    <Grid item xs={12} sm={12} md={4} lg={4} xl={4}>
-                      <Typography></Typography>
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={4} lg={4} xl={4}>
-                      <Typography fontWeight="300" fontSize="12px" color="whitesmoke">
-                        MIN
+                <Grid item ml="20px" xs={12} sm={12} md={12} lg={12} xl={12}>
+                  <Grid>
+                    <MDTypography
+                      style={{ marginBottom:"6px",fontSize:"18px",display: "flex", justifyContent: "center", alignItems: "center" }}
+                    >
+                      {val.t_name}
+                    </MDTypography>
+                  </Grid>
+
+                  <Grid></Grid>
+                  <Grid container style={{ justifyContent: "left", alignContent: "center" }}>
+                    <Grid item xs={12} sm={12} md={3} lg={3} xl={3}>
+                      <Typography fontWeight="700" fontSize="14px" color="whitesmoke">
+                        {val.p_name}
                       </Typography>
                     </Grid>
-                    <Grid item xs={12} sm={12} md={4} lg={4} xl={4}>
-                      <Typography fontWeight="300" fontSize="11px" color="whitesmoke">
-                        MAX
-                      </Typography>
+                    <Grid item mr={2} xs={12} sm={12} md={6} lg={6} xl={6}>
+                      <Grid container justifyContent="space-around" alignItems="center">
+                        <Grid Grid item xs={4} sm={4} md={2} lg={2} xl={2}>
+                          <MDTypography
+                            style={{
+                              fontSize: "12px",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              color: "#ffffff70",
+                            }}
+                          >
+                            Initial
+                          </MDTypography>
+                        </Grid>
+                        <Grid Grid item xs={4} sm={4} md={2} lg={2} xl={2}>
+                          <MDTypography
+                            style={{
+                              fontSize: "12px",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              color: "#ffffff70",
+                            }}
+                          >
+                            min
+                          </MDTypography>
+                        </Grid>
+                        <Grid Grid item xs={4} sm={4} md={2} lg={2} xl={2}>
+                          <MDTypography
+                            style={{
+                              fontSize: "12px",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              color: "#ffffff70",
+                            }}
+                          >
+                            max
+                          </MDTypography>
+                        </Grid>
+                      </Grid>
                     </Grid>
                   </Grid>
 
-                  <Grid container>
-                    <Grid item xs={12} sm={12} md={4} lg={4} xl={4}>
-                      <Typography fontWeight="700" fontSize="14px" color="whitesmoke">
-                        {val.name} :
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={4} lg={4} xl={4}>
-                      {showInputs ? (
-                        <TextField
-                          sx={{ width: "80%" }}
-                          value={val.value.min}
-                          onChange={(e) => setMinValues(e, i)}
-                        />
-                      ) : (
-                        <Typography
-                          textAlign="center"
-                          fontWeight="700"
-                          fontSize="16px"
-                          color="whitesmoke"
-                          sx={{ background: "#344767", width: "50%", borderRadius: "4px" }}
-                        >
-                          {val.value.min}
-                        </Typography>
-                      )}
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={4} lg={4} xl={4}>
-                      {showInputs ? (
-                        <TextField sx={{ width: "80%" }} value={val.value.max} onChange={(e) => setMaxValues(e, i)} />
-                      ) : (
-                        <Typography
-                          textAlign="center"
-                          fontWeight="700"
-                          fontSize="16px"
-                          color="whitesmoke"
-                          sx={{ background: "#344767", width: "50%", borderRadius: "4px" }}
-                        >
-                          {val.value.max}
-                        </Typography>
-                      )}
-                    </Grid>
-                  </Grid>
+                  {val?.conditions?.map((val, i) => {
+                    console.log(val)
+                    return (
+                      <Grid container justifyContent="left" alignItems="center">
+                        <Grid item ml={2} xs={12} sm={12} md={3} lg={3} xl={3}>
+                          <Typography fontWeight="500" fontSize="12px" color="whitesmoke">
+                            {val.c_name} :
+                          </Typography>
+                        </Grid>
+                        <Grid item mr={6} xs={12} sm={12} md={6} lg={6} xl={6}>
+                          <Grid container justifyContent="space-around" alignItems="center">
+                            <Grid item xs={4} sm={4} md={2} lg={2} xl={2}>
+                              {showInputs ? (
+                                <input style={{ height: "30px", width: "90%" }} />
+                              ) : (
+                                <MDTypography
+                                  style={{
+                                    background: "#394258",
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    borderRadius: "4px",
+                                    fontSize:"13px"
+
+                                  }}
+                                >
+                                  {val.value.a_value}
+                                </MDTypography>
+                              )}
+                            </Grid>
+                            <Grid item xs={4} sm={4} md={2} lg={2} xl={2}>
+                              {showInputs ? (
+                                <input style={{ height: "30px", width: "90%" }} />
+                              ) : (
+                                <MDTypography
+                                  style={{
+                                    background: "#394258",
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    borderRadius: "4px",
+                                    marginTop: "4px",
+                                    fontSize:"13px"
+
+                                  }}
+                                >
+                                {val.value.min}
+
+                                </MDTypography>
+                              )}
+                            </Grid>
+                            <Grid item xs={4} sm={4} md={2} lg={2} xl={2}>
+                              {showInputs ? (
+                                <input style={{ height: "30px", width: "90%" }} />
+                              ) : (
+                                <MDTypography
+                                  style={{
+                                    background: "#394258",
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    borderRadius: "4px",
+                                    fontSize:"13px"
+                                    
+                                  }}
+                                >
+                                  {val.value.max}
+                                </MDTypography>
+                              )}
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                    );
+                  })}
                 </Grid>
               );
             })}

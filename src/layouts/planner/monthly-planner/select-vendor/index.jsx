@@ -115,12 +115,13 @@ function ConfirmationDialogRaw({
                   dispatch(addNotifications("New planner added"));
                   addPreResultsPart({
                     partCode: store.detailsToPush.partCode,
-                    partName: store.detailsToPush.partName,
+                    partId: store.detailsToPush.partId,
                   }).then((res) => {
+                    console.log(res)
                     if (res.data) {
                       addPostResultsPart({
                         partCode: store.detailsToPush.partCode,
-                        partName: store.detailsToPush.partName,
+                        partId: store.detailsToPush.partId,
                       }).then((res) => {
                         if (res.data) {
 

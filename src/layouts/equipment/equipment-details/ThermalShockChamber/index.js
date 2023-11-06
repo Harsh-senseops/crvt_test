@@ -239,7 +239,7 @@ export default function ThermalShockChamber({ details, componentName, id }) {
           "Cycle Time": cycleTime,
           "Total Cycle": totalCycle,
           "Equipment Running (hr)": equipmentRunning,
-          Simultaneously: simultaneously,
+          "Simultaneously": simultaneously,
           "Test Duration (hr min)": testDurationMin,
           "Test Duration (hr max)": testDurationMax,
           "Sample Quantity": sampleQty,
@@ -431,7 +431,7 @@ export default function ThermalShockChamber({ details, componentName, id }) {
                       label="Hot (℃)"
                     />
                   </Grid>
-                  <Grid item xs={12} sm={3}>
+                  {/* <Grid item xs={12} sm={3}>
                     <TextField
                       onChange={(e) =>
                         setCycleTime((prevData) => ({
@@ -449,7 +449,7 @@ export default function ThermalShockChamber({ details, componentName, id }) {
                       value={cycleTime.newData}
                       label="Cycle Time"
                     />
-                  </Grid>
+                  </Grid> */}
                   <Grid item xs={12} sm={3}>
                     <TextField
                       onChange={(e) =>

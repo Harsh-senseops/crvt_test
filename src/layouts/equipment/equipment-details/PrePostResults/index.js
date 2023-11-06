@@ -22,12 +22,8 @@ import MDDialog from "components/MDDilouge";
 import { useDispatch, useSelector } from "react-redux";
 import alertAndLoaders from "utils/alertAndLoaders";
 import {
-  ALL_COMPONENT,
-  FATCH_DIFFERENCE,
-  ALL_PRE_TEST_EQUIPMENT,
-  PRE_TABLE_DATA,
-  UPDATE_DIFF_DATA,
-  FATCH_DIFF_RESULTS,
+  GET_POST_DATA,
+  PRE_POST_DETAILS,
 } from "apis/queries";
 import UploadImage from "./PostResult/UploadImage/uploadImage";
 import { setNoOfSamples, setPrePostIndex } from "reduxSlices/prePost";
@@ -89,116 +85,31 @@ const searchPrePost = (data, searchTerm) => {
   return filteredData;
 };
 
-let allPrestestEquipmentArray = [];
 
-export default function PrePostResult({}) {
-  // const [expanded, setExpanded] = React.useState(false);
+export default function PrePostResult({ }) {
+  const [isExpanded, setIsExpanded] = React.useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [show, setShow] = useState(false);
-  const [partDetails, setPartDetails] = useState([]);
   const [change, setChange] = useState(initialSampleState);
   const classes = useStyles();
-  const [preTestValues, setPreTestValues] = useState({});
-  const [diffData, setDiffData] = useState([]);
   const [open, setOpen] = useState(false);
-  const [pledge, setPledge] = useState(true);
-  const [sound, setSound] = useState(null);
   const [preData, setPreData] = useState(null);
-  const [frequency, setFrequency] = useState(null);
-  const [shouldPause, setShouldPause] = useState(true);
   const prePostStore = useSelector((store) => {
     return store.prePost;
   });
-  const [selectedImage, setSelectedImage] = useState(null);
 
-  const [isExpandedIndex, setIsExpandedIndex] = useState(0);
-  const [partCode, setPartCode] = useState(null);
-  const [plannerByName, rexPlannerByName] = useQuery({
-    query: ALL_COMPONENT,
-    pause: shouldPause,
+  const [preTableData, rexPreTableData] = useQuery({
+    query: PRE_POST_DETAILS,
   });
-  const [preTableData, rexPreTableData] = useSubscription({
-    query: PRE_TABLE_DATA,
-  });
+  const [partId, setPartId] = useState("")
   const dispatch = useDispatch();
 
-  const [fatchDiffData, rexFatchDiffData] = useSubscription({
-    query: FATCH_DIFF_RESULTS,
-    variables: { partCode: partCode },
-  });
-  const [fatchDifference, rexFatchDifference] = useSubscription({
-    query: FATCH_DIFFERENCE,
-  });
-
-  const [updateDiff, updateDiffResults] = useMutation(UPDATE_DIFF_DATA);
-  const [allPreTestEquipment, rexAllPresTestEquipment] = useQuery({
-    query: ALL_PRE_TEST_EQUIPMENT,
-  });
-
   useEffect(() => {
-    if (fatchDifference.data) {
-      let data = fatchDifference.data.allCrvtPostResultTables.nodes;
-      setDiffData(data);
-    }
-  }, [fatchDifference.data]);
-
-  useEffect(() => {
-    if (fatchDiffData.data) {
-      if (fatchDiffData.data.crvtPostResultTableByPartCode) {
-        let data = fatchDiffData.data.crvtPostResultTableByPartCode;
-        setSound(JSON.parse(data.diffSound) || null);
-        setFrequency(JSON.parse(data.diffFrequency) || null);
-      }
-    }
-    if (!plannerByName.data) {
-      setShouldPause(false);
-    }
     if (preTableData.data) {
-      setPreData(preTableData.data.allCrvtPreResultTables.nodes);
+      setPreData(preTableData.data.allCrvtPostResultTables.nodes);
+      setPartId(preTableData.data.allCrvtPostResultTables.nodes[0].partId)
     }
-    if (plannerByName.data) {
-      let tempArray = [];
-      plannerByName.data.allCrvtPreResultTables.nodes.map((val, i) => {
-        if (prePostStore.index === i) {
-          tempArray.push({
-            partName: val.partName,
-            partCode: val.partCode,
-            isExpanded: true,
-          });
-          return;
-        }
-        tempArray.push({
-          partName: val.partName,
-          partCode: val.partCode,
-          isExpanded: false,
-        });
-      });
-      setPartDetails(searchPrePost(tempArray, searchTerm));
-      setShouldPause(true);
-    }
-  }, [plannerByName.data, preTableData.data, searchTerm]);
+  }, [preTableData.data, searchTerm]);
 
-  useEffect(() => {
-    if (allPreTestEquipment.data) {
-      allPreTestEquipment.data.allCrvtPreTestTables.nodes.map((val) => {
-        allPrestestEquipmentArray.push({
-          partName: val.crvtComponentDetailByComponentId.partName,
-          current: { min: JSON.parse(val.prCurrent).min, max: JSON.parse(val.prCurrent).max },
-          frequency: { min: JSON.parse(val.prFrequency).min, max: JSON.parse(val.prFrequency).max },
-          insulation: {
-            min: JSON.parse(val.prInsulationRs).min,
-            max: JSON.parse(val.prInsulationRs).max,
-          },
-          sound: { min: JSON.parse(val.prSoundLvl).min, max: JSON.parse(val.prSoundLvl).max },
-        });
-      });
-    }
-  }, [allPreTestEquipment.data]);
-
-  const handleExchange = (e) => {
-    e.stopPropagation();
-    setShow(!show);
-  };
   const sampleSelect = (index) => {
     let tempArray = [...change];
     for (let i = 0; i < tempArray.length; i++) {
@@ -210,63 +121,12 @@ export default function PrePostResult({}) {
     }
     setChange(tempArray);
   };
-  const handleExpanded = (index, partCode) => {
-    for (let i = 0; i < allPrestestEquipmentArray.length; i++) {
-      if (allPrestestEquipmentArray[i].partName === partDetails[index].partName) {
-        if (prePostStore.index === index) {
-          dispatch(setPrePostIndex(null));
-        } else {
-          dispatch(setPrePostIndex(index));
-        }
-        diffData.map((val) => {
-          if (val.partCode === partCode) {
-            setSound(val.diffSound ? JSON.parse(val.diffSound) : null);
-            setFrequency(val.diffFrequency ? JSON.parse(val.diffFrequency) : null);
-          }
-        });
-        setPartCode(partCode);
-        if (!partDetails[index].isExpanded) {
-          // console.log(preData)
-          // if (!preData) {
-          //   setOpen(true);
-          // }
-          preData.map((val, i) => {
-            if (
-              index === i &&
-              !val.current &&
-              !val.frequency &&
-              !val.insulatioRs &&
-              !val.soundLvl &&
-              !frequency &&
-              !sound
-            ) {
-              setOpen(true);
-            }
-          });
-        } else {
-          dispatch(setNoOfSamples(0));
-        }
-        setIsExpandedIndex(index);
-        setPartDetails((prevTestData) =>
-          prevTestData.map((val, i) => ({
-            ...val,
-            isExpanded: i === index ? !val.isExpanded : false,
-          }))
-        );
-        setPreTestValues(allPrestestEquipmentArray[i]);
-        return;
-      }
-    }
-    alertAndLoaders(
-      "UNSHOW_ALERT",
-      dispatch,
-      "Please configure Pre test values in equipment details page.",
-      "warning"
-    );
-  };
   const handleClose = () => {
     setOpen(false);
   };
+  const handleCardCollapse = () => {
+    setOpen(false)
+  }
   const saveSamples = () => {
     for (let i = 0; i < change.length; i++) {
       if (change[i].color === "#EC407A") {
@@ -276,273 +136,122 @@ export default function PrePostResult({}) {
       }
     }
   };
-  const handleCardCollapse = (index) => {
-    setOpen(false);
-    dispatch(setPrePostIndex(null));
-    setPartDetails((prevTestData) =>
-      prevTestData.map((val, i) => ({
-        ...val,
-        isExpanded: i === prePostStore.index ? !val.isExpanded : false,
-      }))
-    );
-    // alert(i);
-  };
-  const saveDiffResults = () => {
-    let frequencyVal = JSON.stringify(frequency);
-    let soundVal = JSON.stringify(sound);
-    if (pledge === true) {
-      updateDiffResults({
-        partCode: partCode,
-        diffFrequency: frequencyVal,
-        diffSound: soundVal,
-      }).then((res) => {
-        if (res.data) {
-          alertAndLoaders("UNSHOW_ALERT", dispatch, "Difference Results Are Saved... ", "success");
-        } else if (res.error) {
-          alertAndLoaders("UNSHOW_ALERT", dispatch, "Something Went Wrong... ", "error");
-        }
-      });
-    }
-  };
+  // const Id=preData.map(item=>item.partId)
+  console.log((partId));
+
   return (
     <DashboardLayout>
       <MDBox width="calc(100% - 48px)" position="absolute" top="1.75rem">
         <DashboardNavbar dark absolute />
       </MDBox>
       <MDBox pt={10} pb={3}>
-        {/* <MDHoverSearch onInputChange={(value) => setSearchTerm(value)}/><br/> */}
         <Card style={{ background: "#394259" }}>
           <div style={{ padding: "1em" }}>
             <MDHoverSearch onInputChange={(value) => setSearchTerm(value)} />
           </div>
-
-          {partDetails.length !== 0 &&
-            partDetails.map((val, i) => {
+          <MDBox >
+            {preData && preData.map((val, i) => {
               return (
-                <MDBox key={i}>
-                  <Card sx={{ margin: "12px" }}>
-                    <CardHeader
-                      onClick={() => handleExpanded(i, val.partCode)}
-                      sx={{
-                        transition: "all 250ms",
-                        ":hover": {
-                          boxShadow: 20,
-                          cursor: "pointer",
-                          backgroundColor: "#384158 !important",
-                          borderRadius: "10px",
-                          transform: "scale(1.02)",
-                        },
-                      }}
-                      action={
-                        <div>
-                          <IconButton
-                            className={clsx(classes.expand, {
-                              [classes.expandOpen]: val.isExpanded,
-                            })}
-                            sx={{
-                              "& .MuiInputBase-input.Mui-disabled": {
-                                WebkitTextFillColor: "gray",
-                              },
-                            }}
-                            // onClick={() => setExpanded(!expanded)}
-                            aria-expanded={val.isExpanded}
-                            aria-label="show more"
-                            color="info"
-                          >
-                            <ExpandMoreIcon />
-                          </IconButton>
-                        </div>
-                      }
-                      title={
-                        <MDTypography variant="h6" fontWeight="medium">
-                          {val.partName} - {val.partCode}
-                        </MDTypography>
-                      }
-                    />
-                    <MDDialog open={open} onClose={handleClose}>
-                      <DialogTitle id="alert-dialog-title">Select Samples</DialogTitle>
-                      <div
-                        style={{ display: "flex", justifyContent: "space-around", width: "280px" }}
-                      >
-                        {change.map((val, i) => {
-                          return (
-                            <div
-                              onClick={() => sampleSelect(i)}
-                              style={{
-                                background: val.color,
-                                borderRadius: "8px",
-                                width: "50px",
-                                height: "50px",
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                                cursor: "pointer",
-                              }}
-                            >
-                              <MDTypography variant="h6" fontWeight="medium">
-                                {val.value}
-                              </MDTypography>
-                            </div>
-                          );
-                        })}
+                <Card sx={{ margin: "12px", }}>
+                  <CardHeader
+                    // onClick={() =>{ setIsExpanded(prev=>!prev),
+                    //       !isExpanded?setOpen(true):setOpen(false)}}
+                    sx={{
+                      transition: "all 250ms",
+                      ":hover": {
+                        boxShadow: 20,
+                        cursor: "pointer",
+                        backgroundColor: "#384158 !important",
+                        borderRadius: "10px",
+                        transform: "scale(1.02)",
+
+                      },
+                    }}
+                    action={
+                      <div>
+                        <IconButton
+                          className={clsx(classes.expand, {
+                            [classes.expandOpen]: isExpanded,
+                          })}
+                          sx={{
+                            "& .MuiInputBase-input.Mui-disabled": {
+                              WebkitTextFillColor: "gray",
+                            },
+                          }}
+                          // onClick={() => setExpanded(!expanded)}
+                          aria-expanded={isExpanded}
+                          aria-label="show more"
+                          color="info"
+                        >
+                          <ExpandMoreIcon />
+                        </IconButton>
                       </div>
-                      <DialogActions style={{ marginTop: "20px" }}>
-                        <MDButton color="error" onClick={() => handleCardCollapse(i)}>
-                          Cancel
-                        </MDButton>
-                        <MDButton color="success" onClick={saveSamples} autoFocus>
-                          Save
-                        </MDButton>
-                      </DialogActions>
-                    </MDDialog>
-                    <Collapse in={val.isExpanded} timeout="auto" unmountOnExit>
-                      <Card style={{ background: "#394259", margin: "10px" }}>
-                        <Grid container lg={12} xl={12}>
-                          <Grid xs={6} sm={6}>
-                            <PreResult partCode={val.partCode} details={preTestValues} />
-                          </Grid>
-                          <Grid sm={6} xs={6}>
-                            <PostResult partCode={val.partCode} />
-                          </Grid>
+                    }
+                    title={
+                      <MDTypography variant="h6" fontWeight="medium">
+                        {val.crvtComponentDetailByPartId.partName} - {val.partCode}
+                      </MDTypography>
+                    }
+                  />
+
+                  <MDDialog open={open} onClose={handleClose}>
+                    <DialogTitle id="alert-dialog-title">Select Samples</DialogTitle>
+                    <div
+                      style={{ display: "flex", justifyContent: "space-around", width: "280px" }}
+                    >
+                      {change.map((val, i) => {
+                        return (
+                          <div
+                            onClick={() => sampleSelect(i)}
+                            style={{
+                              background: val.color,
+                              borderRadius: "8px",
+                              width: "50px",
+                              height: "50px",
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              cursor: "pointer",
+                            }}
+                          >
+                            <MDTypography variant="h6" fontWeight="medium">
+                              {val.value}
+                            </MDTypography>
+                          </div>
+                        );
+                      })}
+                    </div>
+                    <DialogActions style={{ marginTop: "20px" }}>
+                      <MDButton color="error" onClick={() => handleCardCollapse()}>
+                        Cancel
+                      </MDButton>
+                      <MDButton color="success" onClick={saveSamples} autoFocus>
+                        Save
+                      </MDButton>
+                    </DialogActions>
+                  </MDDialog>
+                  <Collapse in={isExpanded} timeout="auto" unmountOnExit>
+                    <Card style={{ background: "#394259", margin: "10px" }}>
+                      <Grid container lg={12} xl={12}>
+                        <Grid xs={6} sm={6}>
+                          {/* <PreResult Id={partId} /> */}
                         </Grid>
-                        <Card style={{ margin: "12px" }}>
-                          <CardHeader
-                            title={
-                              <MDTypography variant="h6" fontWeight="medium">
-                                {" "}
-                                Difference
-                              </MDTypography>
-                            }
-                          />
-                          <Grid container lg={12}>
-                            <Grid lg={6}>
-                              <Grid style={{ alignItems: "center" }}>
-                                <MDTypography
-                                  style={{ marginLeft: "15px" }}
-                                  variant="h6"
-                                  fontWeight="small"
-                                >
-                                  Sound:
-                                </MDTypography>
-                              </Grid>
-                              <Grid
-                                container
-                                marginBottom={2}
-                                style={{ display: "flex", justifyContent: "space-evenly" }}
-                              >
-                                {prePostStore.noOFSamples.map((val, i) => {
-                                  const handleChange = (event) => {
-                                    const { name, value } = event.target;
-                                    setSound((prevValues) => ({
-                                      ...prevValues,
-                                      [name]: value,
-                                    }));
-                                  };
-                                  return (
-                                    <Grid key={i} sm={2} m={1}>
-                                      {show ? (
-                                        <TextField
-                                          name={`n${val}`}
-                                          value={sound ? sound[`n${val}`] : ""}
-                                          onChange={handleChange}
-                                        />
-                                      ) : (
-                                        <MDTypography
-                                          variant="h6"
-                                          fontWeight="small"
-                                          style={{
-                                            textAlign: "center",
-                                            background: "#394259",
-                                            padding: "5px 0px",
-                                            borderRadius: "8px",
-                                          }}
-                                        >
-                                          {sound ? sound[`n${val}`] : "N/A"}{" "}
-                                        </MDTypography>
-                                      )}
-                                    </Grid>
-                                  );
-                                })}
-                              </Grid>
-                            </Grid>
-                            <Grid lg={6}>
-                              <Grid style={{ alignItems: "center" }}>
-                                <MDTypography
-                                  style={{ marginLeft: "15px" }}
-                                  variant="h6"
-                                  fontWeight="small"
-                                >
-                                  Frequency:
-                                </MDTypography>
-                              </Grid>
-                              <Grid
-                                container
-                                marginBottom={2}
-                                style={{ display: "flex", justifyContent: "space-evenly" }}
-                              >
-                                {prePostStore.noOFSamples.map((val, i) => {
-                                  const handleChange = (event) => {
-                                    const { name, value } = event.target;
-                                    // let freq = frequency ?  frequency[`n${val}`] : "N/A"
-                                    setFrequency((prevValues) => ({
-                                      ...prevValues,
-                                      [name]: value,
-                                    }));
-                                  };
-                                  return (
-                                    <Grid key={i} sm={2} m={1}>
-                                      {show ? (
-                                        <TextField
-                                          name={`n${val}`}
-                                          value={frequency ? frequency[`n${val}`] : ""}
-                                          onChange={handleChange}
-                                        />
-                                      ) : (
-                                        <MDTypography
-                                          variant="h6"
-                                          fontWeight="small"
-                                          style={{
-                                            textAlign: "center",
-                                            background: "#394259",
-                                            padding: "5px 0px",
-                                            borderRadius: "8px",
-                                          }}
-                                        >
-                                          {frequency ? frequency[`n${val}`] : "N/A"}
-                                        </MDTypography>
-                                      )}
-                                    </Grid>
-                                  );
-                                })}
-                              </Grid>
-                            </Grid>
-                          </Grid>
-                          <Grid className={classes.parentFlexRight}>
-                            <MDButton color="info" onClick={(e) => handleExchange(e)}>
-                              {show ? "Cancel" : "Edit"}
-                            </MDButton>
-                            {show ? (
-                              <MDButton
-                                color="info"
-                                style={{ marginLeft: "5px" }}
-                                onClick={saveDiffResults}
-                              >
-                                Save
-                              </MDButton>
-                            ) : null}
-                          </Grid>
-                        </Card>
-                        <Grid sm={6} xs={6} style={{ margin: "12px" }}>
-                          {prePostStore.noOFSamples.length !== 0 && (
-                            <UploadImage partCode={val.partCode} />
-                          )}
+                        <Grid sm={6} xs={6}>
+                          {/* <PostResult /> */}
                         </Grid>
-                      </Card>
-                    </Collapse>
-                  </Card>
-                </MDBox>
-              );
+                      </Grid>
+                      <Grid sm={6} xs={6} style={{ margin: "12px" }}>
+                        {/* {prePostStore.noOFSamples.length !== 0 && (
+                      // <UploadImage partCode={val.partCode} />
+                    )} */}
+                      </Grid>
+                    </Card>
+                  </Collapse>
+                </Card>
+              )
             })}
+
+          </MDBox>
         </Card>
       </MDBox>
       <Footer />

@@ -72,6 +72,19 @@ function findIndex(arr, componentName) {
   return index;
 }
 
+function getPartID(partName,store){
+  let keys = Object.keys(store);
+  let id = null;
+  for(let i = 0; i < keys.length;i++ ){
+    if(id){
+      return id.partId
+    }
+    id = store[keys[i]].find((element)=>element.partName === partName)
+  }
+ 
+  return null
+}
+
 function checkIsPartCodeEmpty(arr, name, code) {
   for (let i = 0; i < arr.length; i++) {
     if (arr[i].partName === name && arr[i].partCode.length === 0) {
@@ -205,7 +218,6 @@ const ReusabaleMonthlyPlannerTests = ({
   const [searchTerm, setSearchTerm] = useState("");
 
   const userStore = useSelector((store) => store.userRoles);
-
   const [testNameYp] = useQuery({
     query: allYearlyPlanner,
     // pause: monthlyPlannerStore.shouldPause,
@@ -261,6 +273,7 @@ const ReusabaleMonthlyPlannerTests = ({
               partCode,
               partName,
               status: 1,
+              partId:getPartID(partName,monthlyPlannerStore.monthlyDetails)
             })
           );
           dispatch(monthlyPlannerAction.setTestName(testName));
@@ -338,6 +351,7 @@ const ReusabaleMonthlyPlannerTests = ({
                 status: "",
                 sevenDaysRunning: isSevenDaysRunning === 0 ? false : true,
                 testDuration: val2?.testDuration,
+                partId:val.componentId
               };
             }
           }
@@ -390,7 +404,7 @@ const ReusabaleMonthlyPlannerTests = ({
   }, []);
 
   const classes = useStyles();
-
+console.log(monthlyPlannerStore.monthlyDetails)
   return (
     //  background:monthlyPlannerStore?.isExpanded[testName] ? "#394259":"#202940"
     <Card style={{ marginBottom: "15px" }}>

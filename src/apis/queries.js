@@ -732,36 +732,27 @@ createCrvtPostTestTable(
   clientMutationId
 }
 }`;
-const FATCH_POST_DATA = `subscription postTestTableByComponentId($componentId:Int!) {
-crvtPostTestTableByComponentId(componentId: $componentId) {
-  ptCurrent
-  ptDifferance
-  ptFrequency
-  ptInsulationRs
-  ptSoundLvl
-}
-}`;
-const GET_PRE_DATA = `subscription allCrvtPreTestTables($id:Int!) {
-  crvtPreTestTableByComponentId(componentId: $id) {
-    crvtComponentDetailByComponentId {
-      partName
-    }
-    componentId
-    parameters
+//
+const GET_POST_DATA = `subscription crvtPostTestTableByComponentId($componentId:Int!) {
+  crvtPostTestTableByComponentId(componentId: $componentId) {
+    ptParameter
   }
 }
 `;
-const UPDATE_PRE_TEST = `mutation updatePreTestTableByComponentId($prCurrent: JSON!, $prFrequency: JSON!, $prInsulationRs: JSON!, $prSoundLvl: JSON!, $componentId: Int!) {
-updateCrvtPreTestTableByComponentId(
-  input: {crvtPreTestTablePatch: {prCurrent: $prCurrent, prFrequency: $prFrequency, prInsulationRs: $prInsulationRs, prSoundLvl: $prSoundLvl}, componentId: $componentId}
-) {
-  clientMutationId
-}
-}
-`;
+//
 const GET_ALL_TIMERS = `query getAllTimers {
 getAllTimers
 }`;
+
+const GET_PRE_TABLE_DATA=`subscription allCrvtPreResultTables {
+  allCrvtPreResultTables {
+    nodes {
+      partCode
+      partId
+      prResParameter
+    }
+  }
+}`
 
 const ALL_COMPONENTS = `query MyQuery {
 allCrvtComponentDetails {
@@ -940,33 +931,27 @@ const UPDATE_UNPLANNED_LIST = `mutation MyMutation($details:String!) {
 updateUnplannedList(details: $details)
 }
 `;
-
-const UPDATE_POST_TEST = `mutation updatePostTestTableByComponentId($ptCurrent:JSON!, $ptDifferance: JSON!, $ptFrequency:JSON!, $ptInsulationRs: JSON!, $ptSoundLvl:JSON!,$componentId:Int!) {
-updateCrvtPostTestTableByComponentId(
-  input: {crvtPostTestTablePatch: {ptCurrent: $ptCurrent, ptDifferance: $ptDifferance, ptFrequency: $ptFrequency, ptInsulationRs: $ptInsulationRs, ptSoundLvl: $ptSoundLvl}, componentId:$componentId}
-) {
-  clientMutationId
-}
+//
+const UPDATE_POST_TEST = `mutation updateCrvtPostTestTableByComponentId($componentId: Int!, $ptParameter: JSON!) {
+  updateCrvtPostTestTableByComponentId(
+    input: {crvtPostTestTablePatch: {ptParameter: $ptParameter}, componentId: $componentId}
+  ) {
+    clientMutationId
+  }
 }
 `;
-const ALL_COMPONENT = `query allPreResultTables {
+//
+const ALL_PRETEST_COMPONENT = `query allPreResultTables {
 allCrvtPreResultTables {
   nodes {
     partCode
-    partName
+    partId
   }
 }
 }`;
 const CREATE_PRE_RESULT = `mutation createPreResultTable($partCode:String!,$n1:JSON!,$n2:JSON!,$n3:JSON!,$n4:JSON!,$partName:String!) {
 createCrvtPreResultTable(
   input: {crvtPreResultTable: {partCode:$partCode, n4:$n4, n3:$n3, n2:$n2, n1: $n1, partName:$partName}}
-) {
-  clientMutationId
-}
-}`;
-const UPDATE_PRE_RESULT = `mutation updatePreResultTableByPartCode($current: JSON!, $frequency: JSON!, $insulationRs: JSON!, $soundLvl: JSON!,$partCode:String!) {
-updateCrvtPreResultTableByPartCode(
-  input: {crvtPreResultTablePatch: {current: $current, frequency: $frequency, insulationRs: $insulationRs, soundLvl: $soundLvl}, partCode: $partCode}
 ) {
   clientMutationId
 }
@@ -978,74 +963,22 @@ createCrvtPostResultTable(
   clientMutationId
 }
 }`;
-const PRE_CURRENT = `mutation preCurrent($current: JSON! $partCode: String!) {
-updateCrvtPreResultTableByPartCode(
-  input: {crvtPreResultTablePatch: {current: $current}, partCode: $partCode}
-) {
-  clientMutationId
-}
-}`;
-const PRE_FREQUENCY = `mutation preFrequency($frequency: JSON!, $partCode: String!) {
-updateCrvtPreResultTableByPartCode(
-  input: {crvtPreResultTablePatch: {frequency: $frequency}, partCode: $partCode}
-) {
-  clientMutationId
-}
-}`;
-const PRE_SOUND = `mutation preSound($soundLvl: JSON!, $partCode: String!) {
-updateCrvtPreResultTableByPartCode(
-  input: {crvtPreResultTablePatch: {soundLvl: $soundLvl}, partCode: $partCode}
-) {
-  clientMutationId
-}
-}`;
-const PRE_INSULATION = `mutation preInsulation($insulationRs: JSON!, $partCode: String!) {
-updateCrvtPreResultTableByPartCode(input: {crvtPreResultTablePatch: {insulationRs: $insulationRs}, partCode: $partCode}
-) {
-  clientMutationId
-}
-}`;
 
-const POST_CURRENT = `mutation postCurrent($ptCurrent:JSON! ,$partCode:String!) {
-updateCrvtPostResultTableByPartCode(
-  input: {crvtPostResultTablePatch: {ptCurrent: $ptCurrent}, partCode: $partCode}
-) {
-  clientMutationId
-}
+const PRE_RESULT_SAMPLE = `mutation createPreResultTable($partId: Int!,$partCode:String!) {
+  createCrvtPreResultTable(
+    input: {crvtPreResultTable: {partId: $partId, prResParameter: null, partCode: $partCode}}
+  ) {
+    clientMutationId
+  }
 }`;
-const POST_FREQUENCY = `mutation postFrequency($ptFrequency: JSON, $partCode: String!) {
-updateCrvtPostResultTableByPartCode(
-  input: {crvtPostResultTablePatch: {ptFrequency: $ptFrequency}, partCode: $partCode}
-) {
-  clientMutationId
+const POST_RESULT_SAMPLE = `mutation createPreResultTable($partId: Int!, $partCode: String!) {
+  createCrvtPostResultTable(
+    input: {crvtPostResultTable: {partId: $partId, partCode: $partCode, ptResultTable: null}}
+  ) {
+    clientMutationId
+  }
 }
-}`;
-const POST_SOUND = `mutation postSound($ptSoundLvl: JSON, $partCode: String!) {
-updateCrvtPostResultTableByPartCode(
-  input: {crvtPostResultTablePatch: {ptSoundLvl: $ptSoundLvl}, partCode: $partCode}
-) {
-  clientMutationId
-}
-}`;
-const POST_INSULATION = `mutation postInsulation($ptInsulationRs: JSON, $partCode: String!) {
-updateCrvtPostResultTableByPartCode(
-  input: {crvtPostResultTablePatch: {ptInsulationRs:$ptInsulationRs }, partCode: $partCode}
-) {
-  clientMutationId
-}
-}`;
-
-const PRE_RESULT_SAMPLE = `mutation createPreResultTable($partCode:String!, $partName:String!) {
-createCrvtPreResultTable(input: {crvtPreResultTable: {partCode: $partCode partName: $partName}}) {
-  clientMutationId
-}
-}`;
-const POST_RESULT_SAMPLE = `mutation createPostResultTable($partCode: String!, $partName: String!) {
-createCrvtPostResultTable(input: {crvtPostResultTable: {partCode: $partCode, partName: $partName}}
-) {
-  clientMutationId
-}
-}`;
+`;
 
 const START_TIMER = `mutation startTimer($machineId: Int!) {
 startTimer(machineId: $machineId)
@@ -1066,59 +999,6 @@ clientMutationId
 }
 }
 `;
-
-const FATCH_PRE_RESULT = `subscription preResultTableByPartCode($partCode: String!) {
-crvtPreResultTableByPartCode(partCode: $partCode) {
-  current
-  frequency
-  insulationRs
-  soundLvl
-}
-}`;
-const FATCH_POST_RESULT = `subscription postResultTableByPartCode($partCode:String!) {
-crvtPostResultTableByPartCode(partCode: $partCode) {
-  ptCurrent
-  ptFrequency
-  ptInsulationRs
-  ptSoundLvl
-}
-}`;
-const PRE_TABLE_DATA = `subscription allPreResultTables {
-allCrvtPreResultTables {
-  nodes {
-    current
-    frequency
-    insulationRs
-    nodeId
-    partCode
-    partName
-    soundLvl
-  }
-}
-}`;
-const UPDATE_DIFF_DATA = `mutation updatePostResultTableByPartCode($diffFrequency: JSON!, $diffSound: JSON!,$partCode:String!) {
-updateCrvtPostResultTableByPartCode(
-  input: {crvtPostResultTablePatch: {diffFrequency: $diffFrequency, diffSound: $diffSound}, partCode: $partCode}
-) {
-  clientMutationId
-}
-}
-`;
-const FATCH_DIFF_RESULTS = `subscription postResultTableByPartCode($partCode:String!) {
-crvtPostResultTableByPartCode(partCode: $partCode) {
-  diffFrequency
-  diffSound
-}
-}`;
-const FATCH_DIFFERENCE = `subscription MyQuery {
-allCrvtPostResultTables {
-  nodes {
-    diffFrequency
-    diffSound
-    partCode
-  }
-}
-}`;
 
 const UPDATE_ALERT_STATUS_BY_ID = `mutation updateAlertById($alertStatus: Int!, $id: Int!) {
 updateCrvtAlertById(
@@ -1225,22 +1105,18 @@ const UPDATE_VIBRATION_ERD = `mutation vibrationERD($vibrationErt: JSON, $partId
     clientMutationId
   }
 }
-`
-const ALL_PRE_TEST_EQUIPMENT = `query allCrvtPreTestTables {
-  allCrvtPreTestTables {
+`;
+const PRE_POST_DETAILS=`query allCrvtPostResultTables {
+  allCrvtPostResultTables {
     nodes {
-      crvtComponentDetailByComponentId {
+      partCode
+      partId
+      crvtComponentDetailByPartId {
         partName
-        id
       }
-      prCurrent
-      prFrequency
-      prInsulationRs
-      prSoundLvl
     }
   }
-}
-`
+}`
 
 export {
   AUTH,
@@ -1331,30 +1207,14 @@ export {
   UPDATE_UNPLANNED_LIST,
   CREATE_PRE_TEST,
   CREATE_POST_TEST,
-  GET_PRE_DATA,
-  FATCH_POST_DATA,
-  UPDATE_PRE_TEST,
+  GET_POST_DATA,
   UPDATE_POST_TEST,
-  ALL_COMPONENT,
+  ALL_PRETEST_COMPONENT,
   CREATE_PRE_RESULT,
   CREATE_POST_RESULT,
-  UPDATE_PRE_RESULT,
   PRE_RESULT_SAMPLE,
   POST_RESULT_SAMPLE,
-  FATCH_PRE_RESULT,
-  FATCH_POST_RESULT,
-  PRE_TABLE_DATA,
-  UPDATE_DIFF_DATA,
-  FATCH_DIFF_RESULTS,
-  FATCH_DIFFERENCE,
-  PRE_CURRENT,
-  PRE_FREQUENCY,
-  PRE_INSULATION,
-  PRE_SOUND,
-  POST_SOUND,
-  POST_FREQUENCY,
-  POST_INSULATION,
-  POST_CURRENT,
+  GET_PRE_TABLE_DATA,
   UPDATE_ALERT_STATUS_BY_ID,
   UPLOAD_POST_IMAGES,
   IMAGE_FETCH,
@@ -1368,5 +1228,6 @@ export {
   UPDATE_THERMAL_CYCLE_ERD,
   UPDATE_THERMAL_SHOCK_ERD,
   UPDATE_VIBRATION_ERD,
-  ALL_PRE_TEST_EQUIPMENT
+  PRE_POST_DETAILS,
+  
 };

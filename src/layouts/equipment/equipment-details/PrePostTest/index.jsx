@@ -60,7 +60,6 @@ export default function PrePostTest({ id }) {
 
     const classes = useStyles();
     
-
     return (
         <>
             <Card style={{ marginTop: '2%' }}>
@@ -98,7 +97,7 @@ export default function PrePostTest({ id }) {
                     <form onSubmit={(e) => handleFormSubmit(e)}>
                         <CardContent>
                             <Card style={{ background: '#394259' }} >
-                                <PreTest id={id}/>
+                                {/* <PreTest id={id}/> */}
                                 <PostTest id={id} />
                             </Card>
                         </CardContent>
