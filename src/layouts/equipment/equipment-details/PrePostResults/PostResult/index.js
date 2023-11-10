@@ -64,9 +64,6 @@ export default function PostResult({ Id,partCode}) {
         return store.prePost;
     });
 
-    // const [plannerByName, rexPlannerByName] = useQuery({
-    //     query: ALL_PRETEST_COMPONENT,
-    // });
     const [postTestDetailsById, rexPostTestDataById] = useQuery({
         query: GET_POST_DATA,
         variables: { componentId: Id },
@@ -115,10 +112,10 @@ export default function PostResult({ Id,partCode}) {
     }
     const saveValues = () => {
         let data=JSON.stringify(parameters)
-        console.log(data)
+        console.log(data,partCode)
         storePostDetails({
             partCode:partCode,
-            prResParameter:data
+            ptResultTable:data
         }).then((res)=>{
             console.log(res)
             if(res.data){
@@ -138,7 +135,6 @@ export default function PostResult({ Id,partCode}) {
                     <MDTypography variant="h6" fontWeight="medium">Post Test Values</MDTypography>
                 </Grid>
                 <Grid>
-
                     {parameters && parameters?.parameters?.map((pval, pindex) => {
                         return (
                             <Grid item ml="20px" xs={12} sm={12} md={12} lg={12} xl={12}>
@@ -158,7 +154,7 @@ export default function PostResult({ Id,partCode}) {
                                                         {cval.c_name} :
                                                     </Typography>
                                                 </Grid>
-                                                <Grid ml={3} lg={8} marginBottom={2} style={{ display: "flex", justifyContent: "space-between" }}>
+                                                <Grid ml={2} lg={8} marginBottom={2} style={{ display: "flex", justifyContent: "space-between" }}>
                                                     {cval.value.map((c_values,c_valuesIndex) => {
                                                         return (
                                                             <Grid  >

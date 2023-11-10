@@ -1124,7 +1124,7 @@ const UPDATE_PRE_RESULT=`mutation updateCrvtPreResultTableByPartCode($partCode:S
     clientMutationId
   }
 }`
-const UPDATE_POST_RESULT=`mutation updateCrvtPostResultTableByPartCode($ptResultTable:JSON!,$partCode:String!) {
+const UPDATE_POST_RESULT=`mutation updateCrvtPostResultTableByPartCode($partCode:String!,$ptResultTable:JSON!) {
   updateCrvtPostResultTableByPartCode(
     input: {crvtPostResultTablePatch: {ptResultTable: $ptResultTable}, partCode: $partCode}
   ) {

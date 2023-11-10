@@ -81,6 +81,7 @@ function isValueNull(obj, noOFSamples, str) {
 export default function PreResult({ Id,partCode }) {
     const [parameters, setParameters] = useState("")
     const [show, setShow] = React.useState(false)
+    const [pData,setPdata]=useState(false)
     const prePostStore = useSelector((store) => {
         return store.prePost
     })
@@ -99,9 +100,8 @@ export default function PreResult({ Id,partCode }) {
     useEffect(() => {
         if (preTableData.data && prePostStore.noOFSamples.length !== 0) {
             if (preTableData.data.crvtPostTestTableByComponentId?.ptParameter) {
-                // setParameters(JSON.parse(preTableData.data.crvtPostTestTableByComponentId?.ptParameter))
+                setPdata(true)
                 let tempArray = { ...JSON.parse(preTableData.data.crvtPostTestTableByComponentId?.ptParameter) };
-                // tempArray.conditions
                 tempArray.parameters.map((val1) => {
                     val1.conditions.map((c_val) => {
                         c_val.value = [];
@@ -112,6 +112,8 @@ export default function PreResult({ Id,partCode }) {
                 })
                 setParameters(tempArray)
 
+            }else{
+                setPdata(false)
             }
         }
     }, [preTableData.data, prePostStore.noOFSamples])
@@ -122,24 +124,43 @@ export default function PreResult({ Id,partCode }) {
     setParameters(tempObj)
     // console.log(tempObj.parameters[pindex].conditions[cindex].value[c_valuesIndex].a_value)
     // conditions[cindex].value[c_valuesIndex].value
-
     }
 
     const saveValues = () => {
         let data=JSON.stringify(parameters)
         console.log(data,partCode)
-        storePreDetails({
-            partCode:partCode,
-            prResParameter:data
-        }).then((res)=>{
-            console.log(res)
-            if(res.data){
-                alertAndLoaders("UNSHOW_ALERT", dispatch, "Pre Test Results Are Saved... ", "success");
-              }
-              if(res.error){
-                console.log(res.error)
-              }
-        })
+        if(pData === true){
+            storePreDetails({
+                partCode:partCode,
+                prResParameter:data
+            }).then((res)=>{
+                console.log(res)
+                if(res.data){
+                    alertAndLoaders("UNSHOW_ALERT", dispatch, "Pre Test Results Are Saved... ", "success");
+                  }
+                  if(res.error){
+                    console.log(res.error)
+                  }
+            })
+
+        }
+        // else{
+        //     createPreDetails({
+        //         partCode:partCode,
+        //         prResParameter:data
+        //     }).then((res)=>{
+        //         console.log(res)
+        //         if(res.data){
+        //             alertAndLoaders("UNSHOW_ALERT", dispatch, "Pre Test Results Are Saved... ", "success");
+        //           }
+        //           if(res.error){
+        //             console.log(res.error)
+        //           }
+        //     })
+
+        // }
+
+        
 
     };
 
@@ -179,7 +200,6 @@ export default function PreResult({ Id,partCode }) {
                                                     </Typography>
                                                 </Grid>
                                                 <Grid ml={2} lg={8} marginBottom={2} style={{ display: "flex", justifyContent: "space-between" }}>
-                                                
                                                     {cval.value.map((c_values,c_valuesIndex) => {
                                                         return (
                                                             <Grid  >
