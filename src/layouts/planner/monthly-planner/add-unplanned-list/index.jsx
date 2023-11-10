@@ -191,7 +191,6 @@ function UnplannedListUpload() {
   }, [allComponets]);
 
   useEffect(() => {
-    // console.log(yearlyPlanner);
     if (yearlyPlanner.data) {
       setDetails("");
       let { data } = yearlyPlanner;
@@ -199,7 +198,6 @@ function UnplannedListUpload() {
         let chamberIndex = names.findIndex((val) =>
           key.toLowerCase().includes(val.name.toLowerCase().replace(/\s/g, ""))
         );
-        console.log(data[key]);
         if (data[key].nodes.length === 0) {
           setDetails((prev) => [
             ...prev,
@@ -262,7 +260,6 @@ function UnplannedListUpload() {
               if (flag) {
                 if (index === 0 && startMonthIndex > currentMonthIndex) {
                   flag = false;
-                  console.log(yearlyPlan[index + 2]?.startDate.split("-")[0]);
                   setDetails((prev) => [
                     ...prev,
                     {
@@ -299,12 +296,10 @@ function UnplannedListUpload() {
                       },
                     },
                   ]);
-                  console.log(yearlyPlan[index]);
                 } else if (
                   currentMonthIndex === startMonthIndex &&
                   Number(startDay) > Number(currentDay)
                 ) {
-                  console.log(yearlyPlan[index + 1].startDate.split("-")[0]);
                   flag = false;
                   setDetails((prev) => [
                     ...prev,
@@ -322,22 +317,41 @@ function UnplannedListUpload() {
                     },
                   ]);
                 } else if (currentMonthIndex < startMonthIndex) {
-                  setDetails((prev) => [
-                    ...prev,
-                    {
-                      chamber: names[chamberIndex].name,
-                      partName: componentType.partName,
-                      partCode: partcode,
-                      vendor,
-                      status: 1,
-                      month: endMonth,
-                      schdeuledComponentsDetails: {
-                        monthlyDetails,
-                        newMonth: yearlyPlan[index + 1].startDate.split("-")[0],
+                  if(yearlyPlan[index + 1]){
+                    setDetails((prev) => [
+                      ...prev,
+                      {
+                        chamber: names[chamberIndex].name,
+                        partName: componentType.partName,
+                        partCode: partcode,
+                        vendor,
+                        status: 1,
+                        month: endMonth,
+                        schdeuledComponentsDetails: {
+                          monthlyDetails,
+                          newMonth: yearlyPlan[index + 1].startDate.split("-")[0],
+                        },
                       },
-                    },
-                  ]);
-                  console.log(yearlyPlan);
+                    ]);
+                  }else if(!yearlyPlan[index + 1]){
+                    alertAndLoaders("UNSHOW_ALERT", dispatch, `It can only be tested in next year`, "warning");
+                    setDetails((prev) => [
+                      ...prev,
+                      {
+                        chamber: names[chamberIndex].name + "not assigned",
+                        partName: componentType.partName,
+                        partCode: partcode,
+                        vendor,
+                        status: 1,
+                        month: endMonth,
+                        schdeuledComponentsDetails: {
+                          monthlyDetails,
+                          newMonth: "next Year",
+                        },
+                      },
+                    ]);
+                  }
+                 
                   flag = false;
                 }
               }
@@ -347,7 +361,6 @@ function UnplannedListUpload() {
       }
     }
   }, [yearlyPlanner, query]);
-  // console.log(details);
   const handleChangeComponentType = (value) => {
     setComponentType(value);
   };
@@ -371,7 +384,6 @@ function UnplannedListUpload() {
 
   const handleUnplannedListSubmit = (e) => {
     e.preventDefault();
-    // console.log("Form data", componentType, chambers);
   };
   useEffect(() => {
     dispatch(
@@ -391,7 +403,6 @@ function UnplannedListUpload() {
       let index = componentList.findIndex((obj) => obj.partName === componentType.partName);
       let componentId = componentList[index].id;
       setComponetId(Number(componentId));
-      // console.log(chambers);
 
       setQuery((prev) => {
         const queriesArray = chambers.map((chamber) => chamber.query);
@@ -461,7 +472,6 @@ function UnplannedListUpload() {
       rowName: ROW_NAME,
       canIncrement: true,
     }).then((res) => {
-      console.log(res);
     });
   };
 

@@ -2,6 +2,7 @@ import * as React from "react";
 import { useState, useEffect, useCallback } from "react";
 import Card from "@mui/material/Card";
 import MDTypography from "components/MDTypography";
+import { Typography } from "@mui/material";
 import MDButton from "components/MDButton";
 import { makeStyles } from "@mui/styles";
 import { useSelector, useDispatch } from "react-redux";
@@ -9,10 +10,7 @@ import { CardHeader, TextField } from "@mui/material";
 import { useMutation, useQuery, useSubscription } from "urql";
 import Grid from "@mui/material/Grid";
 import alertAndLoaders from "utils/alertAndLoaders";
-import { ALL_COMPONENT } from "apis/queries";
-import { POST_CURRENT, POST_FREQUENCY, POST_INSULATION, POST_SOUND } from "apis/queries";
-import { FATCH_POST_RESULT } from "apis/queries";
-import { setNoOfSamples } from "reduxSlices/prePost";
+import { GET_POST_DATA,UPDATE_POST_RESULT } from "apis/queries";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -57,283 +55,146 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function PostResult({ partCode }) {
-    const [expanded, setExpanded] = React.useState(false);
+export default function PostResult({ Id,partCode}) {
     const [show, setShow] = useState(false);
-    const [ptcurrent, setPtCurrent] = useState({});
-    const [ptfrequency, setPtFrequency] = useState({});
-    const [ptinsulation, setPtInsulation] = useState({});
-    const [ptsound, setPtSound] = useState({});
+    const [parameters, setParameters] = useState(null)
     const classes = useStyles();
-    const [updatePostCurrent, updatePostCurrentResults] = useMutation(POST_CURRENT);
-    const [updatePostFrequency, updatePostFrequencyResults] = useMutation(POST_FREQUENCY);
-    const [updatePostInsulation, updatePostInsulationResults] = useMutation(POST_INSULATION);
-    const [updatePostSound, updatePostSoundResults] = useMutation(POST_SOUND);
-
 
     const prePostStore = useSelector((store) => {
         return store.prePost;
     });
-    const [fatchPostData, rexFatchPostData] = useSubscription({
-        query: FATCH_POST_RESULT,
-        variables: { partCode: partCode },
-    });
 
-    const [plannerByName, rexPlannerByName] = useQuery({
-        query: ALL_COMPONENT,
-    });
+    // const [plannerByName, rexPlannerByName] = useQuery({
+    //     query: ALL_PRETEST_COMPONENT,
+    // });
+    const [postTestDetailsById, rexPostTestDataById] = useQuery({
+        query: GET_POST_DATA,
+        variables: { componentId: Id },
+    })
+    const [storePostDetailsRes,storePostDetails]=useMutation(UPDATE_POST_RESULT)
+
+
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        if (fatchPostData.data) {
-            if (fatchPostData.data.crvtPostResultTableByPartCode) {
-                let data = fatchPostData.data.crvtPostResultTableByPartCode
-                let flag = true;
-                if (JSON.parse(data?.ptCurrent) && flag) {
-                    let len = Object.keys(JSON.parse(data?.ptCurrent)).length;
-                    dispatch(setNoOfSamples(len))
-                    flag = false
-                } else if (JSON.parse(data?.ptFrequency) && flag) {
-                    let len = Object.keys(JSON.parse(data?.ptFrequency)).length;
-                    dispatch(setNoOfSamples(len))
-                    flag = false
-                } else if (JSON.parse(data?.ptInsulationRs) && flag) {
-                    let len = Object.keys(JSON.parse(data?.ptInsulationRs)).length;
-                    dispatch(setNoOfSamples(len))
-                    flag = false
-                }
-                else if (JSON.parse(data?.ptSoundLvl) && flag) {
-                    let len = Object.keys(JSON.parse(data?.ptSoundLvl)).length;
-                    dispatch(setNoOfSamples(len))
-                    flag = false
-                }
-                setPtCurrent(JSON.parse(data?.ptCurrent) || "")
-                setPtFrequency(JSON.parse(data?.ptFrequency) || "")
-                setPtSound(JSON.parse(data?.ptSoundLvl) || "")
-                setPtInsulation(JSON.parse(data?.ptInsulationRs) || "")
-            }
-        }
-    }, [plannerByName.data, fatchPostData.data]);
+    const onCancel = () => {
+        setShow(prev => !prev);
+        // rexFatchPreData({ requestPolicy: "network-only" });
+    }
 
+    const onEdit = () => {
+        setShow(prev => !prev);
+        // rexFatchPreData({ requestPolicy: "network-only" });
+    }
+
+    useEffect(() => {
+        if (postTestDetailsById.data) {
+            if (postTestDetailsById.data?.crvtPostTestTableByComponentId?.ptParameter) {
+                //setParameters(JSON.parse(postTestDetailsById.data.crvtPostTestTableByComponentId?.ptParameter));
+                let tempArray={...JSON.parse(postTestDetailsById.data.crvtPostTestTableByComponentId?.ptParameter)}
+                tempArray.parameters.map((p_val)=>{
+                    p_val.conditions.map((c_val)=>{
+                        c_val.value = []
+                        prePostStore.noOFSamples.map(()=>{
+                            c_val.value.push({a_value:"N/A"})
+                        })
+                    })
+                })
+                setParameters(tempArray)
+            }
+        }
+        
+
+    }, [postTestDetailsById.data, prePostStore.noOFSamples]);
+
+    const handleValues=(e,pindex,cindex,c_valIndex)=>{
+        let tempObj= {...parameters}
+        tempObj.parameters[pindex].conditions[cindex].value[c_valIndex].a_value = e.target.value
+        setParameters(tempObj)
+        console.log(tempObj.parameters[pindex].conditions[cindex].value[c_valIndex].a_value)
+
+    }
     const saveValues = () => {
-        let currentVal = ptcurrent === "" ? null : JSON.stringify(ptcurrent);
-        let frequencyVal = ptfrequency === "" ? null : JSON.stringify(ptfrequency);
-        let insulationVal = ptinsulation === "" ? null : JSON.stringify(ptinsulation);
-        let soundVal = ptsound === "" ? null : JSON.stringify(ptsound);
-        if (currentVal) {
-            for (let i = 0; i < prePostStore.noOFSamples.length; i++) {
-                if (!ptcurrent[`n${i + 1}`]) {
-                    alertAndLoaders(
-                        "UNSHOW_ALERT",
-                        dispatch,
-                        "Please ensure that all current fields are filled",
-                        "warning"
-                    );
-                    return;
-                }
-            }
-            updatePostCurrentResults({
-                partCode: partCode,
-                ptCurrent: currentVal,
-            }).then((res) => {
-                if (res.data !== null) {
-                    alertAndLoaders("UNSHOW_ALERT", dispatch, "Post Test Current Values Are Saved... ", "success");
-                } else if (res.error) {
-                    alertAndLoaders("UNSHOW_ALERT", dispatch, "Something Went Wrong... ", "error");
-                }
-            });
-        }
-        if (soundVal) {
-            for (let i = 0; i < prePostStore.noOFSamples.length; i++) {
-                if (!ptsound[`n${i + 1}`]) {
-                    alertAndLoaders(
-                        "UNSHOW_ALERT",
-                        dispatch,
-                        "Please ensure that all sound fields are filled",
-                        "warning"
-                    );
-                    return;
-                }
-            }
-            updatePostSoundResults({
-                partCode: partCode,
-                ptSoundLvl: soundVal,
-            }).then((res) => {
-                if (res.data !== null) {
-                    alertAndLoaders("UNSHOW_ALERT", dispatch, "Post Test Sound Values Are Saved... ", "success");
-                } else if (res.error) {
-                    alertAndLoaders("UNSHOW_ALERT", dispatch, "Something Went Wrong... ", "error");
-                }
-            });
-        }
-        if (insulationVal) {
-            for (let i = 0; i < prePostStore.noOFSamples.length; i++) {
-                if (!ptinsulation[`n${i + 1}`]) {
-                    alertAndLoaders(
-                        "UNSHOW_ALERT",
-                        dispatch,
-                        "Please ensure that all insulation fields are filled",
-                        "warning"
-                    );
-                    return;
-                }
-            }
-            updatePostInsulationResults({
-                partCode: partCode,
-                ptInsulationRs: insulationVal,
-            }).then((res) => {
-                if (res.data !== null) {
-                    alertAndLoaders("UNSHOW_ALERT", dispatch, "Post Test Insulation Values Are Saved... ", "success");
-                } else if (res.error) {
-                    alertAndLoaders("UNSHOW_ALERT", dispatch, "Something Went Wrong... ", "error");
-                }
-            });
-        }
-        if (frequencyVal) {
-            for (let i = 0; i < prePostStore.noOFSamples.length; i++) {
-                if (!ptfrequency[`n${i + 1}`]) {
-                    alertAndLoaders(
-                        "UNSHOW_ALERT",
-                        dispatch,
-                        "Please ensure that all frequency fields are filled",
-                        "warning"
-                    );
-                    return;
-                }
-            }
-            updatePostFrequencyResults({
-                partCode: partCode,
-                ptFrequency: frequencyVal,
-            }).then((res) => {
-                if (res.data !== null) {
-                    alertAndLoaders("UNSHOW_ALERT", dispatch, "Post Test Frequency Values Are Saved... ", "success");
-                } else if (res.error) {
-                    alertAndLoaders("UNSHOW_ALERT", dispatch, "Something Went Wrong... ", "error");
-                }
-            });
-        }
+        let data=JSON.stringify(parameters)
+        console.log(data)
+        storePostDetails({
+            partCode:partCode,
+            prResParameter:data
+        }).then((res)=>{
+            console.log(res)
+            if(res.data){
+                alertAndLoaders("UNSHOW_ALERT", dispatch, "Post Test Results Are Saved... ", "success");
+              }
+              if(res.error){
+                console.log(res.error)
+              }
+        })
+
     };
 
     return (
         <>
             <Card style={{ margin: "12px" }}>
-                <CardHeader
-                    title={<MDTypography variant="h6" fontWeight="medium">Post Test Values</MDTypography>}
-                />
-                {prePostStore.noOFSamples.length === 0 || undefined ? "" :
-                    <> <Grid container marginBottom={2} style={{ display: "flex", justifyContent: "space-around" }}>
-                        {prePostStore.noOFSamples.map((val) => {
-                            return (
-                                <Grid>
-                                    <MDTypography variant="h6" fontWeight="small" style={{ textAlign: "center" }}>N{val}</MDTypography>
+                <Grid m={2}>
+                    <MDTypography variant="h6" fontWeight="medium">Post Test Values</MDTypography>
+                </Grid>
+                <Grid>
+
+                    {parameters && parameters?.parameters?.map((pval, pindex) => {
+                        return (
+                            <Grid item ml="20px" xs={12} sm={12} md={12} lg={12} xl={12}>
+                                <Grid container style={{ justifyContent: "left", alignContent: "center" }}>
+                                    <Grid item xs={12} sm={12} md={3} lg={6} xl={6}>
+                                        <Typography marginTop={2} fontWeight="700" fontSize="14px" color="whitesmoke">
+                                            {pval.p_name}
+                                        </Typography>
+                                    </Grid>
                                 </Grid>
-                            )
-                        })}
-                    </Grid>
-                        <Grid style={{ alignItems: "center" }}>
-                            <MDTypography style={{ marginLeft: "15px" }} variant="h6" fontWeight="small">
-                                Current:
-                            </MDTypography>
-                        </Grid>
-                        <Grid container marginBottom={2} style={{ display: "flex", justifyContent: "space-evenly" }} >
-                            {prePostStore.noOFSamples.map((val, id) => {
-                                const handleChange = (event) => {
-                                    const { name, value } = event.target;
-                                    setPtCurrent((prevValues) => ({
-                                        ...prevValues,
-                                        [name]: value,
-                                    }));
-                                };
-                                return (
-                                    <Grid sm={2} m={1}>
-                                        {show ? <TextField name={`n${val}`}
-                                            value={ptcurrent ? ptcurrent[`n${val}`] : ''}
-                                            onChange={handleChange} /> : <MDTypography variant="h6" fontWeight="small" style={{ textAlign: "center", background: "#394259", padding: "5px 0px", borderRadius: "8px" }}>{ptcurrent ? ptcurrent[`n${val}`] : "N/A"}</MDTypography>}
-                                    </Grid>
-                                )
-                            })}
-                        </Grid>
-                        <Grid style={{ alignItems: "center" }}>
-                            <MDTypography style={{ marginLeft: "15px" }} variant="h6" fontWeight="small">
-                                Sound:
-                            </MDTypography>
-                        </Grid>
-                        <Grid container marginBottom={2} style={{ display: "flex", justifyContent: "space-evenly" }} >
-                            {prePostStore.noOFSamples.map((val) => {
-                                const handleChange = (event) => {
-                                    const { name, value } = event.target;
-                                    setPtSound((prevValues) => ({
-                                        ...prevValues,
-                                        [name]: value,
-                                    }));
-                                };
-                                return (
-                                    <Grid sm={2} m={1}>
-                                        {show ? <TextField name={`n${val}`}
-                                            value={ptsound ? ptsound[`n${val}`] : ''}
-                                            onChange={handleChange} /> : <MDTypography variant="h6" fontWeight="small" style={{ textAlign: "center", background: "#394259", padding: "5px 0px", borderRadius: "8px" }}>{ptsound ? ptsound[`n${val}`] : "N/A"}</MDTypography>}
-                                    </Grid>
-                                )
-                            })}
-                        </Grid>
-                        <Grid >
-                            <MDTypography style={{ marginLeft: "15px" }} variant="h6" fontWeight="small">
-                                Frequency:
-                            </MDTypography>
-                        </Grid>
-                        <Grid container marginBottom={2} style={{ display: "flex", justifyContent: "space-evenly" }} >
-                            {prePostStore.noOFSamples.map((val) => {
-                                const handleChange = (event) => {
-                                    const { name, value } = event.target;
-                                    setPtFrequency((prevValues) => ({
-                                        ...prevValues,
-                                        [name]: value,
-                                    }));
-                                };
-                                return (
-                                    <Grid sm={2} m={1}>
-                                        {show ? <TextField name={`n${val}`}
-                                            value={ptfrequency ? ptfrequency[`n${val}`] : ''}
-                                            onChange={handleChange} /> : <MDTypography variant="h6" fontWeight="small" style={{ textAlign: "center", background: "#394259", padding: "5px 0px", borderRadius: "8px" }}>{ptfrequency ? ptfrequency[`n${val}`] : "N/A"}</MDTypography>}
-                                    </Grid>
-                                )
-                            })}
-                        </Grid>
-                        <Grid >
-                            <MDTypography style={{ marginLeft: "15px" }} variant="h6" fontWeight="small">
-                                Insulation Resistance:
-                            </MDTypography>
-                        </Grid>
-                        <Grid container marginBottom={2} style={{ display: "flex", justifyContent: "space-evenly" }} >
-                            {prePostStore.noOFSamples.map((val) => {
-                                const handleChange = (event) => {
-                                    const { name, value } = event.target;
-                                    setPtInsulation((prevValues) => ({
-                                        ...prevValues,
-                                        [name]: value,
-                                    }));
-                                };
-                                return (
-                                    <Grid sm={2} m={1}>
-                                        {show ? <TextField name={`n${val}`}
-                                            value={ptinsulation ? ptinsulation[`n${val}`] : ''}
-                                            onChange={handleChange} /> : <MDTypography variant="h6" fontWeight="small" style={{ textAlign: "center", background: "#394259", padding: "5px 0px", borderRadius: "8px" }}>{ptinsulation ? ptinsulation[`n${val}`] : "N/A"}</MDTypography>}
-                                    </Grid>
-                                )
-                            })}
-                        </Grid>
-                        <Grid className={classes.parentFlexRight}>
-                            <MDButton color="info"
-                                onClick={() => setShow(!show)}
-                            >
-                                {show ? "Cancel" : "Edit"}
-                            </MDButton>
-                            {show ? <MDButton color="info" style={{ marginLeft: "5px" }}
-                                onClick={saveValues}
-                            >
-                                Save
-                            </MDButton> : null}
-                        </Grid></>}
+                                {pval && pval.conditions.map((cval, cindex) => {
+                                    return (
+                                        <>
+                                            <Grid container lg={12} >
+                                                <Grid sx={{ display: "flex", alignItems: "center" }} item ml={2} xs={3} sm={3} md={3} lg={3} xl={3}>
+                                                    <Typography display="flex" alignItems="center" fontWeight="500" fontSize="12px" color="whitesmoke">
+                                                        {cval.c_name} :
+                                                    </Typography>
+                                                </Grid>
+                                                <Grid ml={3} lg={8} marginBottom={2} style={{ display: "flex", justifyContent: "space-between" }}>
+                                                    {cval.value.map((c_values,c_valuesIndex) => {
+                                                        return (
+                                                            <Grid  >
+                                                                <Grid margin="0px 30px" display="flex" justifyContent="center" alignItems="center" sm={3} xs={12} lg={12}>
+                                                                {show? <TextField value={c_values.a_value === "N/A" ? "":c_values.a_value} onChange={(e)=>handleValues(e,pindex,cindex,c_valuesIndex)} ></TextField>:<MDTypography variant="h6" fontWeight="small" style={{ textAlign: "center", background: "#394259", padding: "10px 25px", borderRadius: "8px" }}>{c_values.a_value}</MDTypography>} 
+                                                                </Grid>
+                                                            </Grid>
+                                                        )
+                                                    })}
+                                                </Grid>
+                                            </Grid>
+                                        </>
+                                    )
+                                })}
+                            </Grid>
+                        )
+                    })}
+                </Grid>
+                <Grid>
+                    {prePostStore.noOFSamples.length === 0 || undefined ? "" :
+                        <>
+                            <Grid className={classes.parentFlexRight}>
+                                {!show ? <MDButton color="info"
+                                    onClick={onEdit}>
+                                    Edit
+                                </MDButton> : <div style={{ display: "flex", gap: "15px" }}>
+                                    <MDButton color="error" onClick={saveValues}>
+                                        Save
+                                    </MDButton>
+                                    <MDButton color="dark" onClick={onCancel}>
+                                        Cancel
+                                    </MDButton>
+                                </div>}
+                            </Grid>
+                        </>}
+                </Grid>
             </Card>
         </>
     );

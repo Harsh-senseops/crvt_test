@@ -9,3 +9,7 @@
 .MuiTablePagination-toolbar{
     color: white;
 }
+
+.MuiTableCell-sizeMedium {
+    border-radius: 0px !important;
+}

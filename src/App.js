@@ -153,6 +153,7 @@ function authorizeUser() {
     // urql client
     const subscriptionClient = new SubscriptionClient(senseopsWSServerURL, {
       reconnect: true,
+      timeout: 30000,
     });
   
     const client = new Client({

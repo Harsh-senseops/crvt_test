@@ -16,10 +16,7 @@ import { CardActions, TextField } from "@mui/material";
 import { useSubscription, useMutation, useQuery } from "urql";
 import Grid from "@mui/material/Grid";
 import { useSelector, useDispatch } from "react-redux";
-import { DUST_TEST_DETAILS } from "apis/queries";
-import { SAVE_DUST_DETAILS } from "apis/queries";
-import { ADD_EQUIPMENT_UPDATE_HISTORY } from "apis/queries";
-import { ADD_DUST_STATUS } from "apis/queries";
+import { ADD_DUST_STATUS,UPDATE_DUST_ERD,DUST_TEST_DETAILS,ADD_EQUIPMENT_UPDATE_HISTORY,SAVE_DUST_DETAILS } from "apis/queries";
 import alertAndLoaders from "utils/alertAndLoaders";
 
 const useStyles = makeStyles((theme) => ({
@@ -92,32 +89,9 @@ export default function DustTest({ details, componentName, id }) {
   });
   const [dustStatus, saveDustStatus] = useMutation(ADD_DUST_STATUS);
   const [equipmentHistoryRes, saveEquipmentHistory] = useMutation(ADD_EQUIPMENT_UPDATE_HISTORY);
+  const [updateDustErdRes,updateDustErd] = useMutation(UPDATE_DUST_ERD);
 
   useEffect(() => {
-    if (dustdetailByID.data) {
-      let constValues = JSON.parse(dustdetailByID.data.crvtDustTestDetailByPartName.testDetails);
-      setOldData({ eName: constValues?.name, running: constValues["7daysrunning"] });
-      setDust({ newData: constValues?.dust_sec, oldData: constValues?.dust_sec });
-      setRest({ newData: constValues?.rest_mins, oldData: constValues?.rest_mins });
-      setTestDurationMax({
-        newData: constValues?.test_duration_hr.max,
-        oldData: constValues?.test_duration_hr.max,
-      });
-      setTestDurationMin({
-        newData: constValues?.test_duration_hr.min,
-        oldData: constValues?.test_duration_hr.min,
-      });
-      setEquipmentRunning({
-        newData: constValues?.equipment_running,
-        oldData: constValues?.equipment_running,
-      });
-      setSimultaneously({
-        newData: constValues?.simultaneously,
-        oldData: constValues?.simultaneously,
-      });
-      setSampleQty({ newData: constValues?.sample_qty, oldData: constValues?.sample_qty });
-    }
-
     details.map((val) => {
       let data = "";
       if (val.partName == componentName) {
@@ -147,6 +121,31 @@ export default function DustTest({ details, componentName, id }) {
         }
       }
     });
+    if (dustdetailByID.data) {
+      let constValues = JSON.parse(dustdetailByID.data.crvtDustTestDetailByPartName.testDetails);
+      setOldData({ eName: constValues?.name, running: constValues["7daysrunning"] });
+      setDust({ newData: constValues?.dust_sec, oldData: constValues?.dust_sec });
+      setRest({ newData: constValues?.rest_mins, oldData: constValues?.rest_mins });
+      setTestDurationMax({
+        newData: constValues?.test_duration_hr.max,
+        oldData: constValues?.test_duration_hr.max,
+      });
+      setTestDurationMin({
+        newData: constValues?.test_duration_hr.min,
+        oldData: constValues?.test_duration_hr.min,
+      });
+      setEquipmentRunning({
+        newData: constValues?.equipment_running,
+        oldData: constValues?.equipment_running,
+      });
+      setSimultaneously({
+        newData: constValues?.simultaneously,
+        oldData: constValues?.simultaneously,
+      });
+      setSampleQty({ newData: constValues?.sample_qty, oldData: constValues?.sample_qty });
+    }
+
+
     if(dustdetailByID.data){
       let data=dustdetailByID.data.crvtDustTestDetailByPartName.status
       setToggleEnable(data === 1 ? true:false)
@@ -189,7 +188,22 @@ export default function DustTest({ details, componentName, id }) {
           testType: "Dust Test",
           updateValues: handleCompare(obj),
         }).then((res) => {
-          alertAndLoaders("UNSHOW_ALERT", dispatch, "Dust Test Details Are Saved... ", "success");
+          updateDustErd({
+            partId:id,
+            dustErt:JSON.stringify({
+              simultaniously:parseInt(simultaneously.newData),
+              days:parseInt(testDurationMax.newData)/parseInt(equipmentRunning.newData),
+              "7daysrunning":oldData.running,
+              sample_qty:parseInt(sampleQty.newData)
+            })
+          }).then((res)=>{
+            if(res.data){
+              alertAndLoaders("UNSHOW_ALERT", dispatch, "Dust Test Details Are Saved... ", "success");
+            }
+            if(res.error){
+              console.log(res.error)
+            }
+          })
         });
       }
     });

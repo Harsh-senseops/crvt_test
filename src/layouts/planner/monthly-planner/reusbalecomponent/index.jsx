@@ -21,6 +21,7 @@ import { ADD_MONTHLY_UPLOAD_HISTORY } from "apis/queries";
 import { setMonthlyPlanner, setDoFetch } from "../../../../reduxSlices/monthlyPlanner";
 import MDTable from "components/MDTable";
 import MDHoverSearch from "components/MDHoverSearch";
+import MDLoader from "components/MDLoader";
 
 const columns = [
   { Header: "part name", accessor: "partName" },
@@ -71,6 +72,19 @@ function findIndex(arr, componentName) {
   return index;
 }
 
+function getPartID(partName,store){
+  let keys = Object.keys(store);
+  let id = null;
+  for(let i = 0; i < keys.length;i++ ){
+    if(id){
+      return id.partId
+    }
+    id = store[keys[i]].find((element)=>element.partName === partName)
+  }
+ 
+  return null
+}
+
 function checkIsPartCodeEmpty(arr, name, code) {
   for (let i = 0; i < arr.length; i++) {
     if (arr[i].partName === name && arr[i].partCode.length === 0) {
@@ -82,6 +96,107 @@ function checkIsPartCodeEmpty(arr, name, code) {
   }
   return { isTrue: false, msg: "Slot is full" };
 }
+
+const allYearlyPlanner = `query dustYearlyPlanner {
+  allCrvtDustYearlyPlanners {
+    nodes {
+      crvtComponentDetailByComponentId {
+        partName
+        crvtEquipmentRunningDetailByPartId{
+          dustErt
+        }
+      }
+      componentId
+      samples
+      testDetails
+      totalSamplesTested
+    }
+  }
+   allCrvtOvenYearlyPlanners {
+    nodes {
+      crvtComponentDetailByComponentId {
+        partName
+        crvtEquipmentRunningDetailByPartId{
+          ovenErt
+        }
+      }
+      componentId
+      samples
+      testDetails
+      totalSamplesTested
+    }
+  }
+    allCrvtRoYearlyPlanners {
+    nodes {
+      crvtComponentDetailByComponentId {
+        partName
+        crvtEquipmentRunningDetailByPartId{
+          repeatedOperationErt
+        }
+      }
+      componentId
+      samples
+      testDetails
+      totalSamplesTested
+    }
+  }
+   allCrvtShowerYearlyPlanners {
+    nodes {
+      crvtComponentDetailByComponentId {
+        partName
+        crvtEquipmentRunningDetailByPartId{
+          showerErt
+        }
+      }
+      componentId
+      samples
+      testDetails
+      totalSamplesTested
+    }
+  }
+    allCrvtThermalCycleYearlyPlanners {
+    nodes {
+      crvtComponentDetailByComponentId {
+        partName
+        crvtEquipmentRunningDetailByPartId{
+          thermalCycleErt
+        }
+      }
+      componentId
+      samples
+      testDetails
+      totalSamplesTested
+    }
+  }
+   allCrvtThermalShockYearlyPalnners {
+    nodes {
+      crvtComponentDetailByComponentId {
+        partName
+        crvtEquipmentRunningDetailByPartId {
+          thermalShockErt
+        }
+      }
+      componentId
+      samples
+      testDetails
+      totalSamplesTested
+    }
+  }
+    allCrvtVibrationYearlyPlanners {
+    nodes {
+      crvtComponentDetailByComponentId {
+        partName
+        crvtEquipmentRunningDetailByPartId{
+          vibrationErt
+        }
+      }
+      componentId
+      samples
+      testDetails
+      totalSamplesTested
+    }
+  }
+}`;
 
 const ReusabaleMonthlyPlannerTests = ({
   yearlyPlannerQuery,
@@ -103,13 +218,12 @@ const ReusabaleMonthlyPlannerTests = ({
   const [searchTerm, setSearchTerm] = useState("");
 
   const userStore = useSelector((store) => store.userRoles);
-
   const [testNameYp] = useQuery({
-    query: yearlyPlannerQuery,
+    query: allYearlyPlanner,
     // pause: monthlyPlannerStore.shouldPause,
   });
 
-  const [partDetails] = useQuery({
+  const [partDetails] = useSubscription({
     query: PARTDEAILS_BY_PART_CODE,
     variables: { partCode },
     pause: shouldPause,
@@ -120,7 +234,6 @@ const ReusabaleMonthlyPlannerTests = ({
     pause: shouldPause,
     variables: { month: monthlyPlannerStore.date.month },
   });
-
   const [addMonthlyUploadHistoryResult, addMonthlyUploadHistory] = useMutation(
     ADD_MONTHLY_UPLOAD_HISTORY
   );
@@ -160,6 +273,7 @@ const ReusabaleMonthlyPlannerTests = ({
               partCode,
               partName,
               status: 1,
+              partId:getPartID(partName,monthlyPlannerStore.monthlyDetails)
             })
           );
           dispatch(monthlyPlannerAction.setTestName(testName));
@@ -188,6 +302,10 @@ const ReusabaleMonthlyPlannerTests = ({
       dispatch(monthlyPlannerAction.setShouldPause(false));
     }
     let tempArray = [];
+    const fetchData = async () => {
+      await testNameYp.data;
+    };
+    fetchData();
     if (testNameYp.data && monthlyPlannerStore.date.year >= 2012) {
       let isSevenDaysRunning = "";
       dispatch(monthlyPlannerAction.setShouldPause(true));
@@ -233,6 +351,7 @@ const ReusabaleMonthlyPlannerTests = ({
                 status: "",
                 sevenDaysRunning: isSevenDaysRunning === 0 ? false : true,
                 testDuration: val2?.testDuration,
+                partId:val.componentId
               };
             }
           }
@@ -247,15 +366,17 @@ const ReusabaleMonthlyPlannerTests = ({
       let index = 0;
       for (let i = 0; i < mp.length; i++) {
         index = findIndex(tempArry2, mp[i].partName);
-        if(tempArry2[index].partName !== mp[i].partName){
-          // console.log(mp[i],tempArry2[index])
-          // tempArray
-          // console.log(index,"inside")
-          tempArry2.push({partName:mp[i].partName,partCode:mp[i].partCode,vendorName:JSON.parse(mp[i].vendorDetails).vendorName,status:mp[i].status === 0 ? "Scheduled":"Progress",sevenDaysRunning:tempArry2[index].sevenDaysRunning  === 0 ? false : true,testDuration:tempArry2[index].testDuration})
-          console.log(mp[i]);
+        if (tempArry2[index].partName !== mp[i].partName) {
+          tempArry2.push({
+            partName: mp[i].partName,
+            partCode: mp[i].partCode,
+            vendorName: JSON.parse(mp[i].vendorDetails).vendorName,
+            status: mp[i].status === 0 ? "Scheduled" : "Progress",
+            sevenDaysRunning: tempArry2[index].sevenDaysRunning === 0 ? false : true,
+            testDuration: tempArry2[index].testDuration,
+          });
           continue;
         }
-        console.log(index)
         tempArry2[index].partCode = mp[i].partCode;
         tempArry2[index].status = mp[i].status === 0 ? "Scheduled" : "Progress";
         tempArry2[index].vendorName = JSON.parse(mp[i].vendorDetails).vendorName;
@@ -277,19 +398,13 @@ const ReusabaleMonthlyPlannerTests = ({
     dispatch(setMonthlyPlanner({ testName, data: tempArry2 }));
     setData({ columns, rows: tempArry2 });
   }, [testNameYp.data, dispatch, monthMP.data]);
-  
-  // useEffect(()=>{
-  //   if(testNameYp.data){
-  //     console.log(testNameYp.data)
-  //   }
-  // },[testNameYp.data])
-  
+
   const handleAddPartCode = useCallback((partCode) => {
     setPartCode(partCode);
   }, []);
 
   const classes = useStyles();
-
+console.log(monthlyPlannerStore.monthlyDetails)
   return (
     //  background:monthlyPlannerStore?.isExpanded[testName] ? "#394259":"#202940"
     <Card style={{ marginBottom: "15px" }}>
@@ -334,7 +449,11 @@ const ReusabaleMonthlyPlannerTests = ({
               paddingTop: "1%",
             }}
           >
-            {Math.floor(data.rows.length / 2)} components scheduled
+            {data.rows.length === 0 ? (
+              <MDLoader />
+            ) : (
+              Math.floor(data.rows.length / 2) + " components scheduled"
+            )}
           </MDTypography>
         }
       />
@@ -349,16 +468,17 @@ const ReusabaleMonthlyPlannerTests = ({
                 ""
               )}
             </MDBox>
+
             <MDBox pr={1}>
-              {/* <DataTable
-                table={{ columns, rows: data.rows }}
-                canSearch={true}
-              /> */}
-              <MDTable
-                data={{ columns, rows: data.rows }}
-                canSearch={true}
-                searchTerm={searchTerm}
-              />
+              {data.rows.length !== 0 ? (
+                <MDTable
+                  data={{ columns, rows: data.rows }}
+                  canSearch={true}
+                  searchTerm={searchTerm}
+                />
+              ) : (
+                <MDTypography style={{ padding: "1em" }}>Loading...</MDTypography>
+              )}
             </MDBox>
           </CardContent>
         </Collapse>

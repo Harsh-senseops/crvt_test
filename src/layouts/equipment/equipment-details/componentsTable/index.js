@@ -39,7 +39,6 @@ function ComponentsTable() {
       {
         background: '#202940',
         color: "#FFF !important",
-        borderRadius: "12px 0px 0px 12px",
       },
     }];
 
@@ -100,8 +99,8 @@ function ComponentsTable() {
                 <OvenTest componentName={formtitle} details={componentDetails} id={partId} />
                 <RepeatedOperation componentName={formtitle} details={componentDetails} id={partId} />
                 <ShowerTesting componentName={formtitle} details={componentDetails} id={partId} />
-                <ThermalShockChamber componentName={formtitle} details={componentDetails} id={partId} />
                 <ThermalCycleTestDetail componentName={formtitle} details={componentDetails} id={partId} />
+                <ThermalShockChamber componentName={formtitle} details={componentDetails} id={partId} />
                 <VibrationTest componentName={formtitle} details={componentDetails} id={partId} />
                 {/* <Report componentName = {formtitle} componentDetails={componentDetails} /> */}
               </Card>
