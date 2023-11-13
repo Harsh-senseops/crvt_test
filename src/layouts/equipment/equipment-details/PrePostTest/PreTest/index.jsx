@@ -60,7 +60,8 @@ export default function PreTest({ id }) {
   });
   useEffect(() => {
     if (preTestDetailsById.data) {
-      console.log(JSON.parse(preTestDetailsById.data.crvtPostTestTableByComponentId.ptParameter));
+      // console.log(JSON.parse(preTestDetailsById.data.crvtPostTestTableByComponentId.ptParameter));
+
       setParameters(JSON.parse(preTestDetailsById.data.crvtPostTestTableByComponentId.ptParameter));
     }
   }, [preTestDetailsById.data]);
@@ -157,7 +158,6 @@ export default function PreTest({ id }) {
                   </Grid>
 
                   {val?.conditions?.map((val, i) => {
-                    console.log(val)
                     return (
                       <Grid container justifyContent="left" alignItems="center">
                         <Grid item ml={2} xs={12} sm={12} md={3} lg={3} xl={3}>

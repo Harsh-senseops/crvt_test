@@ -28,7 +28,7 @@ import {
 import UploadImage from "./PostResult/UploadImage/uploadImage";
 import { setNoOfSamples, setPrePostIndex } from "reduxSlices/prePost";
 import MDHoverSearch from "components/MDHoverSearch";
-
+let toCheckArray = [35, 15, 30, 33, 21, 13, 41, 7, 28, 10, 27, 11, 20, 14, 38, 39]
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: "100%",
@@ -93,10 +93,11 @@ export default function PrePostResult({ }) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [preData, setPreData] = useState(null);
+  const [expand, setExpand] = useState(null)
+  const [dataCheck,setDataCheck]=useState(false)
   const prePostStore = useSelector((store) => {
     return store.prePost;
   });
-
   const [preTableData, rexPreTableData] = useQuery({
     query: PRE_POST_DETAILS,
   });
@@ -106,6 +107,9 @@ export default function PrePostResult({ }) {
   useEffect(() => {
     if (preTableData.data) {
       setPreData(preTableData.data.allCrvtPostResultTables.nodes);
+    }
+  }, [preTableData.data, searchTerm]);
+
       setPartId(preTableData.data.allCrvtPostResultTables.nodes[0].partId)
     }
   }, [preTableData.data, searchTerm]);
@@ -126,6 +130,8 @@ export default function PrePostResult({ }) {
   };
   const handleCardCollapse = () => {
     setOpen(false)
+    setExpand(null)
+
   }
   const saveSamples = () => {
     for (let i = 0; i < change.length; i++) {
@@ -136,6 +142,27 @@ export default function PrePostResult({ }) {
       }
     }
   };
+  const handleExpand = (Index) => {
+    // console.log(preData[Index].partId)
+    let doesDataExist = toCheckArray.find((val) => val === preData[Index].partId)
+    console.log(doesDataExist)
+    if (expand === Index) {
+      setExpand(null)
+      dispatch(setNoOfSamples([]));
+    } else {
+      if (!doesDataExist) {
+        setOpen(false)
+        setExpand(Index)
+        setDataCheck(false)
+        return
+      }
+      setExpand(Index)
+      setOpen(true)
+      setDataCheck(true)
+    }
+  }
+  // const Id=preData.map(item=>item.partId)
+  console.log(preTableData.data);
   // const Id=preData.map(item=>item.partId)
   console.log((partId));
 
@@ -152,6 +179,9 @@ export default function PrePostResult({ }) {
           <MDBox >
             {preData && preData.map((val, i) => {
               return (
+                <Card key={i} sx={{ margin: "12px", }}>
+                  <CardHeader
+                    onClick={() => { handleExpand(i) }}
                 <Card sx={{ margin: "12px", }}>
                   <CardHeader
                     // onClick={() =>{ setIsExpanded(prev=>!prev),
@@ -164,14 +194,15 @@ export default function PrePostResult({ }) {
                         backgroundColor: "#384158 !important",
                         borderRadius: "10px",
                         transform: "scale(1.02)",
-
                       },
                     }}
                     action={
                       <div>
                         <IconButton
                           className={clsx(classes.expand, {
+                            [classes.expandOpen]: expand === i,
                             [classes.expandOpen]: isExpanded,
+
                           })}
                           sx={{
                             "& .MuiInputBase-input.Mui-disabled": {
@@ -179,6 +210,8 @@ export default function PrePostResult({ }) {
                             },
                           }}
                           // onClick={() => setExpanded(!expanded)}
+                          aria-expanded={expand === i}
+
                           aria-expanded={isExpanded}
                           aria-label="show more"
                           color="info"
@@ -230,6 +263,15 @@ export default function PrePostResult({ }) {
                       </MDButton>
                     </DialogActions>
                   </MDDialog>
+                  <Collapse in={expand === i} timeout="auto" unmountOnExit>
+                    {dataCheck?<Card style={{ background: "#394259", margin: "10px" }}>
+                      <Grid container lg={12} xl={12}>
+                        <Grid xs={12} sm={12}>
+                          <PreResult Id={val.partId} partCode={val.partCode} />
+                        </Grid>
+                        <Grid sm={12} xs={6}>
+                          <PostResult Id={val.partId} partCode={val.partCode} />
+
                   <Collapse in={isExpanded} timeout="auto" unmountOnExit>
                     <Card style={{ background: "#394259", margin: "10px" }}>
                       <Grid container lg={12} xl={12}>
@@ -245,12 +287,20 @@ export default function PrePostResult({ }) {
                       // <UploadImage partCode={val.partCode} />
                     )} */}
                       </Grid>
+                    </Card> : <Card style={{ background: "#394259", margin: "10px" }}>
+                      <Grid style={{ marginTop:"20px" }}>
+                        <MDTypography variant="h6"  style={{ marginBottom: "20px", display: "flex", justifyContent: "center", alignContent: "center" }}>
+                          No Data Available for Pre And Post Test
+                        </MDTypography>
+                      </Grid>
+                    </Card> }
+                    
+                   
                     </Card>
                   </Collapse>
                 </Card>
               )
             })}
-
           </MDBox>
         </Card>
       </MDBox>
