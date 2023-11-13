@@ -13,6 +13,11 @@ import Grid from "@mui/material/Grid";
 import { ALL_PRERESULT_COMPONENT,GET_POST_DATA,UPDATE_PRE_RESULT} from "apis/queries";
 
 
+import Grid from "@mui/material/Grid";
+
+import { setNoOfSamples } from "reduxSlices/prePost";
+
+
 const useStyles = makeStyles((theme) => ({
     root: {
         maxWidth: '100%',
@@ -82,6 +87,7 @@ export default function PreResult({ Id,partCode }) {
     const [parameters, setParameters] = useState("")
     const [show, setShow] = React.useState(false)
     const [pData,setPdata]=useState(false)
+
     const prePostStore = useSelector((store) => {
         return store.prePost
     })
@@ -162,17 +168,17 @@ export default function PreResult({ Id,partCode }) {
 
         
 
-    };
 
     const onCancel = () => {
         setShow(prev => !prev);
-        // rexFatchPreData({ requestPolicy: "network-only" });
+
     }
 
     const onEdit = () => {
         setShow(prev => !prev);
-        // rexFatchPreData({ requestPolicy: "network-only" });
     }
+
+    console.log(parameters)
     return (
         <>
             <Card style={{ margin: "12px" }}>
@@ -236,6 +242,7 @@ export default function PreResult({ Id,partCode }) {
                             </Grid>
                         </>}
                 </Grid>
+
             </Card>
         </>
     )

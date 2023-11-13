@@ -87,6 +87,7 @@ const searchPrePost = (data, searchTerm) => {
 
 
 export default function PrePostResult({ }) {
+  const [isExpanded, setIsExpanded] = React.useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [change, setChange] = useState(initialSampleState);
   const classes = useStyles();
@@ -94,11 +95,13 @@ export default function PrePostResult({ }) {
   const [preData, setPreData] = useState(null);
   const [expand, setExpand] = useState(null)
   const [dataCheck,setDataCheck]=useState(false)
-
+  const prePostStore = useSelector((store) => {
+    return store.prePost;
+  });
   const [preTableData, rexPreTableData] = useQuery({
     query: PRE_POST_DETAILS,
   });
-
+  const [partId, setPartId] = useState("")
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -107,6 +110,9 @@ export default function PrePostResult({ }) {
     }
   }, [preTableData.data, searchTerm]);
 
+      setPartId(preTableData.data.allCrvtPostResultTables.nodes[0].partId)
+    }
+  }, [preTableData.data, searchTerm]);
 
   const sampleSelect = (index) => {
     let tempArray = [...change];
@@ -125,6 +131,7 @@ export default function PrePostResult({ }) {
   const handleCardCollapse = () => {
     setOpen(false)
     setExpand(null)
+
   }
   const saveSamples = () => {
     for (let i = 0; i < change.length; i++) {
@@ -156,6 +163,8 @@ export default function PrePostResult({ }) {
   }
   // const Id=preData.map(item=>item.partId)
   console.log(preTableData.data);
+  // const Id=preData.map(item=>item.partId)
+  console.log((partId));
 
   return (
     <DashboardLayout>
@@ -173,6 +182,10 @@ export default function PrePostResult({ }) {
                 <Card key={i} sx={{ margin: "12px", }}>
                   <CardHeader
                     onClick={() => { handleExpand(i) }}
+                <Card sx={{ margin: "12px", }}>
+                  <CardHeader
+                    // onClick={() =>{ setIsExpanded(prev=>!prev),
+                    //       !isExpanded?setOpen(true):setOpen(false)}}
                     sx={{
                       transition: "all 250ms",
                       ":hover": {
@@ -188,6 +201,8 @@ export default function PrePostResult({ }) {
                         <IconButton
                           className={clsx(classes.expand, {
                             [classes.expandOpen]: expand === i,
+                            [classes.expandOpen]: isExpanded,
+
                           })}
                           sx={{
                             "& .MuiInputBase-input.Mui-disabled": {
@@ -196,6 +211,8 @@ export default function PrePostResult({ }) {
                           }}
                           // onClick={() => setExpanded(!expanded)}
                           aria-expanded={expand === i}
+
+                          aria-expanded={isExpanded}
                           aria-label="show more"
                           color="info"
                         >
@@ -254,6 +271,15 @@ export default function PrePostResult({ }) {
                         </Grid>
                         <Grid sm={12} xs={6}>
                           <PostResult Id={val.partId} partCode={val.partCode} />
+
+                  <Collapse in={isExpanded} timeout="auto" unmountOnExit>
+                    <Card style={{ background: "#394259", margin: "10px" }}>
+                      <Grid container lg={12} xl={12}>
+                        <Grid xs={6} sm={6}>
+                          {/* <PreResult Id={partId} /> */}
+                        </Grid>
+                        <Grid sm={6} xs={6}>
+                          {/* <PostResult /> */}
                         </Grid>
                       </Grid>
                       <Grid sm={6} xs={6} style={{ margin: "12px" }}>
@@ -270,6 +296,7 @@ export default function PrePostResult({ }) {
                     </Card> }
                     
                    
+                    </Card>
                   </Collapse>
                 </Card>
               )

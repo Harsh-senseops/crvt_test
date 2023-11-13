@@ -733,13 +733,14 @@ createCrvtPostTestTable(
 }
 }`;
 //
+
   const GET_POST_DATA = `query crvtPostTestTableByComponentId($componentId:Int!) {
     crvtPostTestTableByComponentId(componentId: $componentId) {
       ptParameter
     }
   }
+
 `;
-//
 const GET_ALL_TIMERS = `query getAllTimers {
 getAllTimers
 }`;
@@ -941,7 +942,8 @@ const UPDATE_POST_TEST = `mutation updateCrvtPostTestTableByComponentId($compone
 }
 `;
 //
-const ALL_PRERESULT_COMPONENT = `query allPreResultTables {
+
+const ALL_PRETEST_COMPONENT = `query allPreResultTables {
 allCrvtPreResultTables {
   nodes {
     partCode
@@ -1116,6 +1118,7 @@ const PRE_POST_DETAILS=`query allCrvtPostResultTables {
       }
     }
   }
+
 }`;
 const UPDATE_PRE_RESULT=`mutation updateCrvtPreResultTableByPartCode($partCode:String!,$prResParameter:JSON!) {
   updateCrvtPreResultTableByPartCode(
@@ -1224,6 +1227,7 @@ export {
   GET_POST_DATA,
   UPDATE_POST_TEST,
   ALL_PRERESULT_COMPONENT,
+  ALL_PRETEST_COMPONENT,
   CREATE_PRE_RESULT,
   CREATE_POST_RESULT,
   PRE_RESULT_SAMPLE,
@@ -1245,5 +1249,6 @@ export {
   PRE_POST_DETAILS,
   UPDATE_PRE_RESULT,
   UPDATE_POST_RESULT
+
   
 };

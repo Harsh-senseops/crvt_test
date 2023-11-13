@@ -12,6 +12,10 @@ import Grid from "@mui/material/Grid";
 import alertAndLoaders from "utils/alertAndLoaders";
 import { GET_POST_DATA,UPDATE_POST_RESULT } from "apis/queries";
 
+import { ALL_PRETEST_COMPONENT, } from "apis/queries";
+import { setNoOfSamples } from "reduxSlices/prePost";
+import { GET_POST_DATA } from "apis/queries";
+
 const useStyles = makeStyles((theme) => ({
     root: {
         maxWidth: "100%",
@@ -58,6 +62,7 @@ const useStyles = makeStyles((theme) => ({
 export default function PostResult({ Id,partCode}) {
     const [show, setShow] = useState(false);
     const [parameters, setParameters] = useState(null)
+
     const classes = useStyles();
 
     const prePostStore = useSelector((store) => {
@@ -108,6 +113,13 @@ export default function PostResult({ Id,partCode}) {
         tempObj.parameters[pindex].conditions[cindex].value[c_valIndex].a_value = e.target.value
         setParameters(tempObj)
         console.log(tempObj.parameters[pindex].conditions[cindex].value[c_valIndex].a_value)
+            if(postTestDetailsById.data){
+                console.log(postTestDetailsById.data)
+              setParameters(JSON.parse(preTestDetailsById.data.crvtPostTestTableByComponentId?.ptParameter));
+            }
+          }
+        
+    }, [postTestDetailsById.data]);
 
     }
     const saveValues = () => {
@@ -191,6 +203,24 @@ export default function PostResult({ Id,partCode}) {
                             </Grid>
                         </>}
                 </Grid>
+
+                <CardHeader
+                    title={<MDTypography variant="h6" fontWeight="medium">Post Test Values</MDTypography>}
+                />
+                {prePostStore.noOFSamples.length === 0 || undefined ? "" :
+
+                        <Grid className={classes.parentFlexRight}>
+                            <MDButton color="info"
+                                onClick={() => setShow(!show)}
+                            >
+                                {show ? "Cancel" : "Edit"}
+                            </MDButton>
+                            {show ? <MDButton color="info" style={{ marginLeft: "5px" }}
+                                onClick={saveValues}
+                            >
+                                Save
+                            </MDButton> : null}
+                        </Grid>}
             </Card>
         </>
     );
