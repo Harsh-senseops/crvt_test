@@ -21,14 +21,11 @@ import PostResult from "./PostResult";
 import MDDialog from "components/MDDilouge";
 import { useDispatch, useSelector } from "react-redux";
 import alertAndLoaders from "utils/alertAndLoaders";
-import {
-  GET_POST_DATA,
-  PRE_POST_DETAILS,
-} from "apis/queries";
+import { GET_POST_DATA, PRE_POST_DETAILS } from "apis/queries";
 import UploadImage from "./PostResult/UploadImage/uploadImage";
-import { setNoOfSamples, setPrePostIndex } from "reduxSlices/prePost";
+import { setNoOfSamples, setPrePostIndex,setIsSampleTrue } from "reduxSlices/prePost";
 import MDHoverSearch from "components/MDHoverSearch";
-let toCheckArray = [35, 15, 30, 33, 21, 13, 41, 7, 28, 10, 27, 11, 20, 14, 38, 39]
+let toCheckArray = [35, 15, 30, 33, 21, 13, 41, 7, 28, 10, 27, 11, 20, 14, 38, 39];
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: "100%",
@@ -85,7 +82,6 @@ const searchPrePost = (data, searchTerm) => {
   return filteredData;
 };
 
-
 function PrePostResult() {
   const [isExpanded, setIsExpanded] = React.useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -93,15 +89,15 @@ function PrePostResult() {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [preData, setPreData] = useState();
-  const [expand, setExpand] = useState(null)
-  const [dataCheck,setDataCheck]=useState(false)
+  const [expand, setExpand] = useState(null);
+  const [dataCheck, setDataCheck] = useState(false);
   const prePostStore = useSelector((store) => {
     return store.prePost;
   });
   const [preTableData, rexPreTableData] = useQuery({
     query: PRE_POST_DETAILS,
   });
-  const [partId, setPartId] = useState("")
+  const [partId, setPartId] = useState("");
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -123,156 +119,162 @@ function PrePostResult() {
   };
   const handleClose = () => {
     setOpen(false);
+    setIsExpanded(false)
+    dispatch(setIsSampleTrue(false))
   };
   const handleCardCollapse = () => {
-    setOpen(false)
-    setExpand(null)
-
-  }
+    setOpen(false);
+    setExpand(null);
+    dispatch(setIsSampleTrue(false))
+  };
   const saveSamples = () => {
     for (let i = 0; i < change.length; i++) {
       if (change[i].color === "#EC407A") {
-        setOpen(false);
-        dispatch(setNoOfSamples(change[i].value));
+        // setOpen(false);
+        dispatch(setIsSampleTrue(false))
+        dispatch(setNoOfSamples(change[i].value))
+
+        console.log("fsdafad")
         break;
       }
     }
+    dispatch(setIsSampleTrue(false))
   };
   const handleExpand = (Index) => {
-    let doesDataExist = toCheckArray.find((val) => val === preData[Index].partId)
-    console.log(doesDataExist)
+    let doesDataExist = toCheckArray.find((val) => val === preData[Index].partId);
     if (expand === Index) {
-      setExpand(null)
-      dispatch(setNoOfSamples([]));
+      setExpand(null);
+      dispatch(setNoOfSamples(null));
+      dispatch(setIsSampleTrue(false))
     } else {
       if (!doesDataExist) {
-        setOpen(false)
-        setExpand(Index)
-        setDataCheck(false)
-        return
+        setOpen(false);
+        dispatch(setIsSampleTrue(false))
+        setExpand(Index);
+        setDataCheck(false);
+        dispatch(setNoOfSamples([]));
+        return;
       }
-      setExpand(Index)
-      setOpen(true)
-      setDataCheck(true)
+      setExpand(Index);
+      setOpen(true);
+      // dispatch(setIsSampleTrue(true))
+      setDataCheck(true);
+      dispatch(setNoOfSamples([]));
     }
-  }
+
+  };
   return (
     <DashboardLayout>
-       <MDBox width="calc(100% - 48px)" position="absolute" top="1.75rem">
+      <MDBox width="calc(100% - 48px)" position="absolute" top="1.75rem">
         <DashboardNavbar dark absolute />
       </MDBox>
       <MDBox pt={10} pb={3}>
-      <Card style={{ background: "#394259" }}>
-      <div style={{ padding: "1em" }}>
+        <Card style={{ background: "#394259" }}>
+          <div style={{ padding: "1em" }}>
             <MDHoverSearch onInputChange={(value) => setSearchTerm(value)} />
           </div>
           <MDBox>
-            {preData && preData.map((val,i)=>{
-              return(
-                <Card key={i} sx={{ margin: "12px", }}>
-                   <CardHeader
-                    onClick={() => { handleExpand(i) }}
-                
-                    // onClick={() =>{ setIsExpanded(prev=>!prev),
-                    //       !isExpanded?setOpen(true):setOpen(false)}}
-                    sx={{
-                      transition: "all 250ms",
-                      ":hover": {
-                        boxShadow: 20,
-                        cursor: "pointer",
-                        backgroundColor: "#384158 !important",
-                        borderRadius: "10px",
-                        transform: "scale(1.02)",
-                      },
-                    }}
-                    action={
-                      <div>
-                        <IconButton
-                          className={clsx(classes.expand, {
-                            [classes.expandOpen]: expand === i,
-                            [classes.expandOpen]: isExpanded,
-
-                          })}
-                          sx={{
-                            "& .MuiInputBase-input.Mui-disabled": {
-                              WebkitTextFillColor: "gray",
-                            },
-                          }}
-                          // onClick={() => setExpanded(!expanded)}
-                          aria-expanded={expand === i}
-
-                          aria-label="show more"
-                          color="info"
-                        >
-                          <ExpandMoreIcon />
-                        </IconButton>
-                      </div>
-                    }
-                    title={
-                      <MDTypography variant="h6" fontWeight="medium">
-                        {val.crvtComponentDetailByPartId.partName} - {val.partCode}
-                      </MDTypography>
-                    }
-                  />
-                  <MDDialog open={open} onClose={handleClose}>
-                    <DialogTitle id="alert-dialog-title">Select Samples</DialogTitle>
-                    <div
-                      style={{ display: "flex", justifyContent: "space-around", width: "280px" }}
-                    >
-                      {change.map((val, i) => {
-                        return (
-                          <div
-                          key={i}
-                            onClick={() => sampleSelect(i)}
-                            style={{
-                              background: val.color,
-                              borderRadius: "8px",
-                              width: "50px",
-                              height: "50px",
-                              display: "flex",
-                              justifyContent: "center",
-                              alignItems: "center",
-                              cursor: "pointer",
+            {preData &&
+              preData.map((val, i) => {
+                return (
+                  <Card key={i} sx={{ margin: "12px" }}>
+                    <CardHeader
+                      onClick={() => {
+                        handleExpand(i);
+                      }}
+                      sx={{
+                        transition: "all 250ms",
+                        ":hover": {
+                          boxShadow: 20,
+                          cursor: "pointer",
+                          backgroundColor: "#384158 !important",
+                          borderRadius: "10px",
+                          transform: "scale(1.02)",
+                        },
+                      }}
+                      action={
+                        <div>
+                          <IconButton
+                            className={clsx(classes.expand, {
+                              [classes.expandOpen]: expand === i,
+                              [classes.expandOpen]: isExpanded,
+                            })}
+                            sx={{
+                              "& .MuiInputBase-input.Mui-disabled": {
+                                WebkitTextFillColor: "gray",
+                              },
                             }}
+                            // onClick={() => setExpanded(!expanded)}
+                            aria-expanded={expand === i}
+                            aria-label="show more"
+                            color="info"
                           >
-                            <MDTypography variant="h6" fontWeight="medium">
-                              {val.value}
-                            </MDTypography>
-                          </div>
-                        );
-                      })}
-                    </div>
-                    <DialogActions style={{ marginTop: "20px" }}>
-                      <MDButton color="error" onClick={() => handleCardCollapse()}>
-                        Cancel
-                      </MDButton>
-                      <MDButton color="success" onClick={saveSamples} autoFocus>
-                        Save
-                      </MDButton>
-                    </DialogActions>
-                  </MDDialog>
-                  <Collapse in={expand === i} timeout="auto" unmountOnExit>
-                <Card style={{ background: "#394259", margin: "10px" }}>
-                      <Grid container lg={12} xl={12}>
-                        <Grid xs={12} sm={12}>
-                        <PreResult Id={val.partId} partCode={val.partCode} />
-
+                            <ExpandMoreIcon />
+                          </IconButton>
+                        </div>
+                      }
+                      title={
+                        <MDTypography variant="h6" fontWeight="medium">
+                          {val.crvtComponentDetailByPartId.partName} - {val.partCode}
+                        </MDTypography>
+                      }
+                    />
+                   
+                    <Collapse in={expand === i} timeout="auto" unmountOnExit>
+                      <Card style={{ background: "#394259", margin: "10px" }}>
+                        <Grid container lg={12} xl={12}>
+                          <Grid xs={12} sm={12}>
+                            <PreResult Id={val.partId} partCode={val.partCode} />
+                          </Grid>
                         </Grid>
-
-                      </Grid>
-                </Card>
-                  </Collapse>
-               
-                </Card>
-                
-              )
-            })}
+                      </Card>
+                    </Collapse>
+                  </Card>
+                );
+              })}
           </MDBox>
-      </Card>
+        </Card>
       </MDBox>
+      <MDDialog open={prePostStore.isSampleTrue} onClose={handleClose}>
+                      <DialogTitle id="alert-dialog-title">Select Samples</DialogTitle>
+                      <div
+                        style={{ display: "flex", justifyContent: "space-around", width: "280px" }}
+                      >
+                        {change.map((val, i) => {
+                          return (
+                            <div
+                              key={i}
+                              onClick={() => sampleSelect(i)}
+                              style={{
+                                background: val.color,
+                                borderRadius: "8px",
+                                width: "50px",
+                                height: "50px",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                cursor: "pointer",
+                              }}
+                            >
+                              <MDTypography variant="h6" fontWeight="medium">
+                                {val.value}
+                              </MDTypography>
+                            </div>
+                          );
+                        })}
+                      </div>
+                      <DialogActions style={{ marginTop: "20px" }}>
+                        <MDButton color="error" onClick={() => handleCardCollapse()}>
+                          Cancel
+                        </MDButton>
+                        <MDButton color="success" onClick={saveSamples}>
+                          Save
+                        </MDButton>
+                      </DialogActions>
+                    </MDDialog>
       <Footer />
     </DashboardLayout>
-  )
-  }
+  );
+}
 
-  export default React.memo(PrePostResult);
+export default React.memo(PrePostResult);

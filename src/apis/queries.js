@@ -1118,7 +1118,6 @@ const PRE_POST_DETAILS=`query allCrvtPostResultTables {
       }
     }
   }
-
 }`;
 const UPDATE_PRE_RESULT=`mutation updateCrvtPreResultTableByPartCode($partCode:String!,$prResParameter:[JSON]) {
   updateCrvtPreResultTableByPartCode(
@@ -1132,6 +1131,13 @@ const UPDATE_POST_RESULT=`mutation updateCrvtPostResultTableByPartCode($partCode
     input: {crvtPostResultTablePatch: {ptResultTable: $ptResultTable}, partCode: $partCode}
   ) {
     clientMutationId
+  }
+}`
+const GET_ALL_PRE_DETAILS_BY_PARTCODE = `subscription MyQuery($partCode:String!) {
+  crvtPreResultTableByPartCode(partCode: $partCode) {
+    partCode
+    partId
+    prResParameter
   }
 }`
 
@@ -1247,7 +1253,6 @@ export {
   UPDATE_VIBRATION_ERD,
   PRE_POST_DETAILS,
   UPDATE_PRE_RESULT,
-  UPDATE_POST_RESULT
-
-  
+  UPDATE_POST_RESULT,
+  GET_ALL_PRE_DETAILS_BY_PARTCODE
 };

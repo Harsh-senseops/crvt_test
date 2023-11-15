@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     noOFSamples: [],
     index:null,
+    isSampleTrue:false,
 }
 
 export const prePost = createSlice({
@@ -9,6 +10,10 @@ export const prePost = createSlice({
     initialState,
     reducers: {
         setNoOfSamples: (state, actions) => {
+            if(!actions.payload){
+                state.noOFSamples = null;
+                return;
+            }
             let tempArray = [];
             state.noOFSamples = [];
             for (let i = 1; i <= actions.payload; i++) {
@@ -18,10 +23,13 @@ export const prePost = createSlice({
         },
         setPrePostIndex:(state,actions)=>{
             state.index = actions.payload;
+        },
+        setIsSampleTrue:(state,action)=>{
+            state.isSampleTrue = action.payload
         }
     }
 });
 
-export const { setNoOfSamples,setPrePostIndex } = prePost.actions;
+export const { setNoOfSamples,setPrePostIndex,setIsSampleTrue } = prePost.actions;
 
 export default prePost.reducer;
