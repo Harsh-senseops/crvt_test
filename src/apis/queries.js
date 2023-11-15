@@ -734,7 +734,7 @@ createCrvtPostTestTable(
 }`;
 //
 
-  const GET_POST_DATA = `query crvtPostTestTableByComponentId($componentId:Int!) {
+  const GET_POST_DATA = `subscription crvtPostTestTableByComponentId($componentId:Int!) {
     crvtPostTestTableByComponentId(componentId: $componentId) {
       ptParameter
     }
@@ -1120,7 +1120,7 @@ const PRE_POST_DETAILS=`query allCrvtPostResultTables {
   }
 
 }`;
-const UPDATE_PRE_RESULT=`mutation updateCrvtPreResultTableByPartCode($partCode:String!,$prResParameter:JSON!) {
+const UPDATE_PRE_RESULT=`mutation updateCrvtPreResultTableByPartCode($partCode:String!,$prResParameter:[JSON]) {
   updateCrvtPreResultTableByPartCode(
     input: {crvtPreResultTablePatch: {prResParameter:$prResParameter}, partCode:$partCode}
   ) {
@@ -1226,7 +1226,6 @@ export {
   CREATE_POST_TEST,
   GET_POST_DATA,
   UPDATE_POST_TEST,
-  ALL_PRERESULT_COMPONENT,
   ALL_PRETEST_COMPONENT,
   CREATE_PRE_RESULT,
   CREATE_POST_RESULT,

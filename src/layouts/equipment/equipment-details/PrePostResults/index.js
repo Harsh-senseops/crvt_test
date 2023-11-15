@@ -86,13 +86,13 @@ const searchPrePost = (data, searchTerm) => {
 };
 
 
-export default function PrePostResult({ }) {
+function PrePostResult() {
   const [isExpanded, setIsExpanded] = React.useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [change, setChange] = useState(initialSampleState);
   const classes = useStyles();
   const [open, setOpen] = useState(false);
-  const [preData, setPreData] = useState(null);
+  const [preData, setPreData] = useState();
   const [expand, setExpand] = useState(null)
   const [dataCheck,setDataCheck]=useState(false)
   const prePostStore = useSelector((store) => {
@@ -107,10 +107,6 @@ export default function PrePostResult({ }) {
   useEffect(() => {
     if (preTableData.data) {
       setPreData(preTableData.data.allCrvtPostResultTables.nodes);
-    }
-  }, [preTableData.data, searchTerm]);
-
-      setPartId(preTableData.data.allCrvtPostResultTables.nodes[0].partId)
     }
   }, [preTableData.data, searchTerm]);
 
@@ -143,7 +139,6 @@ export default function PrePostResult({ }) {
     }
   };
   const handleExpand = (Index) => {
-    // console.log(preData[Index].partId)
     let doesDataExist = toCheckArray.find((val) => val === preData[Index].partId)
     console.log(doesDataExist)
     if (expand === Index) {
@@ -161,29 +156,23 @@ export default function PrePostResult({ }) {
       setDataCheck(true)
     }
   }
-  // const Id=preData.map(item=>item.partId)
-  console.log(preTableData.data);
-  // const Id=preData.map(item=>item.partId)
-  console.log((partId));
-
   return (
     <DashboardLayout>
-      <MDBox width="calc(100% - 48px)" position="absolute" top="1.75rem">
+       <MDBox width="calc(100% - 48px)" position="absolute" top="1.75rem">
         <DashboardNavbar dark absolute />
       </MDBox>
       <MDBox pt={10} pb={3}>
-        <Card style={{ background: "#394259" }}>
-          <div style={{ padding: "1em" }}>
+      <Card style={{ background: "#394259" }}>
+      <div style={{ padding: "1em" }}>
             <MDHoverSearch onInputChange={(value) => setSearchTerm(value)} />
           </div>
-          <MDBox >
-            {preData && preData.map((val, i) => {
-              return (
+          <MDBox>
+            {preData && preData.map((val,i)=>{
+              return(
                 <Card key={i} sx={{ margin: "12px", }}>
-                  <CardHeader
+                   <CardHeader
                     onClick={() => { handleExpand(i) }}
-                <Card sx={{ margin: "12px", }}>
-                  <CardHeader
+                
                     // onClick={() =>{ setIsExpanded(prev=>!prev),
                     //       !isExpanded?setOpen(true):setOpen(false)}}
                     sx={{
@@ -212,7 +201,6 @@ export default function PrePostResult({ }) {
                           // onClick={() => setExpanded(!expanded)}
                           aria-expanded={expand === i}
 
-                          aria-expanded={isExpanded}
                           aria-label="show more"
                           color="info"
                         >
@@ -226,7 +214,6 @@ export default function PrePostResult({ }) {
                       </MDTypography>
                     }
                   />
-
                   <MDDialog open={open} onClose={handleClose}>
                     <DialogTitle id="alert-dialog-title">Select Samples</DialogTitle>
                     <div
@@ -235,6 +222,7 @@ export default function PrePostResult({ }) {
                       {change.map((val, i) => {
                         return (
                           <div
+                          key={i}
                             onClick={() => sampleSelect(i)}
                             style={{
                               background: val.color,
@@ -264,47 +252,27 @@ export default function PrePostResult({ }) {
                     </DialogActions>
                   </MDDialog>
                   <Collapse in={expand === i} timeout="auto" unmountOnExit>
-                    {dataCheck?<Card style={{ background: "#394259", margin: "10px" }}>
+                <Card style={{ background: "#394259", margin: "10px" }}>
                       <Grid container lg={12} xl={12}>
                         <Grid xs={12} sm={12}>
-                          <PreResult Id={val.partId} partCode={val.partCode} />
-                        </Grid>
-                        <Grid sm={12} xs={6}>
-                          <PostResult Id={val.partId} partCode={val.partCode} />
+                        <PreResult Id={val.partId} partCode={val.partCode} />
 
-                  <Collapse in={isExpanded} timeout="auto" unmountOnExit>
-                    <Card style={{ background: "#394259", margin: "10px" }}>
-                      <Grid container lg={12} xl={12}>
-                        <Grid xs={6} sm={6}>
-                          {/* <PreResult Id={partId} /> */}
                         </Grid>
-                        <Grid sm={6} xs={6}>
-                          {/* <PostResult /> */}
-                        </Grid>
+
                       </Grid>
-                      <Grid sm={6} xs={6} style={{ margin: "12px" }}>
-                        {/* {prePostStore.noOFSamples.length !== 0 && (
-                      // <UploadImage partCode={val.partCode} />
-                    )} */}
-                      </Grid>
-                    </Card> : <Card style={{ background: "#394259", margin: "10px" }}>
-                      <Grid style={{ marginTop:"20px" }}>
-                        <MDTypography variant="h6"  style={{ marginBottom: "20px", display: "flex", justifyContent: "center", alignContent: "center" }}>
-                          No Data Available for Pre And Post Test
-                        </MDTypography>
-                      </Grid>
-                    </Card> }
-                    
-                   
-                    </Card>
-                  </Collapse>
                 </Card>
+                  </Collapse>
+               
+                </Card>
+                
               )
             })}
           </MDBox>
-        </Card>
+      </Card>
       </MDBox>
       <Footer />
     </DashboardLayout>
-  );
-}
+  )
+  }
+
+  export default React.memo(PrePostResult);

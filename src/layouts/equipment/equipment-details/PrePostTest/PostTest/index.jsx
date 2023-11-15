@@ -8,10 +8,6 @@ import { useMutation, useQuery, useSubscription } from "urql";
 import Grid from "@mui/material/Grid";
 import { GET_POST_DATA, UPDATE_POST_TEST } from "apis/queries";
 import { useDispatch, useSelector } from "react-redux";
-import { useMutation, useSubscription } from "urql";
-import Grid from "@mui/material/Grid";
-import { GET_POST_DATA, UPDATE_POST_TEST } from "apis/queries";
-import {  useDispatch } from "react-redux";
 import alertAndLoaders from "utils/alertAndLoaders";
 import { Typography } from "@mui/material";
 
@@ -46,15 +42,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ProTest({ id }) {
 
 export default function PreTest({ id }) {
   const classes = useStyles();
   const [parameters, setParameters] = useState(null);
   const [showInputs, setShowInputs] = useState(false);
   const [updatePostTest, updatePostTestResult] = useMutation(UPDATE_POST_TEST);
-
- const [preTestDetailsById, rexPreTestDetailsById] = useQuery({
 
   const [preTestDetailsById, rexPreTestDetailsById] = useSubscription({
     query: GET_POST_DATA,
@@ -71,44 +64,6 @@ export default function PreTest({ id }) {
       }
     }
   }, [preTestDetailsById.data]);
-
-  const updateInput = (event, p_index, c_index) => {
-    let tempObj = { ...parameters };
-    tempObj.parameters[p_index].conditions[c_index].value.a_value = event.target.value;
-    setParameters(tempObj);
-  };
-
-  const updateMax = (event, p_index, c_index) => {
-    let tempObj = { ...parameters };
-    tempObj.parameters[p_index].conditions[c_index].value.max = event.target.value;
-    setParameters(tempObj);
-  };
-
-  const updateMin = (event, p_index, c_index) => {
-    let tempObj = { ...parameters };
-    tempObj.parameters[p_index].conditions[c_index].value.min = event.target.value;
-    setParameters(tempObj);
-  };
-
-  const saveData = () => {
-    let parametersVal = JSON.stringify(parameters);
-    updatePostTestResult({
-      componentId: id,
-      ptParameter: parametersVal,
-    }).then((res) => {
-      console.log(res);
-      if (res.data) {
-        alertAndLoaders("UNSHOW_ALERT", dispatch, "Pre Test Values Are Saved... ", "success");
-      } else if (res.error) {
-        alertAndLoaders("UNSHOW_ALERT", dispatch, "Something Went Wrong... ", "error");
-      }
-      if(preTestDetailsById.data.crvtPostTestTableByComponentId?.ptParameter){
-        setParameters(JSON.parse(preTestDetailsById.data.crvtPostTestTableByComponentId?.ptParameter));
-      }
-    }
-  }, [preTestDetailsById.data]);
-
-  console.log(preTestDetailsById)
 
   const updateInput = (event, p_index, c_index) => {
     let tempObj = { ...parameters };
