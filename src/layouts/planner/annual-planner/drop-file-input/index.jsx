@@ -203,9 +203,9 @@ const DropFileInput = (props) => {
             count: val.partCount,
             vendorDetails: JSON.stringify(val1.details.vendorsInfo),
           }).then((res) => {
-            if (!res.data.createCrvtPartCodeDetail) {
+            if (!res.data?.createCrvtPartCodeDetail) {
               //handle error situation over here
-            } else if (res.data.createCrvtPartCodeDetail) {
+            } else if (res.data?.createCrvtPartCodeDetail) {
               console.log(i);
               dispatch(yearlyPlanner.setShouldPause(false));
             }

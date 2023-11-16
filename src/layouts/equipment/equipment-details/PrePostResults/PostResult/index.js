@@ -11,9 +11,10 @@ import { useMutation, useQuery, useSubscription } from "urql";
 import Grid from "@mui/material/Grid";
 import alertAndLoaders from "utils/alertAndLoaders";
 import { GET_POST_DATA, UPDATE_POST_RESULT } from "apis/queries";
-
+import { GET_ALL_POST_DETAILS_BY_PARTCODE } from "apis/queries";
 import { ALL_PRETEST_COMPONENT } from "apis/queries";
-import { setNoOfSamples } from "reduxSlices/prePost";
+import { setNoOfSamples, setIsSampleTrue } from "reduxSlices/prePost";
+import UploadImage from "./UploadImage/uploadImage";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -58,9 +59,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function PostResult({ Id, partCode }) {
+function PostResult({ Id, partCode }) {
   const [show, setShow] = useState(false);
-  const [parameters, setParameters] = useState(null);
+  const [ptData, setPtData] = useState(false)
+  const [parameters, setParameters] = useState("");
+  const [newValues, setNewValues] = useState(null);
+
 
   const classes = useStyles();
 
@@ -68,9 +72,13 @@ export default function PostResult({ Id, partCode }) {
     return store.prePost;
   });
 
-  const [postTestDetailsById, rexPostTestDataById] = useQuery({
+  const [postTestDetailsById, rexPostTestDetailsById] = useQuery({
     query: GET_POST_DATA,
     variables: { componentId: Id },
+  });
+  const [postTableDataByPartId, rexPostDataByPartId] = useSubscription({
+    query: GET_ALL_POST_DETAILS_BY_PARTCODE,
+    variables: { partCode },
   });
   const [storePostDetailsRes, storePostDetails] = useMutation(UPDATE_POST_RESULT);
 
@@ -87,50 +95,68 @@ export default function PostResult({ Id, partCode }) {
   };
 
   useEffect(() => {
-    if (postTestDetailsById.data) {
-      if (postTestDetailsById.data?.crvtPostTestTableByComponentId?.ptParameter) {
-        //setParameters(JSON.parse(postTestDetailsById.data.crvtPostTestTableByComponentId?.ptParameter));
-        let tempArray = {
-          ...JSON.parse(postTestDetailsById.data.crvtPostTestTableByComponentId?.ptParameter),
-        };
-        tempArray.parameters.map((p_val) => {
-          p_val.conditions.map((c_val) => {
-            c_val.value = [];
-            prePostStore.noOFSamples.map(() => {
-              c_val.value.push({ a_value: "N/A" });
+    if (
+      postTestDetailsById.data &&
+      //   prePostStore.noOFSamples.length !== 0 &&
+      !newValues &&
+      postTableDataByPartId.data
+    ) {
+      if (postTableDataByPartId.data?.crvtPostResultTableByPartCode?.ptResultTable) {
+        setParameters(
+          JSON.parse(postTableDataByPartId.data?.crvtPostResultTableByPartCode?.ptResultTable)
+        );
+        // console.log(parameters)
+        dispatch(setIsSampleTrue(false))
+      } else {
+        if (postTestDetailsById.data.crvtPostTestTableByComponentId?.ptParameter) {
+          // console.log("I from amigo")
+          dispatch(setIsSampleTrue(true))
+          if (!prePostStore.noOFSamples || prePostStore.noOFSamples.length !== 0) {
+            dispatch(setIsSampleTrue(false))
+          }
+          setPtData(true);
+          let tempArray = {
+            ...JSON.parse(postTestDetailsById.data.crvtPostTestTableByComponentId?.ptParameter),
+          };
+          tempArray.parameters.map((val1) => {
+            val1.conditions.map((c_val) => {
+              c_val.value = [];
+              if (prePostStore.noOFSamples !== null) {
+                prePostStore.noOFSamples.map((val) => {
+                  c_val.value.push({ a_value: "N/A" });
+                })
+              };
             });
           });
-        });
-        setParameters(tempArray);
+          setParameters(tempArray);
+        } else {
+          setPtData(false);
+        }
       }
     }
-  }, [postTestDetailsById.data, prePostStore.noOFSamples]);
+  }, [postTestDetailsById.data, prePostStore.noOFSamples, postTableDataByPartId.data]);
+
 
   const handleValues = (e, pindex, cindex, c_valIndex) => {
+    e.preventDefault();
     let tempObj = { ...parameters };
     tempObj.parameters[pindex].conditions[cindex].value[c_valIndex].a_value = e.target.value;
     setParameters(tempObj);
-    console.log(tempObj.parameters[pindex].conditions[cindex].value[c_valIndex].a_value);
-    if (postTestDetailsById.data) {
-      console.log(postTestDetailsById.data);
-      setParameters(
-        JSON.parse(preTestDetailsById.data.crvtPostTestTableByComponentId?.ptParameter)
-      );
-    }
+    setNewValues(true);
   };
   const saveValues = () => {
     let data = JSON.stringify(parameters);
-    console.log(data, partCode);
+    // console.log(data, partCode);
     storePostDetails({
-      partCode: partCode,
+      partCode,
       ptResultTable: data,
     }).then((res) => {
-      console.log(res);
+      // console.log(res);
       if (res.data) {
         alertAndLoaders("UNSHOW_ALERT", dispatch, "Post Test Results Are Saved... ", "success");
       }
       if (res.error) {
-        console.log(res.error);
+        console.log(res.error)
       }
     });
   };
@@ -144,99 +170,100 @@ export default function PostResult({ Id, partCode }) {
           </MDTypography>
         </Grid>
         <Grid>
-          {parameters &&
-            parameters?.parameters?.map((pval, pindex) => {
-              return (
-                <Grid item ml="20px" xs={12} sm={12} md={12} lg={12} xl={12}>
-                  <Grid container style={{ justifyContent: "left", alignContent: "center" }}>
-                    <Grid item xs={12} sm={12} md={3} lg={6} xl={6}>
-                      <Typography marginTop={2} fontWeight="700" fontSize="14px" color="whitesmoke">
-                        {pval.p_name}
-                      </Typography>
+
+          {!parameters ? <MDTypography variant="h6" fontWeight="medium" style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+            No details found
+          </MDTypography> :
+            <Grid>
+              {parameters?.parameters?.map((pval, pindex) => {
+                return (
+                  <Grid key={pindex} item ml="20px" xs={12} sm={12} md={12} lg={12} xl={12}>
+                    <Grid container style={{ justifyContent: "left", alignContent: "center" }}>
+                      <Grid item xs={12} sm={12} md={3} lg={6} xl={6}>
+                        <Typography marginTop={2} fontWeight="700" fontSize="14px" color="whitesmoke">
+                          {pval.p_name}
+                        </Typography>
+                      </Grid>
                     </Grid>
-                  </Grid>
-                  {pval &&
-                    pval.conditions.map((cval, cindex) => {
-                      return (
-                        <>
-                          <Grid container lg={12}>
-                            <Grid
-                              sx={{ display: "flex", alignItems: "center" }}
-                              item
-                              ml={2}
-                              xs={3}
-                              sm={3}
-                              md={3}
-                              lg={3}
-                              xl={3}
-                            >
-                              <Typography
-                                display="flex"
-                                alignItems="center"
-                                fontWeight="500"
-                                fontSize="12px"
-                                color="whitesmoke"
+                    {pval &&
+                      pval?.conditions.map((cval, cindex) => {
+                        return (
+                          <>
+                            <Grid key={cindex} container lg={12}>
+                              <Grid
+                                sx={{ display: "flex", alignItems: "center" }}
+                                item
+                                ml={2}
+                                xs={3}
+                                sm={3}
+                                md={3}
+                                lg={3}
+                                xl={3}
                               >
-                                {cval.c_name} :
-                              </Typography>
-                            </Grid>
-                            <Grid
-                              ml={2}
-                              lg={8}
-                              marginBottom={2}
-                              style={{ display: "flex", justifyContent: "space-between" }}
-                            >
-                              {cval.value.map((c_values, c_valuesIndex) => {
-                                return (
-                                  <Grid>
-                                    <Grid
-                                      margin="0px 30px"
-                                      display="flex"
-                                      justifyContent="center"
-                                      alignItems="center"
-                                      sm={3}
-                                      xs={12}
-                                      lg={12}
-                                    >
-                                      {show ? (
-                                        <TextField
-                                          value={c_values.a_value === "N/A" ? "" : c_values.a_value}
-                                          onChange={(e) =>
-                                            handleValues(e, pindex, cindex, c_valuesIndex)
-                                          }
-                                        ></TextField>
-                                      ) : (
-                                        <MDTypography
-                                          variant="h6"
-                                          fontWeight="small"
-                                          style={{
-                                            textAlign: "center",
-                                            background: "#394259",
-                                            padding: "10px 25px",
-                                            borderRadius: "8px",
-                                          }}
-                                        >
-                                          {c_values.a_value}
-                                        </MDTypography>
-                                      )}
+                                <Typography
+                                  display="flex"
+                                  alignItems="center"
+                                  fontWeight="500"
+                                  fontSize="12px"
+                                  color="whitesmoke"
+                                >
+                                  {cval.c_name} :
+                                </Typography>
+                              </Grid>
+                              <Grid
+                                ml={2}
+                                lg={8}
+                                marginBottom={2}
+                                style={{ display: "flex", justifyContent: "space-between" }}
+                              >
+                                {cval?.value.map((c_values, c_valIndex) => {
+                                  return (
+                                    <Grid key={c_valIndex}>
+                                      <Grid
+                                        margin="0px 30px"
+                                        display="flex"
+                                        justifyContent="center"
+                                        alignItems="center"
+                                        sm={3}
+                                        xs={12}
+                                        lg={12}
+                                      >
+                                        {show ? (
+                                          <TextField
+                                            value={c_values.a_value === "N/A" ? "" : c_values.a_value}
+                                            onChange={(e) =>
+                                              handleValues(e, pindex, cindex, c_valIndex)
+                                            }
+                                          />
+                                        ) : (
+                                          <MDTypography
+                                            variant="h6"
+                                            fontWeight="small"
+                                            style={{
+                                              textAlign: "center",
+                                              background: "#394259",
+                                              padding: "10px 25px",
+                                              borderRadius: "8px",
+                                            }}
+                                          >
+                                            {c_values.a_value === ""?"N/A":c_values.a_value}
+                                          </MDTypography>
+                                        )}
+                                      </Grid>
                                     </Grid>
-                                  </Grid>
-                                );
-                              })}
+                                  );
+                                })}
+                              </Grid>
                             </Grid>
-                          </Grid>
-                        </>
-                      );
-                    })}
-                </Grid>
-              );
-            })}
-        </Grid>
-        <Grid>
-          {prePostStore.noOFSamples.length === 0 || undefined ? (
-            ""
-          ) : (
-            <>
+                          </>
+                        );
+                      })}
+
+                  </Grid>
+
+                );
+
+              })}
               <Grid className={classes.parentFlexRight}>
                 {!show ? (
                   <MDButton color="info" onClick={onEdit}>
@@ -253,32 +280,46 @@ export default function PostResult({ Id, partCode }) {
                   </div>
                 )}
               </Grid>
-            </>
-          )}
-        </Grid>
-
-        <CardHeader
-          title={
-            <MDTypography variant="h6" fontWeight="medium">
-              Post Test Values
-            </MDTypography>
+              {/* <h1>Hello</h1> */}
+              <Card style={{ background: "#394259", margin: "10px" }}>
+                <Grid container lg={12} xl={12}>
+                  <Grid xs={12} sm={12}>
+                    <UploadImage Id={Id} partCode={partCode} />
+                  </Grid>
+                </Grid>
+              </Card>
+            </Grid>
           }
-        />
+        </Grid>
+        {/* <Grid>
         {prePostStore.noOFSamples.length === 0 || undefined ? (
-          ""
+           <MDTypography variant="h6" fontWeight="medium">
+           No details found
+         </MDTypography>
         ) : (
-          <Grid className={classes.parentFlexRight}>
-            <MDButton color="info" onClick={() => setShow(!show)}>
-              {show ? "Cancel" : "Edit"}
-            </MDButton>
-            {show ? (
-              <MDButton color="info" style={{ marginLeft: "5px" }} onClick={saveValues}>
-                Save
-              </MDButton>
-            ) : null}
-          </Grid>
+          <>
+            <Grid className={classes.parentFlexRight}>
+              {!show ? (
+                <MDButton color="info" onClick={onEdit}>
+                  Edit
+                </MDButton>
+              ) : (
+                <div style={{ display: "flex", gap: "15px" }}>
+                  <MDButton color="error" onClick={saveValues}>
+                    Save
+                  </MDButton>
+                  <MDButton color="dark" onClick={onCancel}>
+                    Cancel
+                  </MDButton>
+                </div>
+              )}
+            </Grid>
+          </>
         )}
+      </Grid> */}
       </Card>
+
     </>
   );
 }
+export default React.memo(PostResult);

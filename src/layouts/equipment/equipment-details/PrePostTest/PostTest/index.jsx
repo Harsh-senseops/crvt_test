@@ -47,9 +47,11 @@ export default function PreTest({ id }) {
   const classes = useStyles();
   const [parameters, setParameters] = useState(null);
   const [showInputs, setShowInputs] = useState(false);
+  const [open,setOpen]=useState(true);
+  const [preData,setPreData]=useState(false)
   const [updatePostTest, updatePostTestResult] = useMutation(UPDATE_POST_TEST);
 
-  const [preTestDetailsById, rexPreTestDetailsById] = useSubscription({
+  const [preTestDetailsById, rexPreTestDetailsById] = useQuery({
     query: GET_POST_DATA,
     variables: { componentId: id },
   });
@@ -104,6 +106,7 @@ export default function PreTest({ id }) {
   return (
     <>
       <Card style={{ margin: "10px" }}>
+       
         <MDTypography variant="h6" fontWeight="medium" marginLeft="20px" marginTop="20px">
           Pre Test configurations
         </MDTypography>

@@ -49,9 +49,23 @@ export default function UploadImage({ partCode }) {
 
   const handleUpload = async () => {
     let arr = [];
+    let flag = false;
+    selectedImage.map((val)=>{
+      if(typeof val === "string"){
+        flag = true
+        return
+      }
+      flag = false
+    })
+    if(flag){
+      alertAndLoaders("UNSHOW_ALERT", dispatch, "Already 3 Images Exists...", "warning");
+      return
+    }
+    console.log(selectedImage,"dsfgsdgfsfg")
     selectedImage.map(async (val) => {
       if (typeof val === "string") {
         arr.push(val);
+        return
       }
       await getBase64(val).then((res) => {
         arr.push(res);
