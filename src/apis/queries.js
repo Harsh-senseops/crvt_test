@@ -382,8 +382,8 @@ createCrvtPartCodeDetail(
   clientMutationId
 }
 }
-
 `;
+
 const PARTDEAILS_BY_PART_CODE = `
 subscription MyQuery($partCode:String!) {
 crvtPartCodeDetailByPartCode(partCode: $partCode) {
@@ -733,14 +733,13 @@ createCrvtPostTestTable(
 }
 }`;
 //
-
-  const GET_POST_DATA = `subscription crvtPostTestTableByComponentId($componentId:Int!) {
+  const GET_POST_DATA = `query crvtPostTestTableByComponentId($componentId:Int!) {
     crvtPostTestTableByComponentId(componentId: $componentId) {
       ptParameter
     }
   }
-
 `;
+//
 const GET_ALL_TIMERS = `query getAllTimers {
 getAllTimers
 }`;
@@ -942,8 +941,7 @@ const UPDATE_POST_TEST = `mutation updateCrvtPostTestTableByComponentId($compone
 }
 `;
 //
-
-const ALL_PRETEST_COMPONENT = `query allPreResultTables {
+const ALL_PRERESULT_COMPONENT = `query allPreResultTables {
 allCrvtPreResultTables {
   nodes {
     partCode
@@ -1119,7 +1117,7 @@ const PRE_POST_DETAILS=`query allCrvtPostResultTables {
     }
   }
 }`;
-const UPDATE_PRE_RESULT=`mutation updateCrvtPreResultTableByPartCode($partCode:String!,$prResParameter:[JSON]) {
+const UPDATE_PRE_RESULT=`mutation updateCrvtPreResultTableByPartCode($partCode:String!,$prResParameter:JSON!) {
   updateCrvtPreResultTableByPartCode(
     input: {crvtPreResultTablePatch: {prResParameter:$prResParameter}, partCode:$partCode}
   ) {
@@ -1132,12 +1130,19 @@ const UPDATE_POST_RESULT=`mutation updateCrvtPostResultTableByPartCode($partCode
   ) {
     clientMutationId
   }
-}`
-const GET_ALL_PRE_DETAILS_BY_PARTCODE = `subscription MyQuery($partCode:String!) {
+}`;
+const GET_ALL_PRE_DETAILS_BY_PARTCODE = `subscription crvtPreResultTableByPartCode($partCode:String!) {
   crvtPreResultTableByPartCode(partCode: $partCode) {
     partCode
     partId
     prResParameter
+  }
+}`;
+const GET_ALL_POST_DETAILS_BY_PARTCODE=`subscription crvtPostResultTableByPartCode($partCode: String!) {
+  crvtPostResultTableByPartCode(partCode: $partCode) {
+    partCode
+    partId
+    ptResultTable
   }
 }`
 
@@ -1232,7 +1237,7 @@ export {
   CREATE_POST_TEST,
   GET_POST_DATA,
   UPDATE_POST_TEST,
-  ALL_PRETEST_COMPONENT,
+  ALL_PRERESULT_COMPONENT,
   CREATE_PRE_RESULT,
   CREATE_POST_RESULT,
   PRE_RESULT_SAMPLE,
@@ -1254,5 +1259,7 @@ export {
   PRE_POST_DETAILS,
   UPDATE_PRE_RESULT,
   UPDATE_POST_RESULT,
-  GET_ALL_PRE_DETAILS_BY_PARTCODE
+  GET_ALL_PRE_DETAILS_BY_PARTCODE,
+  GET_ALL_POST_DETAILS_BY_PARTCODE
+
 };

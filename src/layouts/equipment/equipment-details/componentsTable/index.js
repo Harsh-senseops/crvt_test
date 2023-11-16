@@ -22,12 +22,16 @@ import OvenTest from "../OvenTest";
 import "./index.css"
 import PrePostTest from "../PrePostTest";
 import { setShouldPause } from "reduxSlices/yearlyPlanner";
+import MDLoader from "components/MDLoader";
+import MDDialog from "components/MDDilouge";
 
 function ComponentsTable() {
   const [componentDetails, setComponentDetails] = useState([])
   const [detailsOpen, setDetailsOpen] = useState(false)
   const [formtitle, setFormtitle] = useState(null);
-  const [pause,shouldPause] = useState(true)
+  const [pause, shouldPause] = useState(true);
+  const [data, setData] = useState(false)
+  const [open,setOpen]=useState(true)
   const columns = [
     {
       title: "Component",
@@ -35,7 +39,7 @@ function ComponentsTable() {
       editable: "never",
       defaultSort: 'asc',
 
-    headerStyle:
+      headerStyle:
       {
         background: '#202940',
         color: "#FFF !important",
@@ -43,7 +47,7 @@ function ComponentsTable() {
     }];
 
   const actionsCellStyle =
-   {
+  {
     backgroundColor: '#202940',
     borderRadius: "0px 12px 12px 0px",
     color: 'white',
@@ -55,14 +59,16 @@ function ComponentsTable() {
   })
 
   useEffect(() => {
-    if(shouldPause){
+    if (shouldPause) {
       setShouldPause(false);
     }
-    if (getEquipment.data){
-      setComponentDetails(getEquipment.data.allCrvtComponentDetails.nodes)
+    if (getEquipment.data) {
+      setComponentDetails(getEquipment.data.allCrvtComponentDetails?.nodes)
       setShouldPause(true)
-    } 
-  }, [getEquipment.data,shouldPause])
+      setData(true)
+      setOpen(false)
+    }
+  }, [getEquipment.data, shouldPause])
 
   const handleEdit = (rowdata) => {
     setFormtitle(rowdata.partName)
@@ -79,7 +85,7 @@ function ComponentsTable() {
         <Grid item xs={12} md={12} lg={12} ml={3} mr={3} mb={3}>
           <Card style={{ background: '#394259' }} >
             <MDBox >
-              <Card style={{  backgroundColor: 'transparent', shadowOpacity: "10px", boxShadow: 'inherit', margin: "15px" }}>
+              <Card style={{ backgroundColor: 'transparent', shadowOpacity: "10px", boxShadow: 'inherit', margin: "15px" }}>
                 <CardHeader
                   action={
                     <IconButton
@@ -94,8 +100,8 @@ function ComponentsTable() {
                   title={<MDTypography style={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'white' }}>{formtitle}</MDTypography>}
                 />
                 <Divider variant="middle" />
-                <PrePostTest details={componentDetails} id={partId}/>
-                <Dust componentName={formtitle} details={componentDetails}  id={partId}  />
+                <PrePostTest details={componentDetails} id={partId} />
+                <Dust componentName={formtitle} details={componentDetails} id={partId} />
                 <OvenTest componentName={formtitle} details={componentDetails} id={partId} />
                 <RepeatedOperation componentName={formtitle} details={componentDetails} id={partId} />
                 <ShowerTesting componentName={formtitle} details={componentDetails} id={partId} />
@@ -107,7 +113,8 @@ function ComponentsTable() {
             </MDBox>
           </Card>
         </Grid> :
-          <Grid ml={3} mb={3} mr={3} style={{ background: '#394259', borderRadius: 12 }} >
+        <Grid ml={3} mb={3} mr={3} style={{ background: '#394259', borderRadius: 12 }} >
+          {data ?
             <MaterialTable
               style={{ borderRadius: 12, background: '#394259', color: "white", borderBottom: "none" }}
               columns={columns}
@@ -115,16 +122,16 @@ function ComponentsTable() {
               actions={[
                 {
                   icon: () => <EditIcon
-                  color="error" />,
+                    color="error" />,
                   tooltip: 'Edit chamber data',
                   onClick: (event, rowdata) => { handleEdit(rowdata) }
                 }
               ]}
               options={{
-                lableRowsPerPage:"",
+                lableRowsPerPage: "",
                 pageSize: 10,
                 actionsColumnIndex: -1,
-                paginationType:'stepped',
+                paginationType: 'stepped',
                 showFirstLastPageButtons: false,
                 showFirstLastPageButtons: false,
                 pageSizeOptions: [1],
@@ -132,8 +139,12 @@ function ComponentsTable() {
                 rowStyle: rowData => ({ fontSize: '1.01rem', }),
                 headerStyle: actionsCellStyle,
               }}
-            />
-       </Grid>  
+            /> :
+            <MDDialog open={open}>
+              <MDLoader/>
+            </MDDialog>
+          }
+        </Grid>
       }
     </Grid>
   )

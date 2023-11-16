@@ -18,6 +18,8 @@ import { useSelector, useDispatch } from "react-redux";
 import alertAndLoaders from "utils/alertAndLoaders";
 import { UPDATE_PRE_TEST } from "apis/queries";
 import { Box, TextField, Typography } from "@mui/material";
+import MDDialog from "components/MDDilouge";
+import MDLoader from "components/MDLoader";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -54,6 +56,8 @@ export default function PreTest({ id }) {
   const classes = useStyles();
   const [parameters, setParameters] = useState(null);
   const [showInputs, setShowInputs] = useState(false);
+  const [open,setOpen]=useState(true);
+  const [preData,setPreData]=useState(false)
   const [preTestDetailsById, rexPreTestDetailsById] = useSubscription({
     query: GET_POST_DATA,
     variables: { componentId: id },
@@ -61,8 +65,10 @@ export default function PreTest({ id }) {
   useEffect(() => {
     if (preTestDetailsById.data) {
       // console.log(JSON.parse(preTestDetailsById.data.crvtPostTestTableByComponentId.ptParameter));
+      setParameters(JSON.parse(preTestDetailsById.data.crvtPostTestTableByComponentId?.ptParameter));
+     setPreData(true);
+     setOpen(false)
 
-      setParameters(JSON.parse(preTestDetailsById.data.crvtPostTestTableByComponentId.ptParameter));
     }
   }, [preTestDetailsById.data]);
 
@@ -89,8 +95,8 @@ export default function PreTest({ id }) {
   return (
     <>
       <Card style={{ margin: "10px" }}>
-        <MDTypography variant="h6" fontWeight="medium" marginLeft="20px" marginTop="20px">
-          Pre Test configurations
+        {preData?<> <MDTypography variant="h6" fontWeight="medium" marginLeft="20px" marginTop="20px">
+          Pre Test configurations HELLO
         </MDTypography>
         <Grid p={2} container spacing={3}>
           {parameters &&
@@ -99,7 +105,13 @@ export default function PreTest({ id }) {
                 <Grid item ml="20px" xs={12} sm={12} md={12} lg={12} xl={12}>
                   <Grid>
                     <MDTypography
-                      style={{ marginBottom:"6px",fontSize:"18px",display: "flex", justifyContent: "center", alignItems: "center" }}
+                      style={{
+                        marginBottom: "6px",
+                        fontSize: "18px",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
                     >
                       {val.t_name}
                     </MDTypography>
@@ -156,7 +168,6 @@ export default function PreTest({ id }) {
                       </Grid>
                     </Grid>
                   </Grid>
-
                   {val?.conditions?.map((val, i) => {
                     return (
                       <Grid container justifyContent="left" alignItems="center">
@@ -178,8 +189,7 @@ export default function PreTest({ id }) {
                                     justifyContent: "center",
                                     alignItems: "center",
                                     borderRadius: "4px",
-                                    fontSize:"13px"
-
+                                    fontSize: "13px",
                                   }}
                                 >
                                   {val.value.a_value}
@@ -197,12 +207,10 @@ export default function PreTest({ id }) {
                                     justifyContent: "center",
                                     borderRadius: "4px",
                                     marginTop: "4px",
-                                    fontSize:"13px"
-
+                                    fontSize: "13px",
                                   }}
                                 >
-                                {val.value.min}
-
+                                  {val.value.min}
                                 </MDTypography>
                               )}
                             </Grid>
@@ -216,8 +224,7 @@ export default function PreTest({ id }) {
                                     display: "flex",
                                     justifyContent: "center",
                                     borderRadius: "4px",
-                                    fontSize:"13px"
-                                    
+                                    fontSize: "13px",
                                   }}
                                 >
                                   {val.value.max}
@@ -244,7 +251,10 @@ export default function PreTest({ id }) {
             )}
             <MDButton color="info">Save</MDButton>
           </Grid>
-        </Grid>
+        </Grid></>:<MDDialog>
+          <MDLoader/>
+        </MDDialog> }
+        
       </Card>
     </>
   );

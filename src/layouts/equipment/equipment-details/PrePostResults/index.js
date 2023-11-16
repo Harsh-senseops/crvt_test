@@ -23,9 +23,9 @@ import { useDispatch, useSelector } from "react-redux";
 import alertAndLoaders from "utils/alertAndLoaders";
 import { GET_POST_DATA, PRE_POST_DETAILS } from "apis/queries";
 import UploadImage from "./PostResult/UploadImage/uploadImage";
-import { setNoOfSamples, setPrePostIndex,setIsSampleTrue } from "reduxSlices/prePost";
+import { setNoOfSamples, setPrePostIndex, setIsSampleTrue } from "reduxSlices/prePost";
 import MDHoverSearch from "components/MDHoverSearch";
-let toCheckArray = [35, 15, 30, 33, 21, 13, 41, 7, 28, 10, 27, 11, 20, 14, 38, 39];
+let toCheckArray = [35, 15, 30, 33, 21, 13, 41, 7, 28, 10, 27, 11, 20, 14, 38, 39,9];
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: "100%",
@@ -134,7 +134,6 @@ function PrePostResult() {
         dispatch(setIsSampleTrue(false))
         dispatch(setNoOfSamples(change[i].value))
 
-        console.log("fsdafad")
         break;
       }
     }
@@ -219,7 +218,7 @@ function PrePostResult() {
                         </MDTypography>
                       }
                     />
-                   
+
                     <Collapse in={expand === i} timeout="auto" unmountOnExit>
                       <Card style={{ background: "#394259", margin: "10px" }}>
                         <Grid container lg={12} xl={12}>
@@ -228,6 +227,13 @@ function PrePostResult() {
                           </Grid>
                         </Grid>
                       </Card>
+                      <Card style={{ background: "#394259", margin: "10px" }}>
+                        <Grid container lg={12} xl={12}>
+                          <Grid xs={12} sm={12}>
+                            <PostResult Id={val.partId} partCode={val.partCode} />
+                          </Grid>
+                        </Grid>
+                      </Card>                      
                     </Collapse>
                   </Card>
                 );
@@ -236,42 +242,42 @@ function PrePostResult() {
         </Card>
       </MDBox>
       <MDDialog open={prePostStore.isSampleTrue} onClose={handleClose}>
-                      <DialogTitle id="alert-dialog-title">Select Samples</DialogTitle>
-                      <div
-                        style={{ display: "flex", justifyContent: "space-around", width: "280px" }}
-                      >
-                        {change.map((val, i) => {
-                          return (
-                            <div
-                              key={i}
-                              onClick={() => sampleSelect(i)}
-                              style={{
-                                background: val.color,
-                                borderRadius: "8px",
-                                width: "50px",
-                                height: "50px",
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                                cursor: "pointer",
-                              }}
-                            >
-                              <MDTypography variant="h6" fontWeight="medium">
-                                {val.value}
-                              </MDTypography>
-                            </div>
-                          );
-                        })}
-                      </div>
-                      <DialogActions style={{ marginTop: "20px" }}>
-                        <MDButton color="error" onClick={() => handleCardCollapse()}>
-                          Cancel
-                        </MDButton>
-                        <MDButton color="success" onClick={saveSamples}>
-                          Save
-                        </MDButton>
-                      </DialogActions>
-                    </MDDialog>
+        <DialogTitle id="alert-dialog-title">Select Samples</DialogTitle>
+        <div
+          style={{ display: "flex", justifyContent: "space-around", width: "280px" }}
+        >
+          {change.map((val, i) => {
+            return (
+              <div
+                key={i}
+                onClick={() => sampleSelect(i)}
+                style={{
+                  background: val.color,
+                  borderRadius: "8px",
+                  width: "50px",
+                  height: "50px",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  cursor: "pointer",
+                }}
+              >
+                <MDTypography variant="h6" fontWeight="medium">
+                  {val.value}
+                </MDTypography>
+              </div>
+            );
+          })}
+        </div>
+        <DialogActions style={{ marginTop: "20px" }}>
+          <MDButton color="error" onClick={() => handleCardCollapse()}>
+            Cancel
+          </MDButton>
+          <MDButton color="success" onClick={saveSamples}>
+            Save
+          </MDButton>
+        </DialogActions>
+      </MDDialog>
       <Footer />
     </DashboardLayout>
   );

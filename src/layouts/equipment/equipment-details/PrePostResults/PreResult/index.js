@@ -67,7 +67,7 @@ function isValueNull(obj, noOFSamples, str) {
   });
 
   if (isEmpty || noOFSamples !== objLen.length) {
-    console.log("ran");
+    // console.log("ran");
     objLen.map((keys) => {
       newObj[keys] = str;
     });
@@ -90,7 +90,7 @@ function PreResult({ Id, partCode }) {
   });
   const classes = useStyles();
 
-  const [postTableData, rexPostTableData] = useSubscription({
+  const [postTableData, rexPostTableData] = useQuery({
     query: GET_POST_DATA,
     variables: { componentId: Id },
   });
@@ -114,11 +114,11 @@ function PreResult({ Id, partCode }) {
         setParameters(
           JSON.parse(preTableDataByPartId.data?.crvtPreResultTableByPartCode?.prResParameter)
         );
-        console.log(parameters)
+        // console.log(parameters)
         dispatch(setIsSampleTrue(false))
       } else {
         if (postTableData.data.crvtPostTestTableByComponentId?.ptParameter) {
-            console.log("I from amigo")
+            // console.log("I from amigo")
             dispatch(setIsSampleTrue(true))
             if(!prePostStore.noOFSamples || prePostStore.noOFSamples.length !== 0){
                 dispatch(setIsSampleTrue(false))
@@ -151,16 +151,22 @@ function PreResult({ Id, partCode }) {
     setParameters(tempObj);
     setNewValues(true);
   };
-
   const saveValues = () => {
     let data = JSON.stringify(parameters);
     storePreDetails({
       partCode,
       prResParameter: data,
     }).then((res) => {
-      console.log(res);
+      // console.log(res);
+      // console.log(res);
+      if (res.data) {
+        alertAndLoaders("UNSHOW_ALERT", dispatch, "Pre Test Results Are Saved... ", "success");
+      }
+      if (res.error) {
+        console.log(res.error)
+      }
     });
-    alert("Data saved");
+    // alert("Data saved");
   };
 
   const onCancel = () => {
@@ -180,7 +186,7 @@ function PreResult({ Id, partCode }) {
         </Grid>
         <Grid>
           
-          {!parameters ?  <MDTypography variant="h6" fontWeight="medium">
+          {!parameters ?  <MDTypography variant="h6" fontWeight="medium" style={{display:"flex",justifyContent:"center",alignItems:"center",marginBottom:"10px"}}>
            No details found
           </MDTypography> :
           <Grid>
@@ -256,7 +262,7 @@ function PreResult({ Id, partCode }) {
                                             borderRadius: "8px",
                                           }}
                                         >
-                                          {c_values.a_value}
+                                          {c_values.a_value  === "" ?"N/A":c_values.a_value}
                                         </MDTypography>
                                       )}
                                     </Grid>
