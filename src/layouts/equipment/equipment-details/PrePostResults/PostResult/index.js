@@ -102,15 +102,12 @@ function PostResult({ Id, partCode }) {
         let tempArray = {
           ...JSON.parse(postParams.data?.crvtPrePostDefaultValueByComponentId?.ptParameter),
         };
-        if(preTableData.data?.crvtPrePostResultByPartCode?.pre){
-          console.log("olla")
-          dispatch(setNoOfSamples(JSON.parse(preTableData.data?.crvtPrePostResultByPartCode?.pre).parameters[0].conditions[0].value.length))
-        }
+        // if(preTableData.data?.crvtPrePostResultByPartCode?.pre){
+        //   dispatch(setNoOfSamples(JSON.parse(preTableData.data?.crvtPrePostResultByPartCode?.pre).parameters[0].conditions[0].value.length))
+        // }
         tempArray.parameters.map((val1) => {
           val1.conditions.map((c_val) => {
             c_val.value = [];
-            // console.log(JSON.parse(preTableData.data?.crvtPrePostResultByPartCode?.pre).parameters[0].conditions[0].value)
-            
             if (prePostStore.noOFSamples !== null) {
               prePostStore.noOFSamples.map((val) => {
                 c_val.value.push({ a_value: "N/A" });
@@ -123,6 +120,13 @@ function PostResult({ Id, partCode }) {
       }
     }
   }, [postParams.data,preTableData.data]);
+
+  useEffect(()=>{
+    if(preTableData.data?.crvtPrePostResultByPartCode?.pre){
+      dispatch(setNoOfSamples(JSON.parse(preTableData.data?.crvtPrePostResultByPartCode?.pre).parameters[0].conditions[0].value.length))
+    }
+  },[preTableData.data])
+  
   const handleValues = (e, pindex, cindex, c_valIndex) => {
     e.preventDefault();
     let tempObj = { ...parameters };
