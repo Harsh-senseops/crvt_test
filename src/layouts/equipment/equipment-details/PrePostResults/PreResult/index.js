@@ -114,6 +114,9 @@ function PreResult({ Id, partCode }) {
         let tempArray = {
           ...JSON.parse(preParams.data.crvtPrePostDefaultValueByComponentId?.ptParameter),
         };
+        if(preTableData.data?.crvtPrePostResultByPartCode?.post){
+          dispatch(setNoOfSamples(JSON.parse(preTableData.data?.crvtPrePostResultByPartCode?.post).parameters[0].conditions[0].value.length))
+        }
         tempArray.parameters.map((val1) => {
           val1.conditions.map((c_val) => {
             c_val.value = [];
