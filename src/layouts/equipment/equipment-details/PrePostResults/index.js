@@ -25,7 +25,8 @@ import { GET_POST_DATA, PRE_POST_DETAILS } from "apis/queries";
 import UploadImage from "./PostResult/UploadImage/uploadImage";
 import { setNoOfSamples, setPrePostIndex, setIsSampleTrue } from "reduxSlices/prePost";
 import MDHoverSearch from "components/MDHoverSearch";
-let toCheckArray = [35, 15, 30, 33, 21, 13, 41, 7, 28, 10, 27, 11, 20, 14, 38, 39,9];
+import MDLoader from "components/MDLoader";
+let toCheckArray = [35, 15, 30, 33, 21, 13, 41, 7, 28, 10, 27, 11, 20, 14, 38, 39, 9];
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: "100%",
@@ -91,6 +92,7 @@ function PrePostResult() {
   const [preData, setPreData] = useState();
   const [expand, setExpand] = useState(null);
   const [dataCheck, setDataCheck] = useState(false);
+  // let doesDataExist = toCheckArray.find((val) => val === preData[Index].partId);
   const prePostStore = useSelector((store) => {
     return store.prePost;
   });
@@ -102,7 +104,7 @@ function PrePostResult() {
 
   useEffect(() => {
     if (preTableData.data) {
-      setPreData(preTableData.data.allCrvtPostResultTables.nodes);
+      setPreData(preTableData.data.allCrvtPrePostResults?.nodes);
     }
   }, [preTableData.data, searchTerm]);
 
@@ -119,36 +121,36 @@ function PrePostResult() {
   };
   const handleClose = () => {
     setOpen(false);
-    setIsExpanded(false)
-    dispatch(setIsSampleTrue(false))
+    setIsExpanded(false);
+    dispatch(setIsSampleTrue(false));
   };
   const handleCardCollapse = () => {
     setOpen(false);
     setExpand(null);
-    dispatch(setIsSampleTrue(false))
+    dispatch(setIsSampleTrue(false));
   };
   const saveSamples = () => {
     for (let i = 0; i < change.length; i++) {
       if (change[i].color === "#EC407A") {
-        // setOpen(false);
-        dispatch(setIsSampleTrue(false))
-        dispatch(setNoOfSamples(change[i].value))
-
+        setOpen(false);
+        dispatch(setIsSampleTrue(false));
+        dispatch(setNoOfSamples(change[i].value));
         break;
       }
     }
-    dispatch(setIsSampleTrue(false))
+    dispatch(setIsSampleTrue(false));
   };
   const handleExpand = (Index) => {
     let doesDataExist = toCheckArray.find((val) => val === preData[Index].partId);
     if (expand === Index) {
       setExpand(null);
+      console.log(preTableData[Index]);
       dispatch(setNoOfSamples(null));
-      dispatch(setIsSampleTrue(false))
+      dispatch(setIsSampleTrue(false));
     } else {
-      if (!doesDataExist) {
+      if (!doesDataExist || preData[Index].pre || preData[Index].post) {
         setOpen(false);
-        dispatch(setIsSampleTrue(false))
+        dispatch(setIsSampleTrue(false));
         setExpand(Index);
         setDataCheck(false);
         dispatch(setNoOfSamples([]));
@@ -156,11 +158,9 @@ function PrePostResult() {
       }
       setExpand(Index);
       setOpen(true);
-      // dispatch(setIsSampleTrue(true))
       setDataCheck(true);
       dispatch(setNoOfSamples([]));
     }
-
   };
   return (
     <DashboardLayout>
@@ -173,7 +173,7 @@ function PrePostResult() {
             <MDHoverSearch onInputChange={(value) => setSearchTerm(value)} />
           </div>
           <MDBox>
-            {preData &&
+            {preData ? (
               preData.map((val, i) => {
                 return (
                   <Card key={i} sx={{ margin: "12px" }}>
@@ -220,32 +220,55 @@ function PrePostResult() {
                     />
 
                     <Collapse in={expand === i} timeout="auto" unmountOnExit>
-                      <Card style={{ background: "#394259", margin: "10px" }}>
-                        <Grid container lg={12} xl={12}>
-                          <Grid xs={12} sm={12}>
-                            <PreResult Id={val.partId} partCode={val.partCode} />
-                          </Grid>
-                        </Grid>
-                      </Card>
-                      <Card style={{ background: "#394259", margin: "10px" }}>
-                        <Grid container lg={12} xl={12}>
-                          <Grid xs={12} sm={12}>
-                            <PostResult Id={val.partId} partCode={val.partCode} />
-                          </Grid>
-                        </Grid>
-                      </Card>                      
+                      {toCheckArray.find((val1) => val1 === val.partId) ? (
+                        <>
+                          <Card style={{ background: "#394259", margin: "10px" }}>
+                            <Grid container lg={12} xl={12}>
+                              <Grid xs={12} sm={12}>
+                                <PreResult
+                                  Id={val.partId}
+                                  partCode={val.partCode}
+                                  // params={val.pre}
+                                />
+                              </Grid>
+                            </Grid>
+                          </Card>
+                          <Card style={{ background: "#394259", margin: "10px" }}>
+                            <Grid container lg={12} xl={12}>
+                              <Grid xs={12} sm={12}>
+                                <PostResult
+                                  Id={val.partId}
+                                  partCode={val.partCode}
+                                  // params={val.post}
+                                />
+                              </Grid>
+                            </Grid>
+                          </Card>
+                        </>
+                      ) : (
+                        <MDTypography
+                          variant="h6"
+                          fontWeight="medium"
+                          style={{ textAlign: "center", padding: "1em 0px" }}
+                        >
+                          No Details Found &#128533;
+                        </MDTypography>
+                      )}
                     </Collapse>
                   </Card>
                 );
-              })}
+              })
+            ) : (
+              <MDDialog open={true}>
+                <MDLoader />
+              </MDDialog>
+            )}
           </MDBox>
         </Card>
       </MDBox>
-      <MDDialog open={prePostStore.isSampleTrue} onClose={handleClose}>
+      <MDDialog open={open} onClose={handleClose}>
         <DialogTitle id="alert-dialog-title">Select Samples</DialogTitle>
-        <div
-          style={{ display: "flex", justifyContent: "space-around", width: "280px" }}
-        >
+        <div style={{ display: "flex", justifyContent: "space-around", width: "280px" }}>
           {change.map((val, i) => {
             return (
               <div
@@ -283,4 +306,4 @@ function PrePostResult() {
   );
 }
 
-export default React.memo(PrePostResult);
+export default PrePostResult;

@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
-    noOFSamples: [],
+    noOFSamples: [1,2,3],
     index:null,
     isSampleTrue:false,
 }

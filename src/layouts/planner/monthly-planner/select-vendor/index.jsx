@@ -21,10 +21,9 @@ import {
   ADD_MONTHLY_UPLOAD_HISTORY,
   ADD_NOTIFICATION,
   UPDATE_DASHBOARD_DETAILS,
+  PRE_POST_RESULT_SAMPLE
 } from "apis/queries";
 import { setSampleRemaining,clearMonthlyPlanner } from "reduxSlices/monthlyPlanner";
-import { PRE_RESULT_SAMPLE } from "apis/queries";
-import { POST_RESULT_SAMPLE } from "apis/queries";
 
 function ConfirmationDialogRaw({
   onClose,
@@ -44,8 +43,7 @@ function ConfirmationDialogRaw({
     ADD_MONTHLY_UPLOAD_HISTORY
   );
   const [addNotificationResult, addNotification] = useMutation(ADD_NOTIFICATION);
-  const [addPreResults, addPreResultsPart] = useMutation(PRE_RESULT_SAMPLE);
-  const [addPostResults, addPostResultsPart] = useMutation(POST_RESULT_SAMPLE);
+  const [addPrePostResultsRes, addPrePostResults] = useMutation(PRE_POST_RESULT_SAMPLE);
   const [updateDashBoardDetailsRes, updateDashBoardDetails] = useMutation(UPDATE_DASHBOARD_DETAILS);
   const ROW_NAME = ["test_planned","test_in_progress"]
   useEffect(() => {
@@ -113,30 +111,12 @@ function ConfirmationDialogRaw({
                   dispatch(addNotifications("New planner added"));
                   dispatch(incrementCounter(1));
                   dispatch(addNotifications("New planner added"));
-                  addPreResultsPart({
+                  addPrePostResults({
                     partCode: store.detailsToPush.partCode,
                     partId: store.detailsToPush.partId,
-                  }).then((res) => {
+                  }).then((res) => {  
                     console.log(res)
-                    if (res.data) {
-                      addPostResultsPart({
-                        partCode: store.detailsToPush.partCode,
-                        partId: store.detailsToPush.partId,
-                      }).then((res) => {
-                        if (res.data) {
-
-                          ROW_NAME.map((val)=>{
-                            updateDashBoardDetails({
-                              rowName:val,
-                              canIncrement:true,
-                            }).then((res)=>{
-                              console.log(res);
-                            })
-                          })
-                         
-                        }
-                      });
-                    }
+                  console.log(res)
                   });
                 }
               });

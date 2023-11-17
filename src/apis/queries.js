@@ -733,8 +733,8 @@ createCrvtPostTestTable(
 }
 }`;
 //
-  const GET_POST_DATA = `query crvtPostTestTableByComponentId($componentId:Int!) {
-    crvtPostTestTableByComponentId(componentId: $componentId) {
+const GET_DEFAULT_PRE_POST_DATA = `query crvtPrePostDefaultValueByComponentId($componentId:Int!) {
+    crvtPrePostDefaultValueByComponentId(componentId: $componentId) {
       ptParameter
     }
   }
@@ -744,7 +744,7 @@ const GET_ALL_TIMERS = `query getAllTimers {
 getAllTimers
 }`;
 
-const GET_PRE_TABLE_DATA=`subscription allCrvtPreResultTables {
+const GET_PRE_TABLE_DATA = `subscription allCrvtPreResultTables {
   allCrvtPreResultTables {
     nodes {
       partCode
@@ -752,7 +752,7 @@ const GET_PRE_TABLE_DATA=`subscription allCrvtPreResultTables {
       prResParameter
     }
   }
-}`
+}`;
 
 const ALL_COMPONENTS = `query MyQuery {
 allCrvtComponentDetails {
@@ -964,21 +964,13 @@ createCrvtPostResultTable(
 }
 }`;
 
-const PRE_RESULT_SAMPLE = `mutation createPreResultTable($partId: Int!,$partCode:String!) {
-  createCrvtPreResultTable(
-    input: {crvtPreResultTable: {partId: $partId, prResParameter: null, partCode: $partCode}}
+const PRE_POST_RESULT_SAMPLE = `mutation createCrvtPrePostResult($partId: Int!,$partCode:String!) {
+  createCrvtPrePostResult(
+    input: {crvtPrePostResult: {partId: $partId, partCode: $partCode}}
   ) {
     clientMutationId
   }
 }`;
-const POST_RESULT_SAMPLE = `mutation createPreResultTable($partId: Int!, $partCode: String!) {
-  createCrvtPostResultTable(
-    input: {crvtPostResultTable: {partId: $partId, partCode: $partCode, ptResultTable: null}}
-  ) {
-    clientMutationId
-  }
-}
-`;
 
 const START_TIMER = `mutation startTimer($machineId: Int!) {
 startTimer(machineId: $machineId)
@@ -1007,19 +999,21 @@ updateCrvtAlertById(
   clientMutationId
 }
 }`;
-const UPLOAD_POST_IMAGES = `mutation updatePostResultTableByPartCode($postImages: JSON!, $partCode: String!) {
-updateCrvtPostResultTableByPartCode(
-  input: {crvtPostResultTablePatch: {postImages: $postImages}, partCode: $partCode}
-) {
-  clientMutationId
-}
-}`;
+const UPLOAD_PRE_POST_IMAGES = `mutation updatePostResultTableByPartCode($images: JSON!, $partCode: String!) {
+  updateCrvtPrePostResultByPartCode(
+    input: {crvtPrePostResultPatch: {images: $images}, partCode: $partCode}
+  ) {
+    clientMutationId
+  }
+  }
+`;
 
-const IMAGE_FETCH = `subscription ImageFetch($partCode:String!) {
-crvtPostResultTableByPartCode(partCode: $partCode) {
-  postImages
+const GET_PRE_POST_IMAGES = `subscription crvtPrePostResultByPartCode($partCode:String!) {
+  crvtPrePostResultByPartCode(partCode: $partCode) {
+  images
 }
-}`;
+}
+`;
 
 const ALL_ACTIVE_ALERTS = `subscription allCrvtActiveAlerts {
   allCrvtAlerts(condition: {alertStatus: 1}) {
@@ -1032,7 +1026,7 @@ const ALL_ACTIVE_ALERTS = `subscription allCrvtActiveAlerts {
     }
   }
 }
-`
+`;
 const EVERY_TEST_DEATILS = `query everyTestDetails {
   allCrvtDashboardDetails {
     nodes {
@@ -1043,12 +1037,12 @@ const EVERY_TEST_DEATILS = `query everyTestDetails {
     }
   }
 }
-`
+`;
 const UPDATE_DASHBOARD_DETAILS = `
 mutation updatedashBoardDetails($rowName: String!,$canIncrement: Boolean!) {
   updatedashBoardDetails(rowName: $rowName, canIncrement: $canIncrement)
 }
-`
+`;
 
 const UPDATE_DUST_ERD = `mutation dustERD($dustErt: JSON, $partId: Int!) {
   updateCrvtEquipmentRunningDetailByPartId(
@@ -1057,7 +1051,7 @@ const UPDATE_DUST_ERD = `mutation dustERD($dustErt: JSON, $partId: Int!) {
     clientMutationId
   }
 }
-`
+`;
 const UPDATE_OVEN_ERD = `mutation ovenERD($ovenErt: JSON, $partId: Int!) {
   updateCrvtEquipmentRunningDetailByPartId(
     input: {crvtEquipmentRunningDetailPatch: {ovenErt: $ovenErt}, partId: $partId}
@@ -1065,7 +1059,7 @@ const UPDATE_OVEN_ERD = `mutation ovenERD($ovenErt: JSON, $partId: Int!) {
     clientMutationId
   }
 }
-`
+`;
 const UPDATE_RO_ERD = `mutation ROERD($repeatedOperationErt: JSON, $partId: Int!) {
   updateCrvtEquipmentRunningDetailByPartId(
     input: {crvtEquipmentRunningDetailPatch: {repeatedOperationErt: $repeatedOperationErt}, partId: $partId}
@@ -1073,7 +1067,7 @@ const UPDATE_RO_ERD = `mutation ROERD($repeatedOperationErt: JSON, $partId: Int!
     clientMutationId
   }
 }
-`
+`;
 const UPDATE_SHOWER_ERD = `mutation showerERD($showerErt: JSON, $partId: Int!) {
   updateCrvtEquipmentRunningDetailByPartId(
     input: {crvtEquipmentRunningDetailPatch: {showerErt: $showerErt}, partId: $partId}
@@ -1081,7 +1075,7 @@ const UPDATE_SHOWER_ERD = `mutation showerERD($showerErt: JSON, $partId: Int!) {
     clientMutationId
   }
 }
-`
+`;
 const UPDATE_THERMAL_CYCLE_ERD = `mutation thermalCycleERD($thermalCycleErt: JSON, $partId: Int!) {
   updateCrvtEquipmentRunningDetailByPartId(
     input: {crvtEquipmentRunningDetailPatch: {thermalCycleErt: $thermalCycleErt}, partId: $partId}
@@ -1089,7 +1083,7 @@ const UPDATE_THERMAL_CYCLE_ERD = `mutation thermalCycleERD($thermalCycleErt: JSO
     clientMutationId
   }
 }
-`
+`;
 const UPDATE_THERMAL_SHOCK_ERD = `mutation thermalShockERD($thermalShockErt: JSON, $partId: Int!) {
   updateCrvtEquipmentRunningDetailByPartId(
     input: {crvtEquipmentRunningDetailPatch: {thermalShockErt: $thermalShockErt}, partId: $partId}
@@ -1097,7 +1091,7 @@ const UPDATE_THERMAL_SHOCK_ERD = `mutation thermalShockERD($thermalShockErt: JSO
     clientMutationId
   }
 }
-`
+`;
 const UPDATE_VIBRATION_ERD = `mutation vibrationERD($vibrationErt: JSON, $partId: Int!) {
   updateCrvtEquipmentRunningDetailByPartId(
     input: {crvtEquipmentRunningDetailPatch: {vibrationErt: $vibrationErt}, partId: $partId}
@@ -1106,45 +1100,49 @@ const UPDATE_VIBRATION_ERD = `mutation vibrationERD($vibrationErt: JSON, $partId
   }
 }
 `;
-const PRE_POST_DETAILS=`query allCrvtPostResultTables {
-  allCrvtPostResultTables {
+const PRE_POST_DETAILS = `query MyQuery {
+  allCrvtPrePostResults {
     nodes {
       partCode
       partId
       crvtComponentDetailByPartId {
         partName
       }
+      post
+      pre
+      images
     }
   }
-}`;
-const UPDATE_PRE_RESULT=`mutation updateCrvtPreResultTableByPartCode($partCode:String!,$prResParameter:JSON!) {
-  updateCrvtPreResultTableByPartCode(
-    input: {crvtPreResultTablePatch: {prResParameter:$prResParameter}, partCode:$partCode}
-  ) {
-    clientMutationId
-  }
-}`
-const UPDATE_POST_RESULT=`mutation updateCrvtPostResultTableByPartCode($partCode:String!,$ptResultTable:JSON!) {
-  updateCrvtPostResultTableByPartCode(
-    input: {crvtPostResultTablePatch: {ptResultTable: $ptResultTable}, partCode: $partCode}
+}
+`;
+
+const UPDATE_PRE_RESULT = `mutation updateCrvtPrePostResultByPartCode($partCode:String!,$pre:JSON!) {
+  updateCrvtPrePostResultByPartCode(
+    input: {crvtPrePostResultPatch: {pre:$pre}, partCode:$partCode}
   ) {
     clientMutationId
   }
 }`;
-const GET_ALL_PRE_DETAILS_BY_PARTCODE = `subscription crvtPreResultTableByPartCode($partCode:String!) {
-  crvtPreResultTableByPartCode(partCode: $partCode) {
-    partCode
-    partId
-    prResParameter
+const UPDATE_POST_RESULT = `mutation updateCrvtPrePostResultByPartCode($partCode:String!,$post:JSON!) {
+  updateCrvtPrePostResultByPartCode(
+    input: {crvtPrePostResultPatch: {post:$post}, partCode:$partCode}
+  ) {
+    clientMutationId
   }
 }`;
-const GET_ALL_POST_DETAILS_BY_PARTCODE=`subscription crvtPostResultTableByPartCode($partCode: String!) {
+const GET_ALL_PRE_POST_DETAILS_BY_PARTCODE = `subscription crvtPrePostResultByPartCode($partCode:String!) {
+  crvtPrePostResultByPartCode(partCode: $partCode) {
+    post
+    pre
+  }
+}`;
+const GET_ALL_POST_DETAILS_BY_PARTCODE = `subscription crvtPostResultTableByPartCode($partCode: String!) {
   crvtPostResultTableByPartCode(partCode: $partCode) {
     partCode
     partId
     ptResultTable
   }
-}`
+}`;
 
 export {
   AUTH,
@@ -1235,17 +1233,16 @@ export {
   UPDATE_UNPLANNED_LIST,
   CREATE_PRE_TEST,
   CREATE_POST_TEST,
-  GET_POST_DATA,
+  GET_DEFAULT_PRE_POST_DATA,
   UPDATE_POST_TEST,
   ALL_PRERESULT_COMPONENT,
   CREATE_PRE_RESULT,
   CREATE_POST_RESULT,
-  PRE_RESULT_SAMPLE,
-  POST_RESULT_SAMPLE,
+  PRE_POST_RESULT_SAMPLE,
   GET_PRE_TABLE_DATA,
   UPDATE_ALERT_STATUS_BY_ID,
-  UPLOAD_POST_IMAGES,
-  IMAGE_FETCH,
+  UPLOAD_PRE_POST_IMAGES,
+  GET_PRE_POST_IMAGES,
   ALL_ACTIVE_ALERTS,
   EVERY_TEST_DEATILS,
   UPDATE_DASHBOARD_DETAILS,
@@ -1259,7 +1256,6 @@ export {
   PRE_POST_DETAILS,
   UPDATE_PRE_RESULT,
   UPDATE_POST_RESULT,
-  GET_ALL_PRE_DETAILS_BY_PARTCODE,
-  GET_ALL_POST_DETAILS_BY_PARTCODE
-
+  GET_ALL_PRE_POST_DETAILS_BY_PARTCODE,
+  GET_ALL_POST_DETAILS_BY_PARTCODE,
 };

@@ -3,7 +3,7 @@ import "./index.css"
 
 export default function MDLoader(){
     return(
-        <div id="circularG">
+    <div id="circularG">
 	<div id="circularG_1" class="circularG"></div>
 	<div id="circularG_2" class="circularG"></div>
 	<div id="circularG_3" class="circularG"></div>

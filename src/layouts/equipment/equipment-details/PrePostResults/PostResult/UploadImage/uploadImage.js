@@ -9,10 +9,9 @@ import { makeStyles } from "@mui/styles";
 import { Box } from "@mui/material";
 import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
 import { useMutation, useQuery, useSubscription } from "urql";
-import { UPLOAD_POST_IMAGES } from "apis/queries";
 import alertAndLoaders from "utils/alertAndLoaders";
 import { useDispatch } from "react-redux";
-import { IMAGE_FETCH } from "apis/queries";
+import { GET_PRE_POST_IMAGES,UPLOAD_PRE_POST_IMAGES   } from "apis/queries";
 import CheckIcon from '@mui/icons-material/Check';
 
 const useStyles = makeStyles((theme) => ({
@@ -27,18 +26,20 @@ const useStyles = makeStyles((theme) => ({
 export default function UploadImage({ partCode }) {
   const classes = useStyles();
   const [selectedImage, setSelectedImage] = useState([]);
-  const [uploadImage, upoadImageResults] = useMutation(UPLOAD_POST_IMAGES);
+  const [uploadImage, upoadImageResults] = useMutation(UPLOAD_PRE_POST_IMAGES);
   const [fetchedImage, setFetchedImage] = useState(false);
   const [fetchImage, rexFetchImage] = useSubscription({
-    query: IMAGE_FETCH,
+    query: GET_PRE_POST_IMAGES,
     variables: { partCode },
   });
   const dispatch = useDispatch();
   useEffect(() => {
+    console.log(fetchImage)
     if (fetchImage.data) {
-      if (fetchImage.data?.crvtPostResultTableByPartCode?.postImages) {
+      console.log(fetchImage.data)
+      if (fetchImage.data?.crvtPrePostResultByPartCode?.images) {
         setFetchedImage(true);
-        let data = JSON.parse(fetchImage.data?.crvtPostResultTableByPartCode.postImages);
+        let data = JSON.parse(fetchImage.data?.crvtPrePostResultByPartCode.images);
         setSelectedImage([]);
         for (let key in data) {
           setSelectedImage((prev) => [...prev, data[key]]);
@@ -79,8 +80,9 @@ export default function UploadImage({ partCode }) {
       });
       upoadImageResults({
         partCode: partCode,
-        postImages: JSON.stringify(obj),
+        images: JSON.stringify(obj),
       }).then((res) => {
+        console.log(res)
         if (res.data) {
           alertAndLoaders("UNSHOW_ALERT", dispatch, "Images Are Uploaded... ", "success");
         } else if (res.error) {

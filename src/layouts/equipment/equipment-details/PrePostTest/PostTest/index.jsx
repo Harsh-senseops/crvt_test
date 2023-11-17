@@ -6,7 +6,7 @@ import MDButton from "components/MDButton";
 import { makeStyles } from "@mui/styles";
 import { useMutation, useQuery, useSubscription } from "urql";
 import Grid from "@mui/material/Grid";
-import { GET_POST_DATA, UPDATE_POST_TEST } from "apis/queries";
+import { GET_DEFAULT_PRE_POST_DATA, UPDATE_POST_TEST } from "apis/queries";
 import { useDispatch, useSelector } from "react-redux";
 import alertAndLoaders from "utils/alertAndLoaders";
 import { Typography } from "@mui/material";
@@ -52,7 +52,7 @@ export default function PreTest({ id }) {
   const [updatePostTest, updatePostTestResult] = useMutation(UPDATE_POST_TEST);
 
   const [preTestDetailsById, rexPreTestDetailsById] = useQuery({
-    query: GET_POST_DATA,
+    query: GET_DEFAULT_PRE_POST_DATA,
     variables: { componentId: id },
   });
   const dispatch = useDispatch();

@@ -10,9 +10,7 @@ import { CardHeader, TextField } from "@mui/material";
 import { useMutation, useQuery, useSubscription } from "urql";
 import Grid from "@mui/material/Grid";
 import alertAndLoaders from "utils/alertAndLoaders";
-import { GET_POST_DATA, UPDATE_POST_RESULT } from "apis/queries";
-import { GET_ALL_POST_DETAILS_BY_PARTCODE } from "apis/queries";
-import { ALL_PRETEST_COMPONENT } from "apis/queries";
+import { GET_DEFAULT_PRE_POST_DATA, UPDATE_POST_RESULT,GET_ALL_PRE_POST_DETAILS_BY_PARTCODE } from "apis/queries";
 import { setNoOfSamples, setIsSampleTrue } from "reduxSlices/prePost";
 import UploadImage from "./UploadImage/uploadImage";
 
@@ -62,7 +60,7 @@ const useStyles = makeStyles((theme) => ({
 function PostResult({ Id, partCode }) {
   const [show, setShow] = useState(false);
   const [ptData, setPtData] = useState(false)
-  const [parameters, setParameters] = useState("");
+  const [parameters, setParameters] = useState(null);
   const [newValues, setNewValues] = useState(null);
 
 
@@ -72,14 +70,16 @@ function PostResult({ Id, partCode }) {
     return store.prePost;
   });
 
-  const [postTestDetailsById, rexPostTestDetailsById] = useQuery({
-    query: GET_POST_DATA,
-    variables: { componentId: Id },
+  const [postParams, rexPostParams] = useQuery({
+    query: GET_DEFAULT_PRE_POST_DATA,
+    variables: {componentId: Id},
   });
-  const [postTableDataByPartId, rexPostDataByPartId] = useSubscription({
-    query: GET_ALL_POST_DETAILS_BY_PARTCODE,
+
+  const [preTableData, rexPreTableData] = useSubscription({
+    query: GET_ALL_PRE_POST_DETAILS_BY_PARTCODE,
     variables: { partCode },
   });
+
   const [storePostDetailsRes, storePostDetails] = useMutation(UPDATE_POST_RESULT);
 
   const dispatch = useDispatch();
@@ -95,48 +95,33 @@ function PostResult({ Id, partCode }) {
   };
 
   useEffect(() => {
-    if (
-      postTestDetailsById.data &&
-      //   prePostStore.noOFSamples.length !== 0 &&
-      !newValues &&
-      postTableDataByPartId.data
-    ) {
-      if (postTableDataByPartId.data?.crvtPostResultTableByPartCode?.ptResultTable) {
-        setParameters(
-          JSON.parse(postTableDataByPartId.data?.crvtPostResultTableByPartCode?.ptResultTable)
-        );
-        // console.log(parameters)
-        dispatch(setIsSampleTrue(false))
-      } else {
-        if (postTestDetailsById.data.crvtPostTestTableByComponentId?.ptParameter) {
-          // console.log("I from amigo")
-          dispatch(setIsSampleTrue(true))
-          if (!prePostStore.noOFSamples || prePostStore.noOFSamples.length !== 0) {
-            dispatch(setIsSampleTrue(false))
-          }
-          setPtData(true);
-          let tempArray = {
-            ...JSON.parse(postTestDetailsById.data.crvtPostTestTableByComponentId?.ptParameter),
-          };
-          tempArray.parameters.map((val1) => {
-            val1.conditions.map((c_val) => {
-              c_val.value = [];
-              if (prePostStore.noOFSamples !== null) {
-                prePostStore.noOFSamples.map((val) => {
-                  c_val.value.push({ a_value: "N/A" });
-                })
-              };
-            });
+    if (postParams.data?.crvtPrePostDefaultValueByComponentId && preTableData.data && !newValues) {
+      if(preTableData.data?.crvtPrePostResultByPartCode?.post){
+        setParameters(JSON.parse(preTableData.data?.crvtPrePostResultByPartCode?.post))
+      }else {
+        let tempArray = {
+          ...JSON.parse(postParams.data?.crvtPrePostDefaultValueByComponentId?.ptParameter),
+        };
+        tempArray.parameters.map((val1) => {
+          val1.conditions.map((c_val) => {
+            c_val.value = [];
+            // console.log(JSON.parse(preTableData.data?.crvtPrePostResultByPartCode?.pre).parameters[0].conditions[0].value)
+            if(preTableData.data?.crvtPrePostResultByPartCode?.pre){
+              console.log("olla")
+              dispatch(setNoOfSamples(JSON.parse(preTableData.data?.crvtPrePostResultByPartCode?.pre).parameters[0].conditions[0].value.length))
+            }
+            if (prePostStore.noOFSamples !== null) {
+              prePostStore.noOFSamples.map((val) => {
+                c_val.value.push({ a_value: "N/A" });
+              });
+            }
           });
-          setParameters(tempArray);
-        } else {
-          setPtData(false);
-        }
+        });
+        setParameters(tempArray);
+        console.log(postParams.data?.crvtPrePostDefaultValueByComponentId?.ptParameter)
       }
     }
-  }, [postTestDetailsById.data, prePostStore.noOFSamples, postTableDataByPartId.data]);
-
-
+  }, [postParams.data,preTableData.data]);
   const handleValues = (e, pindex, cindex, c_valIndex) => {
     e.preventDefault();
     let tempObj = { ...parameters };
@@ -149,7 +134,7 @@ function PostResult({ Id, partCode }) {
     // console.log(data, partCode);
     storePostDetails({
       partCode,
-      ptResultTable: data,
+      post: data,
     }).then((res) => {
       // console.log(res);
       if (res.data) {
