@@ -86,6 +86,7 @@ export default function UploadImage({ partCode }) {
         if (res.data) {
           alertAndLoaders("UNSHOW_ALERT", dispatch, "Images Are Uploaded... ", "success");
         } else if (res.error) {
+          console.log(res.error)
           alertAndLoaders("UNSHOW_ALERT", dispatch, "Something Went Wrong... ", "error");
         }
       });

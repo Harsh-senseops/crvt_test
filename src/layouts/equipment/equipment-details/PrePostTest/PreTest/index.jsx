@@ -13,7 +13,7 @@ import MDBox from "components/MDBox";
 import { useMutation, useQuery, useSubscription } from "urql";
 
 import Grid from "@mui/material/Grid";
-import { GET_POST_DATA } from "apis/queries";
+import { GET_DEFAULT_PRE_POST_DATA } from "apis/queries";
 import { useSelector, useDispatch } from "react-redux";
 import alertAndLoaders from "utils/alertAndLoaders";
 import { UPDATE_PRE_TEST } from "apis/queries";
@@ -59,19 +59,20 @@ export default function PreTest({ id }) {
   const [open,setOpen]=useState(true);
   const [preData,setPreData]=useState(false)
   const [preTestDetailsById, rexPreTestDetailsById] = useSubscription({
-    query: GET_POST_DATA,
+    query: GET_DEFAULT_PRE_POST_DATA,
     variables: { componentId: id },
   });
   useEffect(() => {
     if (preTestDetailsById.data) {
       // console.log(JSON.parse(preTestDetailsById.data.crvtPostTestTableByComponentId.ptParameter));
-      setParameters(JSON.parse(preTestDetailsById.data.crvtPostTestTableByComponentId?.ptParameter));
+      setParameters(JSON.parse(preTestDetailsById.data.crvtPrePostDefaultValueByComponentId?.ptParameter));
      setPreData(true);
      setOpen(false)
 
     }
   }, [preTestDetailsById.data]);
 
+  console.log(preTestDetailsById.data)
   // const setMinValues = (event, index) => {
   //   console.log(parameters);
   //   let tempParameters = { ...parameters };
@@ -240,7 +241,7 @@ export default function PreTest({ id }) {
               );
             })}
           <Grid gap={2} spacing={6} mt={3} container alignItems="flex-end" justifyContent="center">
-            {showInputs ? (
+            {/* {showInputs ? (
               <MDButton color="info" onClick={onCancel}>
                 Cancel
               </MDButton>
@@ -248,7 +249,22 @@ export default function PreTest({ id }) {
               <MDButton color="info" onClick={() => setShowInputs((prev) => !prev)}>
                 Edit
               </MDButton>
-            )}
+            )} */}
+             {/* {!showInputs ? (
+                  <MDButton color="info" onClick={() => setShowInputs((prev) => !prev)}>
+                    Edit
+                  </MDButton>
+                ) : (
+                  <div style={{ display: "flex", gap: "15px" }}>
+                    <MDButton color="error" onClick={saveData}>
+                      Save
+                    </MDButton>
+                    <MDButton color="dark" onClick={onCancel}>
+                      Cancel
+                    </MDButton>
+                  </div>
+                )} */}
+                <h1>HELO</h1>
             <MDButton color="info">Save</MDButton>
           </Grid>
         </Grid></>:<MDDialog>

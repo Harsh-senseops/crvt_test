@@ -215,9 +215,7 @@ function PreResult({ Id, partCode }) {
                             <Grid key={cindex} container lg={12}>
                               <Grid
                                 sx={{ display: "flex", alignItems: "center" }}
-                                item
-                                ml={2}
-                                xs={3}
+                                item  ml={2}  xs={3}
                                 sm={3}
                                 md={3}
                                 lg={3}

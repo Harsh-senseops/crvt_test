@@ -47,7 +47,7 @@ import UserContext from "layouts/pages/userContext";
 import {useSelector} from "react-redux";
 import "./App.css"
 
-// graphql url
+// // graphql url
 const senseopsHTTPServerURL = "http://127.0.0.1:5052/graphql";
 const senseopsWSServerURL = "ws://127.0.0.1:5052/graphql";
 // const hm2gHTTPURL = "http://10.30.3.67:5052/graphql";

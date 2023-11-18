@@ -404,7 +404,7 @@ const ReusabaleMonthlyPlannerTests = ({
   }, []);
 
   const classes = useStyles();
-console.log(monthlyPlannerStore.monthlyDetails)
+// console.log(monthlyPlannerStore.monthlyDetails)?
   return (
     //  background:monthlyPlannerStore?.isExpanded[testName] ? "#394259":"#202940"
     <Card style={{ marginBottom: "15px" }}>
