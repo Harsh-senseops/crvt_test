@@ -42,7 +42,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
 export default function PreTest({ id }) {
   const classes = useStyles();
   const [parameters, setParameters] = useState(null);
@@ -59,13 +58,14 @@ export default function PreTest({ id }) {
 
   useEffect(() => {
     if (preTestDetailsById.data) {
-      if (preTestDetailsById.data.crvtPostTestTableByComponentId?.ptParameter) {
+      if (preTestDetailsById.data.crvtPrePostDefaultValueByComponentId?.ptParameter) {
         setParameters(
-          JSON.parse(preTestDetailsById.data.crvtPostTestTableByComponentId?.ptParameter)
+          JSON.parse(preTestDetailsById.data.crvtPrePostDefaultValueByComponentId?.ptParameter)
         );
       }
     }
   }, [preTestDetailsById.data]);
+  console.log(preTestDetailsById)
 
   const updateInput = (event, p_index, c_index) => {
     let tempObj = { ...parameters };
@@ -290,18 +290,20 @@ export default function PreTest({ id }) {
               alignItems="flex-end"
               justifyContent="center"
             >
-              {showInputs ? (
-                <MDButton color="info" onClick={onCancel}>
-                  Cancel
-                </MDButton>
-              ) : (
-                <MDButton color="info" onClick={() => setShowInputs((prev) => !prev)}>
-                  Edit
-                </MDButton>
-              )}
-              <MDButton color="info" onClick={saveData}>
-                Save
-              </MDButton>
+               {!showInputs ? (
+                  <MDButton color="info" onClick={() => setShowInputs((prev) => !prev)}>
+                    Edit
+                  </MDButton>
+                ) : (
+                  <div style={{ display: "flex", gap: "15px" }}>
+                    <MDButton color="error" onClick={saveData}>
+                      Save
+                    </MDButton>
+                    <MDButton color="dark" onClick={onCancel}>
+                      Cancel
+                    </MDButton>
+                  </div>
+                )}
             </Grid>
           </Grid>
         ) : (
