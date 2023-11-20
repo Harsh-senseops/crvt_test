@@ -22,7 +22,6 @@ import MDDialog from "components/MDDilouge";
 import { useDispatch, useSelector } from "react-redux";
 import alertAndLoaders from "utils/alertAndLoaders";
 import { GET_POST_DATA, PRE_POST_DETAILS } from "apis/queries";
-import UploadImage from "./PostResult/UploadImage/uploadImage";
 import { setNoOfSamples, setPrePostIndex, setIsSampleTrue } from "reduxSlices/prePost";
 import MDHoverSearch from "components/MDHoverSearch";
 import MDLoader from "components/MDLoader";
@@ -104,7 +103,8 @@ function PrePostResult() {
 
   useEffect(() => {
     if (preTableData.data) {
-      setPreData(preTableData.data.allCrvtPrePostResults?.nodes);
+      setPreData(sortTable(preTableData.data.allCrvtPrePostResults?.nodes));
+      // setPreData(preTableData.data.allCrvtPrePostResults?.nodes);
     }
   }, [preTableData.data, searchTerm]);
 
@@ -162,6 +162,17 @@ function PrePostResult() {
       dispatch(setNoOfSamples([]));
     }
   };
+  let sortTable = (data) => {
+    if (data) {
+      let filteredData = data.filter(
+        (val) =>
+          val.partCode.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          val.crvtComponentDetailByPartId.partName.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      return filteredData;
+    }
+  };
+
   return (
     <DashboardLayout>
       <MDBox width="calc(100% - 48px)" position="absolute" top="1.75rem">
