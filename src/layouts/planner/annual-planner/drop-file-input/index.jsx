@@ -206,7 +206,6 @@ const DropFileInput = (props) => {
             if (!res.data?.createCrvtPartCodeDetail) {
               //handle error situation over here
             } else if (res.data?.createCrvtPartCodeDetail) {
-              console.log(i);
               dispatch(yearlyPlanner.setShouldPause(false));
             }
           });

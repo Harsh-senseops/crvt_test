@@ -144,7 +144,6 @@ function PrePostResult() {
     let doesDataExist = toCheckArray.find((val) => val === preData[Index].partId);
     if (expand === Index) {
       setExpand(null);
-      console.log(preTableData[Index]);
       dispatch(setNoOfSamples(null));
       dispatch(setIsSampleTrue(false));
     } else {

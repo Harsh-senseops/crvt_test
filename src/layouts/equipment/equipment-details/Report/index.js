@@ -125,9 +125,7 @@ export default function Report(componentDataProp) {
       createDustQryDataRecord,
     ] = useMutation(createDustQry);
 
-  // return current componentId
   const currentComponentId = (component) => {
-    // console.log("component name in current component id", component)
     const filtered = component.componentDetails.filter(data => data.componentname === component.componentName)
     const obj = filtered[0] 
     return obj.componentid
@@ -135,7 +133,6 @@ export default function Report(componentDataProp) {
 
   const currentComponentThermalShockDetails = useCallback((component) => {
     const filtered = component.filter(data => data.componentid === currentComponentId(componentDataProp))
-    console.log("Current component ro details", filtered)
     setCurrentData(filtered[0])
     return filtered[0]
   })
@@ -160,7 +157,6 @@ export default function Report(componentDataProp) {
   useEffect(() => {
     if(dustDetails) {
       const filtered = dustDetails.filter(data => data.componentid === currentComponentId(componentDataProp))
-      console.log("Current component TC details", filtered[0])
       setCurrentData(filtered[0])
       if(filtered.length > 0) {
         setDataSaved(true)

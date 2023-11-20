@@ -75,11 +75,9 @@ export const monthlyPlanner = createSlice({
     },
     setIsExpanded: (state, action) => {
       let keys = Object.keys(state.isExpanded);
-      // console.log(keys)
       let payload = action.payload;
       let keysIndex = keys.indexOf(payload);
       if (keysIndex === -1) {
-        console.log("fdas")
         state.isExpanded[payload] = true
         return
         }

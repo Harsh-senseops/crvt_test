@@ -104,7 +104,6 @@ function ConfirmationDialogRaw({
                 notificationFrom: `Planner`,
                 description: `${userStore.empCode} Added ${store.detailsToPush.partName} with part code ${store.detailsToPush.partCode} to ${store.testName}`,
               }).then((res2) => {
-                console.log(res2);
                 if (res2.data) {
                   setShouldPauseNotification(false);
                   dispatch(incrementCounter(1));
@@ -115,8 +114,7 @@ function ConfirmationDialogRaw({
                     partCode: store.detailsToPush.partCode,
                     partId: store.detailsToPush.partId,
                   }).then((res) => {  
-                    console.log(res)
-                  console.log(res)
+                   
                   });
                 }
               });

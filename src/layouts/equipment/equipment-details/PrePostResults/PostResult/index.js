@@ -116,7 +116,6 @@ function PostResult({ Id, partCode }) {
           });
         });
         setParameters(tempArray);
-        console.log(postParams.data?.crvtPrePostDefaultValueByComponentId?.ptParameter)
       }
     }
   }, [postParams.data,preTableData.data]);
@@ -126,7 +125,7 @@ function PostResult({ Id, partCode }) {
       dispatch(setNoOfSamples(JSON.parse(preTableData.data?.crvtPrePostResultByPartCode?.pre).parameters[0].conditions[0].value.length))
     }
   },[preTableData.data])
-  
+
   const handleValues = (e, pindex, cindex, c_valIndex) => {
     e.preventDefault();
     let tempObj = { ...parameters };
@@ -136,12 +135,10 @@ function PostResult({ Id, partCode }) {
   };
   const saveValues = () => {
     let data = JSON.stringify(parameters);
-    // console.log(data, partCode);
     storePostDetails({
       partCode,
       post: data,
     }).then((res) => {
-      // console.log(res);
       if (res.data) {
         alertAndLoaders("UNSHOW_ALERT", dispatch, "Post Test Results Are Saved... ", "success");
       }

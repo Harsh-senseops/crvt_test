@@ -34,9 +34,7 @@ export default function UploadImage({ partCode }) {
   });
   const dispatch = useDispatch();
   useEffect(() => {
-    console.log(fetchImage)
     if (fetchImage.data) {
-      console.log(fetchImage.data)
       if (fetchImage.data?.crvtPrePostResultByPartCode?.images) {
         setFetchedImage(true);
         let data = JSON.parse(fetchImage.data?.crvtPrePostResultByPartCode.images);
@@ -62,7 +60,6 @@ export default function UploadImage({ partCode }) {
       alertAndLoaders("UNSHOW_ALERT", dispatch, "Already 3 Images Exists...", "warning");
       return
     }
-    console.log(selectedImage,"dsfgsdgfsfg")
     selectedImage.map(async (val) => {
       if (typeof val === "string") {
         arr.push(val);
@@ -82,7 +79,6 @@ export default function UploadImage({ partCode }) {
         partCode: partCode,
         images: JSON.stringify(obj),
       }).then((res) => {
-        console.log(res)
         if (res.data) {
           alertAndLoaders("UNSHOW_ALERT", dispatch, "Images Are Uploaded... ", "success");
         } else if (res.error) {

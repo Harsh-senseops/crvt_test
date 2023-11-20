@@ -64,7 +64,6 @@ function AnnualPlanner() {
     return store.userRoles;
   });
   const onFileChange = (files) => {
-    console.log(files);
   };
   useEffect(() => {
     setTestData(testDataObj);

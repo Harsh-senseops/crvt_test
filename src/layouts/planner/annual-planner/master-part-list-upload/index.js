@@ -73,10 +73,8 @@ function Masterpartlistupload({ children }) {
     ];
 
     const selectedFile = e.target.files[0];
-    console.log("Selected file", selectedFile)
 
     setExcelFileName(selectedFile.name);
-    console.log("SelectedFileType: ", selectedFile.type);
     if (selectedFile) {
       const selectedFileType = selectedFile.type;
       if (fileTypesAllowed.includes(selectedFileType)) {
@@ -102,8 +100,6 @@ function Masterpartlistupload({ children }) {
       defval: "",
     });
       const exceldataa = dataXLSX
-      console.log("Excel dataa", exceldataa)
-
     if (excelFileError) {
       console.log("Please select appropriate excel file")
     } else {

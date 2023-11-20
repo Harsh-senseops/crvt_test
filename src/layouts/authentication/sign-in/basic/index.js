@@ -68,7 +68,6 @@ function Basic() {
   const [passIcon, setPassIcon] = useState(false);
 
   useEffect(() => {
-    // console.log(userResult)
     if (data) {
       let token = data.authenticate;
       const decoded = jwt_decode(token);

@@ -51,7 +51,6 @@ const getBase64 = (file) => {
     reader.onload = () => {
       // Make a fileInfo Object
       baseURL = reader.result;
-    //   console.log(baseURL);
       resolve(baseURL);
     };
   });
@@ -75,10 +74,6 @@ function DailyReportTable(currentReportEquipment) {
   const [result, setResult] = useState("");
   const [uploadFile,setUploadFile] = useState("")
   const classes = useStyles();
-
-  const onFileChange = (files) => {
-    console.log(files[0]);
-  };
 
   const theme = createTheme({
     palette: {
@@ -148,7 +143,6 @@ function DailyReportTable(currentReportEquipment) {
 
   const handleSaveReport = (e) => {
     e.preventDefault();
-    console.log(reportNumber, reportDate);
   };
 
   return (

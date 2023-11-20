@@ -64,30 +64,12 @@ export default function PreTest({ id }) {
   });
   useEffect(() => {
     if (preTestDetailsById.data) {
-      // console.log(JSON.parse(preTestDetailsById.data.crvtPostTestTableByComponentId.ptParameter));
       setParameters(JSON.parse(preTestDetailsById.data.crvtPrePostDefaultValueByComponentId?.ptParameter));
      setPreData(true);
      setOpen(false)
 
     }
   }, [preTestDetailsById.data]);
-
-  console.log(preTestDetailsById.data)
-  // const setMinValues = (event, index) => {
-  //   console.log(parameters);
-  //   let tempParameters = { ...parameters };
-  //   tempParameters.parameters[index].value.min = event.target.value;
-  //   setParameters(tempParameters);
-  //   console.log(index);
-  // };
-
-  // const setMaxValues = (event, index) => {
-  //   console.log(parameters);
-  //   let tempParameters = { ...parameters };
-  //   tempParameters.parameters[index].value.max = event.target.value;
-  //   setParameters(tempParameters);
-  //   console.log(index);
-  // };
 
   const onCancel = () => {
     setShowInputs((prev) => !prev);

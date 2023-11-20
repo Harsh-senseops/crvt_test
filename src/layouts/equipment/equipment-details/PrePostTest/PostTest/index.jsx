@@ -65,7 +65,6 @@ export default function PreTest({ id }) {
       }
     }
   }, [preTestDetailsById.data]);
-  console.log(preTestDetailsById)
 
   const updateInput = (event, p_index, c_index) => {
     let tempObj = { ...parameters };
@@ -90,7 +89,6 @@ export default function PreTest({ id }) {
       componentId: id,
       ptParameter: parametersVal,
     }).then((res) => {
-      console.log(res);
       if (res.data) {
         alertAndLoaders("UNSHOW_ALERT", dispatch, "Pre Test Values Are Saved... ", "success");
       } else if (res.error) {

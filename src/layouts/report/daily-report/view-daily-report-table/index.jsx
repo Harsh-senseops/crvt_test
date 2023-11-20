@@ -64,7 +64,6 @@ const getBase64 = (file) => {
     reader.onload = () => {
       // Make a fileInfo Object
       baseURL = reader.result;
-    //   console.log(baseURL);
       resolve(baseURL);
     };
   });
@@ -95,7 +94,6 @@ function ViewDailyReportTable(currentReportEquipment) {
   const classes = useStyles();
 
   const onFileChange = (files) => {
-    console.log(files,"holla");
     let arr = []
     files.map((val)=>{
       getBase64(val).then((res)=>{
@@ -173,7 +171,6 @@ function ViewDailyReportTable(currentReportEquipment) {
 
   const handleSaveReport = (e) => {
     e.preventDefault();
-    console.log(reportNumber, reportDate);
   };
 
   const uploadFile = () =>{
@@ -184,12 +181,6 @@ function ViewDailyReportTable(currentReportEquipment) {
         filename:"img" + i,
         empCode:empCode.empCode,
       }).then((res)=>{
-        // if(res.error){
-        //   alert("Error")
-        //   console.log(error)
-        //   return
-        // }
-        console.log(res)
         alert("Success")
       })
     })

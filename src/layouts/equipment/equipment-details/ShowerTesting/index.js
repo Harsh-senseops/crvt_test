@@ -210,7 +210,6 @@ export default function ShowerTesting({ details, componentName, id }) {
                 sample_qty: parseInt(sampleQty.newData)
               })
             }).then((res) => {
-              console.log(res,updateShowerErdRes,id);
               if (res.data) {
                 alertAndLoaders(
                   "UNSHOW_ALERT",
