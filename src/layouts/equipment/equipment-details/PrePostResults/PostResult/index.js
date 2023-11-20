@@ -10,7 +10,11 @@ import { CardHeader, TextField } from "@mui/material";
 import { useMutation, useQuery, useSubscription } from "urql";
 import Grid from "@mui/material/Grid";
 import alertAndLoaders from "utils/alertAndLoaders";
-import { GET_DEFAULT_PRE_POST_DATA, UPDATE_POST_RESULT,GET_ALL_PRE_POST_DETAILS_BY_PARTCODE } from "apis/queries";
+import {
+  GET_DEFAULT_PRE_POST_DATA,
+  UPDATE_POST_RESULT,
+  GET_ALL_PRE_POST_DETAILS_BY_PARTCODE,
+} from "apis/queries";
 import { setNoOfSamples, setIsSampleTrue } from "reduxSlices/prePost";
 import UploadImage from "./UploadImage/uploadImage";
 
@@ -59,10 +63,9 @@ const useStyles = makeStyles((theme) => ({
 
 function PostResult({ Id, partCode }) {
   const [show, setShow] = useState(false);
-  const [ptData, setPtData] = useState(false)
+  const [ptData, setPtData] = useState(false);
   const [parameters, setParameters] = useState(null);
   const [newValues, setNewValues] = useState(null);
-
 
   const classes = useStyles();
 
@@ -72,7 +75,7 @@ function PostResult({ Id, partCode }) {
 
   const [postParams, rexPostParams] = useQuery({
     query: GET_DEFAULT_PRE_POST_DATA,
-    variables: {componentId: Id},
+    variables: { componentId: Id },
   });
 
   const [preTableData, rexPreTableData] = useSubscription({
@@ -96,9 +99,9 @@ function PostResult({ Id, partCode }) {
 
   useEffect(() => {
     if (postParams.data?.crvtPrePostDefaultValueByComponentId && preTableData.data && !newValues) {
-      if(preTableData.data?.crvtPrePostResultByPartCode?.post){
-        setParameters(JSON.parse(preTableData.data?.crvtPrePostResultByPartCode?.post))
-      }else {
+      if (preTableData.data?.crvtPrePostResultByPartCode?.post) {
+        setParameters(JSON.parse(preTableData.data?.crvtPrePostResultByPartCode?.post));
+      } else {
         let tempArray = {
           ...JSON.parse(postParams.data?.crvtPrePostDefaultValueByComponentId?.ptParameter),
         };
@@ -118,13 +121,18 @@ function PostResult({ Id, partCode }) {
         setParameters(tempArray);
       }
     }
-  }, [postParams.data,preTableData.data]);
+  }, [postParams.data, preTableData.data]);
 
-  useEffect(()=>{
-    if(preTableData.data?.crvtPrePostResultByPartCode?.pre){
-      dispatch(setNoOfSamples(JSON.parse(preTableData.data?.crvtPrePostResultByPartCode?.pre).parameters[0].conditions[0].value.length))
+  useEffect(() => {
+    if (preTableData.data?.crvtPrePostResultByPartCode?.pre) {
+      dispatch(
+        setNoOfSamples(
+          JSON.parse(preTableData.data?.crvtPrePostResultByPartCode?.pre).parameters[0]
+            .conditions[0].value.length
+        )
+      );
     }
-  },[preTableData.data])
+  }, [preTableData.data]);
 
   const handleValues = (e, pindex, cindex, c_valIndex) => {
     e.preventDefault();
@@ -143,7 +151,7 @@ function PostResult({ Id, partCode }) {
         alertAndLoaders("UNSHOW_ALERT", dispatch, "Post Test Results Are Saved... ", "success");
       }
       if (res.error) {
-        console.log(res.error)
+        console.log(res.error);
       }
     });
   };
@@ -157,21 +165,61 @@ function PostResult({ Id, partCode }) {
           </MDTypography>
         </Grid>
         <Grid>
-
-          {!parameters ? <MDTypography variant="h6" fontWeight="medium" style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-            No details found
-          </MDTypography> :
+          {!parameters ? (
+            <MDTypography
+              variant="h6"
+              fontWeight="medium"
+              style={{ display: "flex", justifyContent: "center", alignItems: "center" }}
+            >
+              No details found
+            </MDTypography>
+          ) : (
             <Grid>
+              <Grid container>
+                <Grid item xs={4} sm={12} md={3} lg={4} xl={4}></Grid>
+                <Grid
+                  item
+                  xs={7}
+                  sm={12}
+                  md={3}
+                  lg={7}
+                  xl={7}
+                  style={{ display: "flex", justifyContent: "space-between", }}
+                >
+                {prePostStore.noOFSamples && prePostStore.noOFSamples.map((val)=>{
+                  return(
+                    <MDTypography
+                    variant="h6"
+                    fontWeight="large"
+                    style={{
+                      textAlign: "center",
+                      padding: "10px 25px",
+                      borderRadius: "8px",
+                      // marginRight:"25%"
+                    }}
+                  >
+                    N{val}
+                </MDTypography>
+                  )
+                })}
+                </Grid>
+              </Grid>
               {parameters?.parameters?.map((pval, pindex) => {
                 return (
                   <Grid key={pindex} item ml="20px" xs={12} sm={12} md={12} lg={12} xl={12}>
                     <Grid container style={{ justifyContent: "left", alignContent: "center" }}>
                       <Grid item xs={12} sm={12} md={3} lg={6} xl={6}>
-                        <Typography marginTop={2} fontWeight="700" fontSize="14px" color="whitesmoke">
+                        <Typography
+                          marginTop={2}
+                          fontWeight="700"
+                          fontSize="14px"
+                          color="whitesmoke"
+                        >
                           {pval.p_name}
                         </Typography>
                       </Grid>
                     </Grid>
+
                     {pval &&
                       pval?.conditions.map((cval, cindex) => {
                         return (
@@ -217,7 +265,9 @@ function PostResult({ Id, partCode }) {
                                       >
                                         {show ? (
                                           <TextField
-                                            value={c_values.a_value === "N/A" ? "" : c_values.a_value}
+                                            value={
+                                              c_values.a_value === "N/A" ? "" : c_values.a_value
+                                            }
                                             onChange={(e) =>
                                               handleValues(e, pindex, cindex, c_valIndex)
                                             }
@@ -233,7 +283,7 @@ function PostResult({ Id, partCode }) {
                                               borderRadius: "8px",
                                             }}
                                           >
-                                            {c_values.a_value === ""?"N/A":c_values.a_value}
+                                            {c_values.a_value === "" ? "N/A" : c_values.a_value}
                                           </MDTypography>
                                         )}
                                       </Grid>
@@ -245,11 +295,8 @@ function PostResult({ Id, partCode }) {
                           </>
                         );
                       })}
-
                   </Grid>
-
                 );
-
               })}
               <Grid className={classes.parentFlexRight}>
                 {!show ? (
@@ -267,7 +314,6 @@ function PostResult({ Id, partCode }) {
                   </div>
                 )}
               </Grid>
-              {/* <h1>Hello</h1> */}
               <Card style={{ background: "#394259", margin: "10px" }}>
                 <Grid container lg={12} xl={12}>
                   <Grid xs={12} sm={12}>
@@ -276,36 +322,9 @@ function PostResult({ Id, partCode }) {
                 </Grid>
               </Card>
             </Grid>
-          }
+          )}
         </Grid>
-        {/* <Grid>
-        {prePostStore.noOFSamples.length === 0 || undefined ? (
-           <MDTypography variant="h6" fontWeight="medium">
-           No details found
-         </MDTypography>
-        ) : (
-          <>
-            <Grid className={classes.parentFlexRight}>
-              {!show ? (
-                <MDButton color="info" onClick={onEdit}>
-                  Edit
-                </MDButton>
-              ) : (
-                <div style={{ display: "flex", gap: "15px" }}>
-                  <MDButton color="error" onClick={saveValues}>
-                    Save
-                  </MDButton>
-                  <MDButton color="dark" onClick={onCancel}>
-                    Cancel
-                  </MDButton>
-                </div>
-              )}
-            </Grid>
-          </>
-        )}
-      </Grid> */}
       </Card>
-
     </>
   );
 }

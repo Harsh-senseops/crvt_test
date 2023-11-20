@@ -174,6 +174,35 @@ function PreResult({ Id, partCode }) {
           </MDTypography>
         </Grid>
         <Grid>
+        <Grid container>
+                <Grid item xs={4} sm={12} md={3} lg={4} xl={4}></Grid>
+                <Grid
+                  item
+                  xs={7}
+                  sm={12}
+                  md={3}
+                  lg={7}
+                  xl={7}
+                  style={{ display: "flex", justifyContent: "space-between", }}
+                >
+                {prePostStore.noOFSamples && prePostStore.noOFSamples.map((val)=>{
+                  return(
+                    <MDTypography
+                    variant="h6"
+                    fontWeight="large"
+                    style={{
+                      textAlign: "center",
+                      padding: "10px 25px",
+                      borderRadius: "8px",
+                      // marginRight:"25%"
+                    }}
+                  >
+                    N{val}
+                </MDTypography>
+                  )
+                })}
+                </Grid>
+              </Grid>
           {!parameters ? (
             <MDTypography
               variant="h6"
