@@ -932,9 +932,9 @@ updateUnplannedList(details: $details)
 }
 `;
 //
-const UPDATE_POST_TEST = `mutation updateCrvtPostTestTableByComponentId($componentId: Int!, $ptParameter: JSON!) {
-  updateCrvtPostTestTableByComponentId(
-    input: {crvtPostTestTablePatch: {ptParameter: $ptParameter}, componentId: $componentId}
+const UPDATE_POST_TEST = `mutation updateCrvtPrePostDefaultValueByComponentId($componentId: Int!, $ptParameter: JSON!) {
+  updateCrvtPrePostDefaultValueByComponentId(
+    input: {crvtPrePostDefaultValuePatch: {ptParameter: $ptParameter}, componentId: $componentId}
   ) {
     clientMutationId
   }

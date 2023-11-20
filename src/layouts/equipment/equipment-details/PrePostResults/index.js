@@ -21,7 +21,7 @@ import PostResult from "./PostResult";
 import MDDialog from "components/MDDilouge";
 import { useDispatch, useSelector } from "react-redux";
 import alertAndLoaders from "utils/alertAndLoaders";
-import { GET_POST_DATA, PRE_POST_DETAILS } from "apis/queries";
+import { PRE_POST_DETAILS } from "apis/queries";
 import UploadImage from "./PostResult/UploadImage/uploadImage";
 import { setNoOfSamples, setPrePostIndex, setIsSampleTrue } from "reduxSlices/prePost";
 import MDHoverSearch from "components/MDHoverSearch";
